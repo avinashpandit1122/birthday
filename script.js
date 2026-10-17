@@ -1189,7 +1189,7 @@ function renderDropBoard() {
   if (!board) return;
   board.innerHTML = '';
   
-  let placedCount = 0;
+  let matchedCount = 0;
   for (let i = 0; i < 9; i++) {
     const slot = document.createElement('div');
     slot.className = 'drop-slot';
@@ -1202,81 +1202,55 @@ function renderDropBoard() {
 
     const pieceId = puzzleBoardState[i];
     if (pieceId !== null) {
-      placedCount++;
       const isMatched = pieceId === i;
+      if (isMatched) matchedCount++;
+
       const pieceEl = createPieceElement(pieceId, true);
       if (isMatched) pieceEl.classList.add('is-matched');
       slot.appendChild(pieceEl);
 
-      // Tap to remove from board back to tray
+      // Tap-to-swap fallback
       pieceEl.addEventListener('click', e => {
         if (puzzleSolved) return;
         e.stopPropagation();
-        puzzleBoardState[i] = null;
-        trayPieces.push(pieceId);
-        puzzleMoves++;
-        sfx.pop(1.1);
-        renderPuzzleViews();
+        startPuzzleTimer();
+
+        if (selectedPieceId === null) {
+          selectedPieceId = i;
+          sfx.pop(1.2);
+          renderDropBoard();
+        } else if (selectedPieceId === i) {
+          selectedPieceId = null;
+          renderDropBoard();
+        } else {
+          // Swap piece at selectedPieceId and piece at i
+          const prev = selectedPieceId;
+          const temp = puzzleBoardState[prev];
+          puzzleBoardState[prev] = puzzleBoardState[i];
+          puzzleBoardState[i] = temp;
+
+          puzzleMoves++;
+          selectedPieceId = null;
+          sfx.stamp();
+
+          if (puzzleBoardState[i] === i || puzzleBoardState[prev] === prev) {
+            sfx.sparkle();
+          }
+
+          renderDropBoard();
+          checkWinCondition();
+        }
       });
     }
-
-    // Tap to place selected piece into this slot
-    slot.addEventListener('click', () => {
-      if (puzzleSolved || selectedPieceId === null) return;
-      startPuzzleTimer();
-      const existing = puzzleBoardState[i];
-      if (existing !== null) trayPieces.push(existing);
-      
-      const trayIdx = trayPieces.indexOf(selectedPieceId);
-      if (trayIdx > -1) trayPieces.splice(trayIdx, 1);
-
-      puzzleBoardState[i] = selectedPieceId;
-      if (selectedPieceId === i) sfx.sparkle();
-      else sfx.stamp();
-
-      selectedPieceId = null;
-      puzzleMoves++;
-      renderPuzzleViews();
-      checkWinCondition();
-    });
 
     board.appendChild(slot);
   }
 
   const matchedEl = S('puzzleMatched');
-  if (matchedEl) matchedEl.textContent = `${placedCount}/9`;
+  if (matchedEl) matchedEl.textContent = `${matchedCount}/9`;
 
   const movesEl = S('puzzleMoves');
   if (movesEl) movesEl.textContent = puzzleMoves;
-}
-
-function renderPiecesTray() {
-  const tray = S('piecesTray');
-  if (!tray) return;
-  tray.innerHTML = '';
-
-  trayPieces.forEach(pieceId => {
-    const pieceEl = createPieceElement(pieceId, false);
-    pieceEl.addEventListener('click', e => {
-      if (puzzleSolved) return;
-      e.stopPropagation();
-      selectedPieceId = (selectedPieceId === pieceId) ? null : pieceId;
-      sfx.pop(1.2);
-      renderPuzzleViews();
-    });
-    tray.appendChild(pieceEl);
-  });
-
-  const trayCounter = S('trayCounter');
-  if (trayCounter) {
-    trayCounter.textContent = `${trayPieces.length} left`;
-    trayCounter.style.background = trayPieces.length === 0 ? 'rgba(31,209,193,0.4)' : '';
-  }
-}
-
-function renderPuzzleViews() {
-  renderDropBoard();
-  renderPiecesTray();
 }
 
 // Universal Pointer / Touch Drag & Drop System
@@ -1289,7 +1263,8 @@ function attachDragEvents(el, pieceId) {
     startPuzzleTimer();
 
     const parentSlot = el.closest('.drop-slot');
-    const origin = parentSlot ? parseInt(parentSlot.dataset.slotId, 10) : 'tray';
+    if (!parentSlot) return;
+    const origin = parseInt(parentSlot.dataset.slotId, 10);
 
     const rect = el.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
@@ -1324,15 +1299,17 @@ function attachDragEvents(el, pieceId) {
 function onPointerMove(e) {
   if (!activeDrag) return;
   e.preventDefault();
-  const { ghost, offsetX, offsetY } = activeDrag;
+  const { ghost, offsetX, offsetY, origin } = activeDrag;
   ghost.style.left = `${e.clientX - offsetX}px`;
   ghost.style.top = `${e.clientY - offsetY}px`;
 
   // Highlight candidate drop targets
-  $$('.drop-slot, .pieces-tray').forEach(drop => drop.classList.remove('drag-over'));
+  $$('.drop-slot').forEach(drop => drop.classList.remove('drag-over'));
   const under = document.elementFromPoint(e.clientX, e.clientY);
-  const target = under ? under.closest('.drop-slot, .pieces-tray') : null;
-  if (target) target.classList.add('drag-over');
+  const target = under ? under.closest('.drop-slot') : null;
+  if (target && target.dataset.slotId != origin) {
+    target.classList.add('drag-over');
+  }
 }
 
 function onPointerUp(e) {
@@ -1341,50 +1318,39 @@ function onPointerUp(e) {
   window.removeEventListener('pointerup', onPointerUp);
   window.removeEventListener('pointercancel', onPointerUp);
 
-  const { el, ghost, pieceId, origin } = activeDrag;
+  const { el, ghost, origin } = activeDrag;
   ghost.remove();
   el.classList.remove('is-dragging');
-  $$('.drop-slot, .pieces-tray').forEach(drop => drop.classList.remove('drag-over'));
+  $$('.drop-slot').forEach(drop => drop.classList.remove('drag-over'));
 
   const under = document.elementFromPoint(e.clientX, e.clientY);
   const targetSlot = under ? under.closest('.drop-slot') : null;
-  const targetTray = under ? under.closest('.pieces-tray, .puzzle-tray-container') : null;
 
   if (targetSlot) {
     const targetId = parseInt(targetSlot.dataset.slotId, 10);
-    const existing = puzzleBoardState[targetId];
+    if (targetId !== origin) {
+      // Swap the two photo pieces!
+      const temp = puzzleBoardState[origin];
+      puzzleBoardState[origin] = puzzleBoardState[targetId];
+      puzzleBoardState[targetId] = temp;
 
-    if (origin === 'tray') {
-      const idx = trayPieces.indexOf(pieceId);
-      if (idx > -1) trayPieces.splice(idx, 1);
-      if (existing !== null) trayPieces.push(existing);
-      puzzleBoardState[targetId] = pieceId;
-    } else if (typeof origin === 'number') {
-      // Slot-to-slot drag
-      puzzleBoardState[origin] = existing;
-      puzzleBoardState[targetId] = pieceId;
+      puzzleMoves++;
+      if (puzzleBoardState[targetId] === targetId || puzzleBoardState[origin] === origin) {
+        sfx.sparkle();
+      } else {
+        sfx.stamp();
+      }
+
+      renderDropBoard();
+      checkWinCondition();
     }
-
-    puzzleMoves++;
-    if (pieceId === targetId) sfx.sparkle();
-    else sfx.stamp();
-
-    renderPuzzleViews();
-    checkWinCondition();
-  } else if (targetTray && typeof origin === 'number') {
-    // Moved back to tray
-    puzzleBoardState[origin] = null;
-    trayPieces.push(pieceId);
-    puzzleMoves++;
-    sfx.pop(1.1);
-    renderPuzzleViews();
   }
 
   activeDrag = null;
 }
 
 function checkWinCondition() {
-  if (trayPieces.length === 0 && puzzleBoardState.every((val, i) => val === i)) {
+  if (puzzleBoardState.every((val, i) => val === i)) {
     triggerPuzzleWin();
   }
 }
@@ -1409,7 +1375,7 @@ function triggerPuzzleWin() {
   const nextBtn = S('puzzleNextBtn');
   if (nextBtn) nextBtn.classList.remove('hide');
 
-  renderPuzzleViews();
+  renderDropBoard();
 }
 
 function initPuzzle(photoIdx = 0) {
@@ -1433,18 +1399,27 @@ function initPuzzle(photoIdx = 0) {
   const nextBtn = S('puzzleNextBtn');
   if (nextBtn) nextBtn.classList.add('hide');
 
-  // Reset board and scramble pieces in tray
-  puzzleBoardState = Array(9).fill(null);
-  trayPieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-
-  // Scramble tray pieces
-  for (let i = trayPieces.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [trayPieces[i], trayPieces[j]] = [trayPieces[j], trayPieces[i]];
+  // Scramble pieces on the 3x3 board
+  puzzleBoardState = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  let scrambled = false;
+  let attempts = 0;
+  while (!scrambled && attempts < 100) {
+    attempts++;
+    for (let k = 0; k < 22; k++) {
+      const a = Math.floor(Math.random() * 9);
+      const b = Math.floor(Math.random() * 9);
+      if (a !== b) {
+        const tmp = puzzleBoardState[a];
+        puzzleBoardState[a] = puzzleBoardState[b];
+        puzzleBoardState[b] = tmp;
+      }
+    }
+    const misplaced = puzzleBoardState.filter((v, i) => v !== i).length;
+    if (misplaced >= 4) scrambled = true;
   }
 
   renderPuzzleThumbnails();
-  renderPuzzleViews();
+  renderDropBoard();
 }
 
 hooks.puzzle = () => {
@@ -1470,7 +1445,7 @@ hooks.puzzle = () => {
       puzzleShowNumbers = !puzzleShowNumbers;
       numBtn.innerHTML = `<span>🔢</span> Numbers: ${puzzleShowNumbers ? 'ON' : 'OFF'}`;
       sfx.pop(1.4);
-      renderPuzzleViews();
+      renderDropBoard();
     });
   }
 
@@ -1478,8 +1453,7 @@ hooks.puzzle = () => {
   if (solveBtn) {
     solveBtn.addEventListener('click', () => {
       puzzleBoardState = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-      trayPieces = [];
-      renderPuzzleViews();
+      renderDropBoard();
       triggerPuzzleWin();
     });
   }
@@ -1500,26 +1474,6 @@ hooks.puzzle = () => {
   const hidePreview = () => { if (previewModal) previewModal.classList.add('hide'); };
   if (previewClose) previewClose.addEventListener('click', hidePreview);
   if (previewBackdrop) previewBackdrop.addEventListener('click', hidePreview);
-
-  const fileInput = S('puzzleCustomFile');
-  if (fileInput) {
-    fileInput.addEventListener('change', e => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        puzzlePhotosList.push({
-          src: ev.target.result,
-          caption: 'Your Uploaded Memory 📸',
-          label: 'Custom'
-        });
-        puzzleCurrentIdx = puzzlePhotosList.length - 1;
-        initPuzzle(puzzleCurrentIdx);
-        sfx.sparkle();
-      };
-      reader.readAsDataURL(file);
-    });
-  }
 })();
 
 /* =========================================================

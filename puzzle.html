@@ -137,14 +137,10 @@
     </div>
   </div>
 
-  <!-- Photo Selector & Custom Upload -->
+  <!-- Gallery Photo Selector -->
   <div class="puzzle-picker-container">
-    <span class="picker-label">Choose Photo:</span>
+    <span class="picker-label">Select Memory:</span>
     <div class="puzzle-thumb-list" id="puzzlePhotoList"></div>
-    <label class="custom-photo-upload" title="Upload your own picture">
-      <input type="file" id="puzzleCustomFile" accept="image/*" style="display:none;">
-      <span>📷 Upload</span>
-    </label>
   </div>
 
   <!-- Target Drop Board (3x3 grid) -->
@@ -159,15 +155,6 @@
       <div class="solved-xp">+500 LOVE XP UNLOCKED ⭐</div>
       <a href="index.html#letter" class="cta" style="text-decoration:none;display:inline-block;">Open The Secret Letter 💌</a>
     </div>
-  </div>
-
-  <!-- Pieces Tray (Unplaced draggable pieces) -->
-  <div class="puzzle-tray-container">
-    <div class="puzzle-tray-header">
-      <span>🧩 Puzzle Pieces (Drag to board or tap to place)</span>
-      <span class="tray-counter" id="trayCounter">9 left</span>
-    </div>
-    <div class="pieces-tray" id="piecesTray"></div>
   </div>
 
   <!-- Puzzle Control Toolbar -->
@@ -472,7 +459,7 @@ function renderDropBoard() {
   if (!board) return;
   board.innerHTML = '';
   
-  let placedCount = 0;
+  let matchedCount = 0;
   for (let i = 0; i < 9; i++) {
     const slot = document.createElement('div');
     slot.className = 'drop-slot';
@@ -485,79 +472,55 @@ function renderDropBoard() {
 
     const pieceId = puzzleBoardState[i];
     if (pieceId !== null) {
-      placedCount++;
       const isMatched = pieceId === i;
+      if (isMatched) matchedCount++;
+
       const pieceEl = createPieceElement(pieceId, true);
       if (isMatched) pieceEl.classList.add('is-matched');
       slot.appendChild(pieceEl);
 
+      // Tap-to-swap fallback
       pieceEl.addEventListener('click', e => {
         if (puzzleSolved) return;
         e.stopPropagation();
-        puzzleBoardState[i] = null;
-        trayPieces.push(pieceId);
-        puzzleMoves++;
-        sfx.pop(1.1);
-        renderViews();
+        startTimer();
+
+        if (selectedPieceId === null) {
+          selectedPieceId = i;
+          sfx.pop(1.2);
+          renderDropBoard();
+        } else if (selectedPieceId === i) {
+          selectedPieceId = null;
+          renderDropBoard();
+        } else {
+          // Swap pieces
+          const prev = selectedPieceId;
+          const temp = puzzleBoardState[prev];
+          puzzleBoardState[prev] = puzzleBoardState[i];
+          puzzleBoardState[i] = temp;
+
+          puzzleMoves++;
+          selectedPieceId = null;
+          sfx.stamp();
+
+          if (puzzleBoardState[i] === i || puzzleBoardState[prev] === prev) {
+            sfx.sparkle();
+          }
+
+          renderDropBoard();
+          checkWin();
+        }
       });
     }
-
-    slot.addEventListener('click', () => {
-      if (puzzleSolved || selectedPieceId === null) return;
-      startTimer();
-      const existing = puzzleBoardState[i];
-      if (existing !== null) trayPieces.push(existing);
-      
-      const trayIdx = trayPieces.indexOf(selectedPieceId);
-      if (trayIdx > -1) trayPieces.splice(trayIdx, 1);
-
-      puzzleBoardState[i] = selectedPieceId;
-      if (selectedPieceId === i) sfx.sparkle();
-      else sfx.stamp();
-
-      selectedPieceId = null;
-      puzzleMoves++;
-      renderViews();
-      checkWin();
-    });
 
     board.appendChild(slot);
   }
 
   const matchedEl = S('puzzleMatched');
-  if (matchedEl) matchedEl.textContent = `${placedCount}/9`;
+  if (matchedEl) matchedEl.textContent = `${matchedCount}/9`;
 
   const movesEl = S('puzzleMoves');
   if (movesEl) movesEl.textContent = puzzleMoves;
-}
-
-function renderPiecesTray() {
-  const tray = S('piecesTray');
-  if (!tray) return;
-  tray.innerHTML = '';
-
-  trayPieces.forEach(pieceId => {
-    const pieceEl = createPieceElement(pieceId, false);
-    pieceEl.addEventListener('click', e => {
-      if (puzzleSolved) return;
-      e.stopPropagation();
-      selectedPieceId = (selectedPieceId === pieceId) ? null : pieceId;
-      sfx.pop(1.2);
-      renderViews();
-    });
-    tray.appendChild(pieceEl);
-  });
-
-  const trayCounter = S('trayCounter');
-  if (trayCounter) {
-    trayCounter.textContent = `${trayPieces.length} left`;
-    trayCounter.style.background = trayPieces.length === 0 ? 'rgba(31,209,193,0.4)' : '';
-  }
-}
-
-function renderViews() {
-  renderDropBoard();
-  renderPiecesTray();
 }
 
 // Drag & Drop Controller
@@ -570,7 +533,8 @@ function attachDragEvents(el, pieceId) {
     startTimer();
 
     const parentSlot = el.closest('.drop-slot');
-    const origin = parentSlot ? parseInt(parentSlot.dataset.slotId, 10) : 'tray';
+    if (!parentSlot) return;
+    const origin = parseInt(parentSlot.dataset.slotId, 10);
 
     const rect = el.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
@@ -598,14 +562,16 @@ function attachDragEvents(el, pieceId) {
 function onPointerMove(e) {
   if (!activeDrag) return;
   e.preventDefault();
-  const { ghost, offsetX, offsetY } = activeDrag;
+  const { ghost, offsetX, offsetY, origin } = activeDrag;
   ghost.style.left = `${e.clientX - offsetX}px`;
   ghost.style.top = `${e.clientY - offsetY}px`;
 
-  $$('.drop-slot, .pieces-tray').forEach(drop => drop.classList.remove('drag-over'));
+  $$('.drop-slot').forEach(drop => drop.classList.remove('drag-over'));
   const under = document.elementFromPoint(e.clientX, e.clientY);
-  const target = under ? under.closest('.drop-slot, .pieces-tray') : null;
-  if (target) target.classList.add('drag-over');
+  const target = under ? under.closest('.drop-slot') : null;
+  if (target && target.dataset.slotId != origin) {
+    target.classList.add('drag-over');
+  }
 }
 
 function onPointerUp(e) {
@@ -614,48 +580,39 @@ function onPointerUp(e) {
   window.removeEventListener('pointerup', onPointerUp);
   window.removeEventListener('pointercancel', onPointerUp);
 
-  const { el, ghost, pieceId, origin } = activeDrag;
+  const { el, ghost, origin } = activeDrag;
   ghost.remove();
   el.classList.remove('is-dragging');
-  $$('.drop-slot, .pieces-tray').forEach(drop => drop.classList.remove('drag-over'));
+  $$('.drop-slot').forEach(drop => drop.classList.remove('drag-over'));
 
   const under = document.elementFromPoint(e.clientX, e.clientY);
   const targetSlot = under ? under.closest('.drop-slot') : null;
-  const targetTray = under ? under.closest('.pieces-tray, .puzzle-tray-container') : null;
 
   if (targetSlot) {
     const targetId = parseInt(targetSlot.dataset.slotId, 10);
-    const existing = puzzleBoardState[targetId];
+    if (targetId !== origin) {
+      // Swap the two photo pieces!
+      const temp = puzzleBoardState[origin];
+      puzzleBoardState[origin] = puzzleBoardState[targetId];
+      puzzleBoardState[targetId] = temp;
 
-    if (origin === 'tray') {
-      const idx = trayPieces.indexOf(pieceId);
-      if (idx > -1) trayPieces.splice(idx, 1);
-      if (existing !== null) trayPieces.push(existing);
-      puzzleBoardState[targetId] = pieceId;
-    } else if (typeof origin === 'number') {
-      puzzleBoardState[origin] = existing;
-      puzzleBoardState[targetId] = pieceId;
+      puzzleMoves++;
+      if (puzzleBoardState[targetId] === targetId || puzzleBoardState[origin] === origin) {
+        sfx.sparkle();
+      } else {
+        sfx.stamp();
+      }
+
+      renderDropBoard();
+      checkWin();
     }
-
-    puzzleMoves++;
-    if (pieceId === targetId) sfx.sparkle();
-    else sfx.stamp();
-
-    renderViews();
-    checkWin();
-  } else if (targetTray && typeof origin === 'number') {
-    puzzleBoardState[origin] = null;
-    trayPieces.push(pieceId);
-    puzzleMoves++;
-    sfx.pop(1.1);
-    renderViews();
   }
 
   activeDrag = null;
 }
 
 function checkWin() {
-  if (trayPieces.length === 0 && puzzleBoardState.every((val, i) => val === i)) {
+  if (puzzleBoardState.every((val, i) => val === i)) {
     triggerWin();
   }
 }
@@ -674,7 +631,7 @@ function triggerWin() {
   const solvedCard = S('puzzleSolvedCard');
   if (solvedCard) solvedCard.classList.remove('hide');
 
-  renderViews();
+  renderDropBoard();
 }
 
 function initGame(photoIdx = 0) {
@@ -695,16 +652,27 @@ function initGame(photoIdx = 0) {
   const solvedCard = S('puzzleSolvedCard');
   if (solvedCard) solvedCard.classList.add('hide');
 
-  puzzleBoardState = Array(9).fill(null);
-  trayPieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-
-  for (let i = trayPieces.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [trayPieces[i], trayPieces[j]] = [trayPieces[j], trayPieces[i]];
+  // Scramble pieces on board
+  puzzleBoardState = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  let scrambled = false;
+  let attempts = 0;
+  while (!scrambled && attempts < 100) {
+    attempts++;
+    for (let k = 0; k < 22; k++) {
+      const a = Math.floor(Math.random() * 9);
+      const b = Math.floor(Math.random() * 9);
+      if (a !== b) {
+        const tmp = puzzleBoardState[a];
+        puzzleBoardState[a] = puzzleBoardState[b];
+        puzzleBoardState[b] = tmp;
+      }
+    }
+    const misplaced = puzzleBoardState.filter((v, i) => v !== i).length;
+    if (misplaced >= 4) scrambled = true;
   }
 
   renderThumbnails();
-  renderViews();
+  renderDropBoard();
 }
 
 function renderThumbnails() {
@@ -730,12 +698,11 @@ S('puzzleNumbersBtn').onclick = () => {
   puzzleShowNumbers = !puzzleShowNumbers;
   S('puzzleNumbersBtn').innerHTML = `<span>🔢</span> Numbers: ${puzzleShowNumbers ? 'ON' : 'OFF'}`;
   sfx.pop(1.4);
-  renderViews();
+  renderDropBoard();
 };
 S('puzzleSolveBtn').onclick = () => {
   puzzleBoardState = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-  trayPieces = [];
-  renderViews();
+  renderDropBoard();
   triggerWin();
 };
 
@@ -749,23 +716,6 @@ S('puzzlePreviewBtn').onclick = () => {
 const hidePreview = () => previewModal.classList.add('hide');
 S('previewCloseBtn').onclick = hidePreview;
 S('previewBackdrop').onclick = hidePreview;
-
-// Custom Upload
-S('puzzleCustomFile').onchange = e => {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    puzzlePhotosList.push({
-      src: ev.target.result,
-      caption: 'Your Custom Photo 📸',
-      label: 'Custom'
-    });
-    initGame(puzzlePhotosList.length - 1);
-    sfx.sparkle();
-  };
-  reader.readAsDataURL(file);
-};
 
 // Start
 initGame(0);

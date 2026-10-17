@@ -292,7 +292,7 @@
     <div class="inner wide">
       <div class="stage-tag">STAGE 7 · PHOTO PUZZLE</div>
       <h2 class="t-head">Piece Our Memory Together 🧩</h2>
-      <p class="sub2">Drag & drop pieces from the tray onto the matching board slots!</p>
+      <p class="sub2">Drag and drop photo pieces to move them into the correct spots!</p>
 
       <!-- Puzzle Stats Bar -->
       <div class="puzzle-stats-bar">
@@ -305,19 +305,15 @@
           <b class="pstat-val" id="puzzleTimer">00:00</b>
         </div>
         <div class="pstat-item">
-          <span class="pstat-label">PLACED</span>
+          <span class="pstat-label">MATCHED</span>
           <b class="pstat-val" id="puzzleMatched">0/9</b>
         </div>
       </div>
 
-      <!-- Photo Selector & Custom Upload -->
+      <!-- Gallery Photo Selector -->
       <div class="puzzle-picker-container">
-        <span class="picker-label">Choose Photo:</span>
+        <span class="picker-label">Select Memory:</span>
         <div class="puzzle-thumb-list" id="puzzlePhotoList"></div>
-        <label class="custom-photo-upload" title="Upload your own picture">
-          <input type="file" id="puzzleCustomFile" accept="image/*" style="display:none;">
-          <span>📷 Upload</span>
-        </label>
       </div>
 
       <!-- Target Drop Board (3x3 grid) -->
@@ -334,22 +330,13 @@
         </div>
       </div>
 
-      <!-- Pieces Tray (Unplaced draggable pieces) -->
-      <div class="puzzle-tray-container">
-        <div class="puzzle-tray-header">
-          <span>🧩 Puzzle Pieces (Drag to board or tap to place)</span>
-          <span class="tray-counter" id="trayCounter">9 left</span>
-        </div>
-        <div class="pieces-tray" id="piecesTray"></div>
-      </div>
-
       <!-- Puzzle Control Toolbar -->
       <div class="puzzle-tools-row">
-        <button class="ptool-btn" id="puzzleShuffleBtn" title="Reset and scramble pieces">
-          <span>🔀</span> Scramble
+        <button class="ptool-btn" id="puzzleShuffleBtn" title="Reshuffle photo pieces">
+          <span>🔀</span> Reshuffle
         </button>
-        <button class="ptool-btn" id="puzzlePreviewBtn" title="Click to view completed photo">
-          <span>👁️</span> Preview
+        <button class="ptool-btn" id="puzzlePreviewBtn" title="Click to view full photo">
+          <span>👁️</span> Preview Photo
         </button>
         <button class="ptool-btn" id="puzzleNumbersBtn" title="Toggle number guides">
           <span>🔢</span> Numbers: ON
