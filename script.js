@@ -1545,5 +1545,11 @@ function openLetter() {
 })();
 
 /* ---------- start game ---------- */
+window.go = go;
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.replace('#', '');
+  if (ORDER.includes(hash)) go(hash);
+});
+
 const initHash = window.location.hash.replace('#', '');
 go(ORDER.includes(initHash) ? initHash : 'bow');
