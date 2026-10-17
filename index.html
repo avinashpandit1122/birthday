@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffe9d6">
+<title>A little something, for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Patrick+Hand&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="day">
+
+<!-- Background atmospheric layers -->
+<div id="nightBg" aria-hidden="true"><div id="stars"></div></div>
+<div id="ambientDust" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<!-- Floating Game HUD Header -->
+<header id="gameHud" aria-label="Game Status">
+  <div class="hud-left">
+    <div class="hud-badge stage-badge">
+      <span class="hud-icon">🏹</span>
+      <span id="hudStageName">STAGE 1/8</span>
+    </div>
+    <div class="hud-dots" id="hudDots" title="Stage Progress">
+      <span class="h-dot active">♥</span>
+      <span class="h-dot">♥</span>
+      <span class="h-dot">♥</span>
+      <span class="h-dot">♥</span>
+      <span class="h-dot">♥</span>
+      <span class="h-dot">♥</span>
+      <span class="h-dot">♥</span>
+      <span class="h-dot">♥</span>
+    </div>
+  </div>
+
+  <div class="hud-right">
+    <div class="hud-badge score-badge" id="scoreBadge" title="Love Sparks XP">
+      <span class="hud-icon">⭐</span>
+      <span id="hudScore">0</span>
+      <span class="score-unit">PTS</span>
+    </div>
+    <button id="sfxBtn" class="hud-btn" aria-label="Toggle Sound Effects" title="Toggle Sound">
+      <span id="sfxIcon">🔊</span>
+    </button>
+    <button id="muteBtn" class="hud-btn" aria-label="Toggle Background Music" title="Toggle Music" hidden>
+      ♪
+    </button>
+  </div>
+</header>
+
+<!-- Floating Click Floating Text Layer -->
+<div id="floatingTextLayer" aria-hidden="true"></div>
+
+<main id="app">
+
+  <!-- 1 · Cupid's Archery Minigame -->
+  <section class="scene" id="s-bow" data-tap>
+    <!-- Floating dreamy background clouds -->
+    <div class="cloud-layer" aria-hidden="true">
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <div class="cloud c3"></div>
+    </div>
+
+    <div class="scene-header">
+      <p class="eyebrow-i">a little something, for you</p>
+    </div>
+
+    <!-- Interactive Heart Target with Target Rings -->
+    <div class="target-zone" id="targetZone">
+      <div class="target-rings" aria-hidden="true">
+        <div class="ring r3"></div>
+        <div class="ring r2"></div>
+        <div class="ring r1"></div>
+      </div>
+      <div class="target" id="target" title="Target: The Heart of Aditi">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <radialGradient id="hg" cx="35%" cy="28%" r="80%">
+              <stop offset="0" stop-color="#ffc2d4"/>
+              <stop offset=".45" stop-color="#ff5c92"/>
+              <stop offset="1" stop-color="#d81b60"/>
+            </radialGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <path d="M50 90C20 68 5 49 5 32 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 25 0 17-15 36-45 58z" fill="url(#hg)" filter="url(#glow)"/>
+          <ellipse cx="32" cy="26" rx="10" ry="6" fill="#fff" opacity=".55" transform="rotate(-30 32 26)"/>
+        </svg>
+        <span class="bullseye-label">500 PTS</span>
+      </div>
+    </div>
+
+    <!-- Interactive Bow & Arrow -->
+    <svg id="bowSvg" class="bow-layer" aria-hidden="true">
+      <path id="trajectory" stroke="rgba(255, 92, 146, 0.45)" stroke-dasharray="6,6" stroke-width="2" fill="none"/>
+      <path id="limbs" fill="none" stroke="#7a3f2a" stroke-width="3.8" stroke-linecap="round"/>
+      <polyline id="str" fill="none" stroke="#a9644a" stroke-width="1.6"/>
+      <g id="arrow">
+        <line id="shaft" stroke="#8a5a3a" stroke-width="2.6" stroke-linecap="round"/>
+        <path id="head" fill="#ffb02e"/>
+        <path id="fletch" fill="none" stroke="#ff3d7f" stroke-width="3.4" stroke-linecap="round"/>
+      </g>
+    </svg>
+
+    <!-- Aiming Controls & Power Meter -->
+    <div class="bow-controls">
+      <div class="power-bar-wrap" id="powerWrap">
+        <div class="power-fill" id="powerFill"></div>
+      </div>
+      <p class="eyebrow-b" id="bowLabel">🎯 MOVE CURSOR TO AIM &bull; PULL &amp; RELEASE</p>
+      <button class="game-pill-btn" id="quickShotBtn">✨ Quick Shot</button>
+    </div>
+  </section>
+
+  <!-- 2 · Happy Birthday & Wish Catcher -->
+  <section class="scene dark-bars" id="s-wish" data-tap data-auto="5200">
+    <div class="band">
+      <div class="grid"></div>
+      <div class="wish-stars-container" id="wishStarsZone" aria-hidden="true"></div>
+      
+      <div class="band-in">
+        <div class="stage-tag mini-tag">STAGE 2 · MAKE A WISH</div>
+        <p class="mini">✨ tap the falling stars to make a wish…</p>
+        <h1 class="hb neon-text">Happy<br>Birthday</h1>
+        <svg class="squig" viewBox="0 0 200 14" aria-hidden="true">
+          <path pathLength="1" d="M4 8C40 2 70 12 110 6s60-4 86 0"/>
+        </svg>
+        <p class="to">to someone worth celebrating</p>
+        <button class="game-action-btn pulse-glow" data-go="tree">Enter Enchanted Garden 🌸</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Heart Tree & Blossom Harvest -->
+  <section class="scene" id="s-tree" data-tap>
+    <div class="rays" aria-hidden="true"></div>
+    <div class="floaters" aria-hidden="true"></div>
+    
+    <div class="scene-header">
+      <span class="stage-tag">STAGE 3 · BLOSSOM GARDEN</span>
+      <p class="sub2">Tap branches or floating hearts to harvest blooms 🌸</p>
+      <div class="garden-counter" id="gardenCounter">🌸 <span id="bloomCount">0</span> Blossoms Grown</div>
+    </div>
+
+    <div class="tree" id="treeContainer">
+      <svg viewBox="0 0 300 510" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+        <g fill="none" stroke="#7a3d4a" stroke-linecap="round">
+          <path pathLength="1" style="--d:.1s" stroke-width="10" d="M150 510C146 440 156 380 150 300"/>
+          <path pathLength="1" style="--d:.9s" stroke-width="6" d="M150 330C135 300 112 280 92 235"/>
+          <path pathLength="1" style="--d:.9s" stroke-width="6" d="M150 330C165 300 188 280 208 235"/>
+          <path pathLength="1" style="--d:1s" stroke-width="5" d="M150 300C148 262 150 228 150 192"/>
+          <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M92 235C80 215 74 195 62 175"/>
+          <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M92 235C104 215 108 198 114 170"/>
+          <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M208 235C220 215 226 195 238 175"/>
+          <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M208 235C196 215 192 198 186 170"/>
+          <path pathLength="1" style="--d:1.3s" stroke-width="3" d="M150 235C140 212 134 192 128 168"/>
+          <path pathLength="1" style="--d:1.3s" stroke-width="3" d="M150 235C160 212 166 192 172 168"/>
+        </g>
+      </svg>
+      <div id="canopy"></div>
+    </div>
+
+    <div class="bd-card">
+      <small>it's officially your day</small>
+      <b>Happy Birthday, {you}</b>
+      <span class="late">and just like that, you're turning {age} ✨</span>
+    </div>
+
+    <div class="garden-actions">
+      <button class="game-pill-btn" id="waterTreeBtn">💧 Water &amp; Bloom (+50)</button>
+      <button class="cta mini-cta" data-go="cake">Visit Cake Bakery 🎂</button>
+    </div>
+  </section>
+
+  <!-- 4 · Cake Bakery & Candle Blow Game -->
+  <section class="scene night" id="s-cake" data-tap>
+    <div class="inner">
+      <div class="stage-tag">STAGE 4 · BIRTHDAY BAKERY</div>
+      <h2 class="t-head">Bake &amp; Blow the Candle 🎂</h2>
+      
+      <!-- Interactive Topping Station -->
+      <div class="topping-bar" id="toppingBar" aria-label="Cake Toppings">
+        <span class="topping-title">Add Topping:</span>
+        <button class="top-btn" data-topping="🍓" title="Add Strawberry">🍓 Strawberry</button>
+        <button class="top-btn" data-topping="🍒" title="Add Cherry">🍒 Cherry</button>
+        <button class="top-btn" data-topping="✨" title="Add Magic Sprinkles">✨ Sprinkles</button>
+        <button class="top-btn" data-topping="🍫" title="Add Chocolate">🍫 Heart</button>
+      </div>
+
+      <!-- Interactive SVG Cake -->
+      <div class="cake-wrapper" id="cakeWrapper">
+        <svg class="cake" id="cake" viewBox="0 0 260 210" aria-hidden="true">
+          <line class="plate" x1="20" y1="186" x2="240" y2="186" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+          <g class="cl" style="--d:.7s"><rect x="40" y="160" width="180" height="26" rx="9" fill="#f2638f"/></g>
+          <g class="cl" style="--d:1.2s"><rect x="40" y="134" width="180" height="26" rx="9" fill="#ff7fa8"/></g>
+          <g class="cl" style="--d:1.7s"><rect x="40" y="108" width="180" height="26" rx="9" fill="#ff9dbd"/></g>
+          <g class="frost" style="--d:2.3s">
+            <path d="M36 112c0-12 10-18 22-18h144c12 0 22 6 22 18 0 7-6 10-11 10-6 0-8 4-8 9 0 8-9 8-10 0 0-5-3-8-8-8s-8 3-8 8c0 9-10 9-11 0-1-5-3-8-8-8-6 0-9 3-9 9 0 9-10 9-11 0 0-6-4-9-9-9-6 0-9 4-9 9 0 8-10 8-10 0 0-5-2-9-8-9s-9 3-9 9c0 8-10 8-10 0 0-6-3-9-8-9-6 0-9 3-9 9 0 7-9 7-10 0 0-7-3-9-10-9-5 0-8-2-8-8z" fill="#fff"/>
+          </g>
+          <g class="candle" id="cakeCandle" style="--d:2.9s">
+            <rect x="125" y="56" width="10" height="40" rx="3" fill="#ffe0ea"/>
+            <path d="M125 66l10-5M125 78l10-5M125 90l10-5" stroke="#ff7fa8" stroke-width="2.4"/>
+            <g id="candleFlame" class="candle-flame">
+              <path class="flame" d="M130 30c7 9 8 16 0 22-8-6-7-13 0-22z" fill="#ffb02e"/>
+              <path class="flame in" d="M130 38c3 5 4 8 0 11-4-3-3-6 0-11z" fill="#fff3a8"/>
+            </g>
+          </g>
+          <!-- Dynamic Topping Container -->
+          <g id="cakeToppingsGroup"></g>
+        </svg>
+      </div>
+
+      <p class="greet" id="greet"></p>
+      <p class="status" id="cakeStatus">Baking something sweet…</p>
+
+      <!-- Candle Control Action -->
+      <div class="cake-controls">
+        <button class="game-action-btn blow-btn" id="blowBtn">💨 Blow Out Candle!</button>
+        <button class="cta hide" id="cakeNextBtn" data-go="balloons">Play Balloon Carnival 🎈</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Balloon Carnival Arcade -->
+  <section class="scene night" id="s-balloons">
+    <div class="inner wide">
+      <div class="stage-tag">STAGE 5 · BALLOON CARNIVAL</div>
+      <h2 class="t-head">Pop the Balloons 🎈</h2>
+      <div class="arcade-stats-bar">
+        <span>POPPED: <b id="poppedCount">0</b>/5</span>
+        <span class="combo-pill" id="comboPill">COMBO x1 🔥</span>
+      </div>
+      <p class="sub2">Pop each balloon to unlock a legendary reason you're loved!</p>
+      
+      <div class="sky" id="sky"></div>
+      <div class="reason-list" id="reasonList"></div>
+      
+      <p class="thousand hide" id="thousand">…and a thousand more reasons 💛</p>
+      <button class="cta hide" id="bNext" data-go="memory">Enter Memory Vault 📸</button>
+    </div>
+  </section>
+
+  <!-- 6 · Memory Vault & Polaroid Sticker Studio -->
+  <section class="scene night" id="s-memory">
+    <div class="inner wide">
+      <div class="stage-tag">STAGE 6 · MEMORY VAULT</div>
+      <h2 class="t-head">A Walk Down Memory Lane 📸</h2>
+      <p class="sub2">Drag or swipe through memories. Tap stickers to stamp photos!</p>
+      
+      <!-- Interactive Sticker Palette -->
+      <div class="sticker-palette" id="stickerPalette" aria-label="Photo Stickers">
+        <span class="palette-label">Pick Stamp:</span>
+        <button class="stamp-chip active" data-stamp="💖" title="Love Stamp">💖</button>
+        <button class="stamp-chip" data-stamp="✨" title="Magic Stamp">✨</button>
+        <button class="stamp-chip" data-stamp="👑" title="Crown Stamp">👑</button>
+        <button class="stamp-chip" data-stamp="🍰" title="Cake Stamp">🍰</button>
+        <button class="stamp-chip" data-stamp="🔥" title="Fire Stamp">🔥</button>
+      </div>
+
+      <div class="lights" aria-hidden="true"></div>
+      <div class="rail" id="rail" title="Drag to browse photos"></div>
+      <div class="pdots" id="pdots"></div>
+
+      <!-- Photo Puzzle Challenge Card next to gallery -->
+      <div class="gallery-puzzle-callout">
+        <div class="g-callout-icon">🧩</div>
+        <div class="g-callout-info">
+          <span class="g-callout-title">Photo Puzzle Challenge</span>
+          <span class="g-callout-desc">Can you piece our favourite memories back together?</span>
+        </div>
+        <button class="g-callout-btn" data-go="puzzle">Play Puzzle ➔</button>
+      </div>
+      
+      <div class="scene-nav-actions">
+        <button class="cta" data-go="puzzle">Play Photo Puzzle 🧩</button>
+        <button class="ghost-skip-btn" data-go="letter">Skip to Letter 💌</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Memory Photo Puzzle Quest -->
+  <section class="scene night" id="s-puzzle">
+    <div class="inner wide">
+      <div class="stage-tag">STAGE 7 · PHOTO PUZZLE</div>
+      <h2 class="t-head">Piece Our Memory Together 🧩</h2>
+      <p class="sub2">Tap any two pieces to swap them until our photo is complete!</p>
+
+      <!-- Puzzle Stats Bar -->
+      <div class="puzzle-stats-bar">
+        <div class="pstat-item">
+          <span class="pstat-label">MOVES</span>
+          <b class="pstat-val" id="puzzleMoves">0</b>
+        </div>
+        <div class="pstat-item">
+          <span class="pstat-label">TIME</span>
+          <b class="pstat-val" id="puzzleTimer">00:00</b>
+        </div>
+        <div class="pstat-item">
+          <span class="pstat-label">MATCHED</span>
+          <b class="pstat-val" id="puzzleMatched">0/9</b>
+        </div>
+      </div>
+
+      <!-- Photo Selector & Custom Upload -->
+      <div class="puzzle-picker-container">
+        <span class="picker-label">Choose Photo:</span>
+        <div class="puzzle-thumb-list" id="puzzlePhotoList"></div>
+        <label class="custom-photo-upload" title="Upload your own picture">
+          <input type="file" id="puzzleCustomFile" accept="image/*" style="display:none;">
+          <span>📷 Upload</span>
+        </label>
+      </div>
+
+      <!-- Puzzle Board Wrapper -->
+      <div class="puzzle-board-wrap">
+        <div class="puzzle-board" id="puzzleBoard"></div>
+        
+        <!-- Solved Celebration Overlay -->
+        <div class="puzzle-solved-card hide" id="puzzleSolvedCard">
+          <div class="solved-stars">✨ 🌟 💖 🌟 ✨</div>
+          <h3 class="solved-heading">PUZZLE COMPLETED! 🏆</h3>
+          <p class="solved-msg">You pieced together our sweetest memory!</p>
+          <div class="solved-xp">+500 LOVE XP UNLOCKED ⭐</div>
+          <button class="cta" data-go="letter">Open The Secret Letter 💌</button>
+        </div>
+      </div>
+
+      <!-- Puzzle Control Toolbar -->
+      <div class="puzzle-tools-row">
+        <button class="ptool-btn" id="puzzleShuffleBtn" title="Scramble puzzle pieces">
+          <span>🔀</span> Reshuffle
+        </button>
+        <button class="ptool-btn" id="puzzlePreviewBtn" title="Click to view completed photo">
+          <span>👁️</span> Preview
+        </button>
+        <button class="ptool-btn" id="puzzleNumbersBtn" title="Toggle number guide on tiles">
+          <span>🔢</span> Numbers: ON
+        </button>
+        <button class="ptool-btn" id="puzzleSolveBtn" title="Auto-solve puzzle">
+          <span>🪄</span> Auto-Solve
+        </button>
+      </div>
+
+      <!-- Reference Photo Modal -->
+      <div class="puzzle-preview-modal hide" id="puzzlePreviewModal">
+        <div class="preview-backdrop" id="previewBackdrop"></div>
+        <div class="preview-dialog">
+          <div class="preview-header">
+            <h4>Complete Photo Preview 📸</h4>
+            <button class="preview-close" id="previewCloseBtn">✕</button>
+          </div>
+          <div class="preview-img-container">
+            <img id="puzzlePreviewImg" alt="Complete Memory">
+          </div>
+          <p class="preview-caption" id="puzzlePreviewCap">Our happy memory</p>
+        </div>
+      </div>
+
+      <!-- Navigation Footer -->
+      <div class="puzzle-footer-nav">
+        <button class="cta hide" id="puzzleNextBtn" data-go="letter">Continue to Secret Letter 💌</button>
+        <button class="ghost-back-btn" data-go="memory">← Back to Memory Vault 📸</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · The Secret Quest Letter & Victory Celebration -->
+  <section class="scene night" id="s-letter">
+    <div class="inner" id="envPhase">
+      <div class="stage-tag">FINAL QUEST · THE SECRET LETTER</div>
+      <h2 class="t-head">One last thing, {you}…</h2>
+      <p class="sub2">{me} wrote a sealed letter just for you.</p>
+      
+      <div class="envelope-showcase">
+        <button class="env2" id="env2" aria-label="Open your sealed letter">
+          <div class="e-back"></div>
+          <div class="e-paper"><span>🎂</span><i></i><i></i></div>
+          <div class="e-front"></div>
+          <div class="e-flap"></div>
+          <div class="e-seal" title="Break the wax seal"></div>
+        </button>
+      </div>
+
+      <p class="hint pulse" id="envHint">👆 Tap the golden wax seal to open</p>
+    </div>
+
+    <div class="inner hide" id="notePhase">
+      <div class="quest-clear-banner" id="questClearBanner">
+        <span class="quest-stars">⭐⭐⭐⭐⭐</span>
+        <h3>BIRTHDAY QUEST COMPLETE! 🏆</h3>
+        <p class="final-score-text">FINAL SCORE: <b id="finalScoreVal">10,000</b> LOVE XP</p>
+      </div>
+
+      <article class="note" id="note" title="Tap letter to fast-forward">
+        <h3>Dear {you},</h3>
+        <p id="noteText"></p>
+        <p class="sign hide" id="noteSign">With all my love,<br>— {me}</p>
+        <span class="note-seal" aria-hidden="true">🎂</span>
+      </article>
+
+      <div class="letter-actions">
+        <button class="cta hide" id="replayBtn" data-go="bow">Play Again ↺ (Replay Arcade)</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<audio id="bgm" loop preload="none"></audio>
+<script src="script.js"></script>
+</body>
+</html>
