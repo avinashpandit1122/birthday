@@ -1103,8 +1103,7 @@ function getBirthdayMemoryArtwork() {
 }
 
 let puzzleGrid = 3;
-let puzzleBoardState = Array(9).fill(null);
-let trayPieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+let puzzleBoardState = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 let selectedPieceId = null;
 let puzzleMoves = 0;
 let puzzleTimerStart = null;

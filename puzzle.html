@@ -119,7 +119,7 @@
 
 <main class="puzzle-container-card">
   <h1 class="puzzle-hero-heading">Piece Our Memory Together 🧩</h1>
-  <p class="puzzle-hero-sub">Drag and drop the pieces from the tray onto the matching board slots!</p>
+  <p class="puzzle-hero-sub">Drag and drop photo pieces directly on the board to move and swap them into place!</p>
 
   <!-- Puzzle Stats Bar -->
   <div class="puzzle-stats-bar">
@@ -132,7 +132,7 @@
       <b class="pstat-val" id="puzzleTimer">00:00</b>
     </div>
     <div class="pstat-item">
-      <span class="pstat-label">PLACED</span>
+      <span class="pstat-label">MATCHED</span>
       <b class="pstat-val" id="puzzleMatched">0/9</b>
     </div>
   </div>
@@ -400,8 +400,7 @@ function getCelebrationArtwork() {
 }
 
 // Game State
-let puzzleBoardState = Array(9).fill(null);
-let trayPieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+let puzzleBoardState = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 let selectedPieceId = null;
 let puzzleMoves = 0;
 let puzzleTimerStart = null;
