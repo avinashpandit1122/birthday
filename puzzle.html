@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b0b2e">
+<title>Memory Photo Puzzle 🧩 · Birthday Arcade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Patrick+Hand&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body {
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 12px 40px;
+    background: radial-gradient(circle at 50% 20%, #3a1548 0%, #170726 70%, #0d0317 100%);
+  }
+
+  .puzzle-screen-header {
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 4px 16px;
+  }
+
+  .back-nav-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 99px;
+    padding: 7px 14px;
+    color: #ffd27a;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .back-nav-pill:hover {
+    background: rgba(255, 61, 127, 0.3);
+    border-color: #ff3d7f;
+    transform: translateX(-3px);
+  }
+
+  .screen-title-badge {
+    font-family: var(--arcade);
+    font-size: 11px;
+    color: #ffd27a;
+    background: rgba(255, 176, 46, 0.15);
+    border: 1px solid rgba(255, 176, 46, 0.4);
+    padding: 6px 14px;
+    border-radius: 99px;
+    letter-spacing: 0.5px;
+  }
+
+  .puzzle-container-card {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .puzzle-hero-heading {
+    font-family: var(--fun);
+    font-size: clamp(24px, 5.5vw, 32px);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    text-shadow: 0 0 16px rgba(255, 61, 127, 0.5);
+  }
+
+  .puzzle-hero-sub {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 14px;
+    max-width: 380px;
+  }
+
+  .puzzle-nav-buttons-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #confettiCanvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+  }
+</style>
+</head>
+<body data-theme="night">
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- Separate Screen Header -->
+<header class="puzzle-screen-header">
+  <a href="index.html#memory" class="back-nav-pill">
+    <span>←</span> Back to Gallery
+  </a>
+  <span class="screen-title-badge">DRAG & DROP PUZZLE</span>
+  <button id="sfxToggleBtn" class="hud-btn" style="width:36px;height:36px;font-size:16px;">🔊</button>
+</header>
+
+<main class="puzzle-container-card">
+  <h1 class="puzzle-hero-heading">Piece Our Memory Together 🧩</h1>
+  <p class="puzzle-hero-sub">Drag and drop the pieces from the tray onto the matching board slots!</p>
+
+  <!-- Puzzle Stats Bar -->
+  <div class="puzzle-stats-bar">
+    <div class="pstat-item">
+      <span class="pstat-label">MOVES</span>
+      <b class="pstat-val" id="puzzleMoves">0</b>
+    </div>
+    <div class="pstat-item">
+      <span class="pstat-label">TIME</span>
+      <b class="pstat-val" id="puzzleTimer">00:00</b>
+    </div>
+    <div class="pstat-item">
+      <span class="pstat-label">PLACED</span>
+      <b class="pstat-val" id="puzzleMatched">0/9</b>
+    </div>
+  </div>
+
+  <!-- Photo Selector & Custom Upload -->
+  <div class="puzzle-picker-container">
+    <span class="picker-label">Choose Photo:</span>
+    <div class="puzzle-thumb-list" id="puzzlePhotoList"></div>
+    <label class="custom-photo-upload" title="Upload your own picture">
+      <input type="file" id="puzzleCustomFile" accept="image/*" style="display:none;">
+      <span>📷 Upload</span>
+    </label>
+  </div>
+
+  <!-- Target Drop Board (3x3 grid) -->
+  <div class="puzzle-board-wrap">
+    <div class="drop-board" id="dropBoard"></div>
+
+    <!-- Solved Celebration Overlay -->
+    <div class="puzzle-solved-card hide" id="puzzleSolvedCard">
+      <div class="solved-stars">✨ 🌟 💖 🌟 ✨</div>
+      <h3 class="solved-heading">PUZZLE COMPLETED! 🏆</h3>
+      <p class="solved-msg">You pieced together our sweetest memory!</p>
+      <div class="solved-xp">+500 LOVE XP UNLOCKED ⭐</div>
+      <a href="index.html#letter" class="cta" style="text-decoration:none;display:inline-block;">Open The Secret Letter 💌</a>
+    </div>
+  </div>
+
+  <!-- Pieces Tray (Unplaced draggable pieces) -->
+  <div class="puzzle-tray-container">
+    <div class="puzzle-tray-header">
+      <span>🧩 Puzzle Pieces (Drag to board or tap to place)</span>
+      <span class="tray-counter" id="trayCounter">9 left</span>
+    </div>
+    <div class="pieces-tray" id="piecesTray"></div>
+  </div>
+
+  <!-- Puzzle Control Toolbar -->
+  <div class="puzzle-tools-row">
+    <button class="ptool-btn" id="puzzleShuffleBtn" title="Reset and scramble pieces">
+      <span>🔀</span> Scramble
+    </button>
+    <button class="ptool-btn" id="puzzlePreviewBtn" title="Click to view completed photo">
+      <span>👁️</span> Preview
+    </button>
+    <button class="ptool-btn" id="puzzleNumbersBtn" title="Toggle number guides">
+      <span>🔢</span> Numbers: ON
+    </button>
+    <button class="ptool-btn" id="puzzleSolveBtn" title="Auto-solve puzzle">
+      <span>🪄</span> Auto-Solve
+    </button>
+  </div>
+
+  <!-- Reference Photo Modal -->
+  <div class="puzzle-preview-modal hide" id="puzzlePreviewModal">
+    <div class="preview-backdrop" id="previewBackdrop"></div>
+    <div class="preview-dialog">
+      <div class="preview-header">
+        <h4>Complete Photo Preview 📸</h4>
+        <button class="preview-close" id="previewCloseBtn">✕</button>
+      </div>
+      <div class="preview-img-container">
+        <img id="puzzlePreviewImg" alt="Complete Memory">
+      </div>
+      <p class="preview-caption" id="puzzlePreviewCap">Our happy memory</p>
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="puzzle-nav-buttons-row">
+    <a href="index.html#memory" class="ghost-back-btn">← Back to Memory Vault 📸</a>
+    <a href="index.html#letter" class="ghost-back-btn">Skip to Secret Letter 💌 →</a>
+  </div>
+</main>
+
+<script>
+/* =========================================================
+   STANDALONE DRAG & DROP PHOTO PUZZLE ENGINE
+   ========================================================= */
+const S = id => document.getElementById(id);
+const $$ = s => [...document.querySelectorAll(s)];
+
+// Simple Web Audio Synthesizer
+class SoundEngine {
+  constructor() {
+    this.ctx = null;
+    this.muted = false;
+  }
+  init() {
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) this.ctx = new AC();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+  }
+  play(fn) {
+    if (this.muted) return;
+    this.init();
+    if (this.ctx) {
+      try { fn(this.ctx); } catch (e) {}
+    }
+  }
+  pop(rate = 1) {
+    this.play(ctx => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(320 * rate, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(140 * rate, ctx.currentTime + 0.08);
+      g.gain.setValueAtTime(0.2, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.08);
+    });
+  }
+  stamp() {
+    this.play(ctx => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(240, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.07);
+      g.gain.setValueAtTime(0.2, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.07);
+    });
+  }
+  sparkle() {
+    [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+      setTimeout(() => {
+        this.play(ctx => {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, ctx.currentTime);
+          g.gain.setValueAtTime(0.12, ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.12);
+        });
+      }, i * 40);
+    });
+  }
+  fanfare() {
+    [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98].forEach((f, i) => {
+      setTimeout(() => {
+        this.play(ctx => {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, ctx.currentTime);
+          g.gain.setValueAtTime(0.25, ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.22);
+        });
+      }, i * 65);
+    });
+  }
+}
+const sfx = new SoundEngine();
+
+// Sound toggle
+const sfxBtn = S('sfxToggleBtn');
+if (sfxBtn) {
+  sfxBtn.addEventListener('click', () => {
+    sfx.muted = !sfx.muted;
+    sfxBtn.textContent = sfx.muted ? '🔇' : '🔊';
+    if (!sfx.muted) sfx.pop(1.2);
+  });
+}
+
+// Confetti System
+const cvs = S('confettiCanvas'), cctx = cvs.getContext('2d');
+let conf = [];
+function resizeCvs() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
+window.addEventListener('resize', resizeCvs); resizeCvs();
+
+function rainConfetti(count = 70) {
+  const colors = ['#ffd166', '#ff3d7f', '#ff7aa6', '#1fd1c1', '#ffffff', '#ff9ec0'];
+  for (let i = 0; i < count; i++) {
+    conf.push({
+      x: Math.random() * cvs.width,
+      y: -10 - Math.random() * 80,
+      r: 4 + Math.random() * 6,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 4,
+      vy: 2 + Math.random() * 5,
+      rot: Math.random() * 360,
+      vrot: (Math.random() - 0.5) * 8
+    });
+  }
+}
+
+function updateConfetti() {
+  cctx.clearRect(0, 0, cvs.width, cvs.height);
+  conf.forEach((p, i) => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += p.vrot;
+    cctx.save();
+    cctx.translate(p.x, p.y);
+    cctx.rotate((p.rot * Math.PI) / 180);
+    cctx.fillStyle = p.c;
+    cctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 1.5);
+    cctx.restore();
+    if (p.y > cvs.height + 20) conf.splice(i, 1);
+  });
+  requestAnimationFrame(updateConfetti);
+}
+updateConfetti();
+
+// Default Birthday Memory Artwork
+function getCelebrationArtwork() {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'>
+    <defs>
+      <linearGradient id='bgGrad' x1='0' y1='0' x2='1' y2='1'>
+        <stop offset='0%' stop-color='#3b114d'/>
+        <stop offset='50%' stop-color='#691b4f'/>
+        <stop offset='100%' stop-color='#ff4b72'/>
+      </linearGradient>
+      <radialGradient id='cakeGlow' cx='50%' cy='60%' r='50%'>
+        <stop offset='0%' stop-color='#ffe79a' stop-opacity='0.4'/>
+        <stop offset='100%' stop-color='#ffe79a' stop-opacity='0'/>
+      </radialGradient>
+      <filter id='dropShadow' x='-20%' y='-20%' width='140%' height='140%'>
+        <feDropShadow dx='0' dy='6' stdDeviation='6' flood-color='#000000' flood-opacity='0.4'/>
+      </filter>
+    </defs>
+    <rect width='600' height='600' fill='url(#bgGrad)'/>
+    <circle cx='300' cy='320' r='240' fill='url(#cakeGlow)'/>
+    <circle cx='90' cy='90' r='5' fill='#fff' opacity='0.8'/>
+    <circle cx='510' cy='110' r='6' fill='#ffd166' opacity='0.9'/>
+    <circle cx='120' cy='480' r='4' fill='#ff9ec0' opacity='0.7'/>
+    <circle cx='490' cy='460' r='5' fill='#fff' opacity='0.85'/>
+    <circle cx='70' cy='280' r='3' fill='#ffe08a' opacity='0.75'/>
+    <circle cx='530' cy='290' r='4' fill='#fff' opacity='0.8'/>
+    <g filter='url(#dropShadow)'>
+      <path d='M80 180c-25-35-15-75 15-85s65 15 50 65c-8 25-35 40-50 40-5 0-10-8-15-20z' fill='#ff3d7f'/>
+      <path d='M95 200 Q92 250 110 310' stroke='#ffc2d4' stroke-width='2' fill='none' opacity='0.6'/>
+      <path d='M500 160c25-35 15-75-15-85s-65 15-50 65c8 25 35 40 50 40 5 0 10-8 15-20z' fill='#ffd166'/>
+      <path d='M485 180 Q495 240 480 300' stroke='#ffe8a3' stroke-width='2' fill='none' opacity='0.6'/>
+    </g>
+    <path d='M20 70 Q 300 120 580 70' stroke='rgba(255,255,255,0.4)' stroke-width='2' fill='none'/>
+    <polygon points='70,80 100,83 85,120' fill='#ff3d7f'/>
+    <polygon points='150,91 180,94 165,130' fill='#ffd166'/>
+    <polygon points='230,98 260,99 245,138' fill='#1fd1c1'/>
+    <polygon points='310,99 340,98 325,138' fill='#ff7aa6'/>
+    <polygon points='390,94 420,91 405,130' fill='#b8a8ff'/>
+    <polygon points='470,83 500,80 485,120' fill='#ff9a8a'/>
+    <g filter='url(#dropShadow)' transform='translate(0, 30)'>
+      <ellipse cx='300' cy='430' rx='190' ry='22' fill='#ffffff' opacity='0.9'/>
+      <path d='M150 350 h300 v60 c0 18 -65 32 -150 32 s-150 -14 -150 -32 z' fill='#f2638f'/>
+      <ellipse cx='300' cy='350' rx='150' ry='20' fill='#ff82a8'/>
+      <path d='M150 350 c20 15 40 5 60 16 c20-10 40 10 60 0 c20 10 40-10 60 14 c20-12 40 12 60 0 v-10 H150 z' fill='#fff5ea'/>
+      <path d='M190 280 h220 v60 c0 15 -50 26 -110 26 s-110 -11 -110 -26 z' fill='#ff9dbd'/>
+      <ellipse cx='300' cy='280' rx='110' ry='16' fill='#ffb8d0'/>
+      <path d='M190 280 c15 12 30 4 45 12 c15-8 30 8 45 0 c15 8 30-8 45 10 c15-10 30 8 45 0 v-8 H190 z' fill='#fff5ea'/>
+      <path d='M230 220 h140 v50 c0 12 -30 20 -70 20 s-70 -8 -70 -20 z' fill='#f2638f'/>
+      <ellipse cx='300' cy='220' rx='70' ry='12' fill='#ff82a8'/>
+      <rect x='294' y='160' width='12' height='55' rx='4' fill='#ffe0ea'/>
+      <path d='M294 175 l12 -6 M294 195 l12 -6' stroke='#ff5c92' stroke-width='2'/>
+      <ellipse cx='300' cy='145' rx='9' ry='14' fill='#ffb02e'/>
+      <ellipse cx='300' cy='147' rx='5' ry='8' fill='#fff3a8'/>
+      <rect x='255' y='175' width='10' height='40' rx='3' fill='#e0f7fa'/>
+      <ellipse cx='260' cy='163' rx='7' ry='11' fill='#ffb02e'/>
+      <ellipse cx='260' cy='165' rx='4' ry='6' fill='#fff3a8'/>
+      <rect x='335' y='175' width='10' height='40' rx='3' fill='#ffebee'/>
+      <ellipse cx='340' cy='163' rx='7' ry='11' fill='#ffb02e'/>
+      <ellipse cx='340' cy='165' rx='4' ry='6' fill='#fff3a8'/>
+    </g>
+    <rect x='85' y='490' width='430' height='74' rx='18' fill='#1b0b2e' opacity='0.78' stroke='#ffd27a' stroke-width='2' filter='url(#dropShadow)'/>
+    <text x='300' y='525' font-family='sans-serif' font-weight='800' font-size='23' fill='#ffd27a' text-anchor='middle' letter-spacing='1'>HAPPY BIRTHDAY! ✨</text>
+    <text x='300' y='550' font-family='sans-serif' font-weight='600' font-size='15' fill='#ff9ec0' text-anchor='middle'>💖 Piece together this special memory 💖</text>
+  </svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+// Game State
+let puzzleBoardState = Array(9).fill(null);
+let trayPieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+let selectedPieceId = null;
+let puzzleMoves = 0;
+let puzzleTimerStart = null;
+let puzzleTimerInterval = null;
+let puzzleSolved = false;
+let puzzleShowNumbers = true;
+let puzzlePhotosList = [
+  { src: getCelebrationArtwork(), caption: 'Happy Birthday Celebration ✨', label: 'Celebration' }
+];
+let puzzleCurrentIdx = 0;
+
+function startTimer() {
+  if (puzzleTimerStart !== null) return;
+  puzzleTimerStart = Date.now();
+  if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+  puzzleTimerInterval = setInterval(() => {
+    if (puzzleSolved || !puzzleTimerStart) return;
+    const sec = Math.floor((Date.now() - puzzleTimerStart) / 1000);
+    const m = String(Math.floor(sec / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    const timerEl = S('puzzleTimer');
+    if (timerEl) timerEl.textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function createPieceElement(pieceId, inSlot = false) {
+  const curPhoto = puzzlePhotosList[puzzleCurrentIdx].src;
+  const el = document.createElement('div');
+  el.className = 'drag-piece' + (selectedPieceId === pieceId ? ' selected-piece' : '');
+  el.dataset.pieceId = pieceId;
+  el.setAttribute('tabindex', '0');
+
+  const origRow = Math.floor(pieceId / 3);
+  const origCol = pieceId % 3;
+  const posX = origCol * 50;
+  const posY = origRow * 50;
+
+  el.style.backgroundImage = `url("${curPhoto}")`;
+  el.style.backgroundSize = `300% 300%`;
+  el.style.backgroundPosition = `${posX}% ${posY}%`;
+
+  if (puzzleShowNumbers && !puzzleSolved) {
+    const num = document.createElement('span');
+    num.className = 'piece-num';
+    num.textContent = pieceId + 1;
+    el.appendChild(num);
+  }
+
+  attachDragEvents(el, pieceId);
+  return el;
+}
+
+function renderDropBoard() {
+  const board = S('dropBoard');
+  if (!board) return;
+  board.innerHTML = '';
+  
+  let placedCount = 0;
+  for (let i = 0; i < 9; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'drop-slot';
+    slot.dataset.slotId = i;
+
+    const ghost = document.createElement('span');
+    ghost.className = 'slot-ghost-num';
+    ghost.textContent = i + 1;
+    slot.appendChild(ghost);
+
+    const pieceId = puzzleBoardState[i];
+    if (pieceId !== null) {
+      placedCount++;
+      const isMatched = pieceId === i;
+      const pieceEl = createPieceElement(pieceId, true);
+      if (isMatched) pieceEl.classList.add('is-matched');
+      slot.appendChild(pieceEl);
+
+      pieceEl.addEventListener('click', e => {
+        if (puzzleSolved) return;
+        e.stopPropagation();
+        puzzleBoardState[i] = null;
+        trayPieces.push(pieceId);
+        puzzleMoves++;
+        sfx.pop(1.1);
+        renderViews();
+      });
+    }
+
+    slot.addEventListener('click', () => {
+      if (puzzleSolved || selectedPieceId === null) return;
+      startTimer();
+      const existing = puzzleBoardState[i];
+      if (existing !== null) trayPieces.push(existing);
+      
+      const trayIdx = trayPieces.indexOf(selectedPieceId);
+      if (trayIdx > -1) trayPieces.splice(trayIdx, 1);
+
+      puzzleBoardState[i] = selectedPieceId;
+      if (selectedPieceId === i) sfx.sparkle();
+      else sfx.stamp();
+
+      selectedPieceId = null;
+      puzzleMoves++;
+      renderViews();
+      checkWin();
+    });
+
+    board.appendChild(slot);
+  }
+
+  const matchedEl = S('puzzleMatched');
+  if (matchedEl) matchedEl.textContent = `${placedCount}/9`;
+
+  const movesEl = S('puzzleMoves');
+  if (movesEl) movesEl.textContent = puzzleMoves;
+}
+
+function renderPiecesTray() {
+  const tray = S('piecesTray');
+  if (!tray) return;
+  tray.innerHTML = '';
+
+  trayPieces.forEach(pieceId => {
+    const pieceEl = createPieceElement(pieceId, false);
+    pieceEl.addEventListener('click', e => {
+      if (puzzleSolved) return;
+      e.stopPropagation();
+      selectedPieceId = (selectedPieceId === pieceId) ? null : pieceId;
+      sfx.pop(1.2);
+      renderViews();
+    });
+    tray.appendChild(pieceEl);
+  });
+
+  const trayCounter = S('trayCounter');
+  if (trayCounter) {
+    trayCounter.textContent = `${trayPieces.length} left`;
+    trayCounter.style.background = trayPieces.length === 0 ? 'rgba(31,209,193,0.4)' : '';
+  }
+}
+
+function renderViews() {
+  renderDropBoard();
+  renderPiecesTray();
+}
+
+// Drag & Drop Controller
+let activeDrag = null;
+
+function attachDragEvents(el, pieceId) {
+  el.addEventListener('pointerdown', e => {
+    if (puzzleSolved) return;
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    startTimer();
+
+    const parentSlot = el.closest('.drop-slot');
+    const origin = parentSlot ? parseInt(parentSlot.dataset.slotId, 10) : 'tray';
+
+    const rect = el.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+
+    const ghost = el.cloneNode(true);
+    ghost.className = 'floating-drag-ghost drag-piece';
+    ghost.style.width = `${rect.width}px`;
+    ghost.style.height = `${rect.height}px`;
+    ghost.style.left = `${rect.left}px`;
+    ghost.style.top = `${rect.top}px`;
+    document.body.appendChild(ghost);
+
+    el.classList.add('is-dragging');
+    sfx.pop(1.2);
+
+    activeDrag = { el, ghost, pieceId, origin, offsetX, offsetY };
+
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+  });
+}
+
+function onPointerMove(e) {
+  if (!activeDrag) return;
+  e.preventDefault();
+  const { ghost, offsetX, offsetY } = activeDrag;
+  ghost.style.left = `${e.clientX - offsetX}px`;
+  ghost.style.top = `${e.clientY - offsetY}px`;
+
+  $$('.drop-slot, .pieces-tray').forEach(drop => drop.classList.remove('drag-over'));
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  const target = under ? under.closest('.drop-slot, .pieces-tray') : null;
+  if (target) target.classList.add('drag-over');
+}
+
+function onPointerUp(e) {
+  if (!activeDrag) return;
+  window.removeEventListener('pointermove', onPointerMove);
+  window.removeEventListener('pointerup', onPointerUp);
+  window.removeEventListener('pointercancel', onPointerUp);
+
+  const { el, ghost, pieceId, origin } = activeDrag;
+  ghost.remove();
+  el.classList.remove('is-dragging');
+  $$('.drop-slot, .pieces-tray').forEach(drop => drop.classList.remove('drag-over'));
+
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  const targetSlot = under ? under.closest('.drop-slot') : null;
+  const targetTray = under ? under.closest('.pieces-tray, .puzzle-tray-container') : null;
+
+  if (targetSlot) {
+    const targetId = parseInt(targetSlot.dataset.slotId, 10);
+    const existing = puzzleBoardState[targetId];
+
+    if (origin === 'tray') {
+      const idx = trayPieces.indexOf(pieceId);
+      if (idx > -1) trayPieces.splice(idx, 1);
+      if (existing !== null) trayPieces.push(existing);
+      puzzleBoardState[targetId] = pieceId;
+    } else if (typeof origin === 'number') {
+      puzzleBoardState[origin] = existing;
+      puzzleBoardState[targetId] = pieceId;
+    }
+
+    puzzleMoves++;
+    if (pieceId === targetId) sfx.sparkle();
+    else sfx.stamp();
+
+    renderViews();
+    checkWin();
+  } else if (targetTray && typeof origin === 'number') {
+    puzzleBoardState[origin] = null;
+    trayPieces.push(pieceId);
+    puzzleMoves++;
+    sfx.pop(1.1);
+    renderViews();
+  }
+
+  activeDrag = null;
+}
+
+function checkWin() {
+  if (trayPieces.length === 0 && puzzleBoardState.every((val, i) => val === i)) {
+    triggerWin();
+  }
+}
+
+function triggerWin() {
+  puzzleSolved = true;
+  if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+  puzzleTimerInterval = null;
+
+  sfx.fanfare();
+  rainConfetti(90);
+
+  const board = S('dropBoard');
+  if (board) board.classList.add('puzzle-solved-glow');
+
+  const solvedCard = S('puzzleSolvedCard');
+  if (solvedCard) solvedCard.classList.remove('hide');
+
+  renderViews();
+}
+
+function initGame(photoIdx = 0) {
+  puzzleCurrentIdx = photoIdx;
+  puzzleSolved = false;
+  selectedPieceId = null;
+  puzzleMoves = 0;
+  puzzleTimerStart = null;
+  if (puzzleTimerInterval) clearInterval(puzzleTimerInterval);
+  puzzleTimerInterval = null;
+
+  const timerEl = S('puzzleTimer');
+  if (timerEl) timerEl.textContent = '00:00';
+
+  const board = S('dropBoard');
+  if (board) board.classList.remove('puzzle-solved-glow');
+
+  const solvedCard = S('puzzleSolvedCard');
+  if (solvedCard) solvedCard.classList.add('hide');
+
+  puzzleBoardState = Array(9).fill(null);
+  trayPieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+  for (let i = trayPieces.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [trayPieces[i], trayPieces[j]] = [trayPieces[j], trayPieces[i]];
+  }
+
+  renderThumbnails();
+  renderViews();
+}
+
+function renderThumbnails() {
+  const container = S('puzzlePhotoList');
+  if (!container) return;
+  container.innerHTML = '';
+  puzzlePhotosList.forEach((item, idx) => {
+    const thumb = document.createElement('button');
+    thumb.className = 'puzzle-thumb' + (idx === puzzleCurrentIdx ? ' active' : '');
+    thumb.title = item.caption || item.label;
+    thumb.innerHTML = `<img src="${item.src}" alt="${item.label}">`;
+    thumb.onclick = () => {
+      sfx.pop(1.4);
+      initGame(idx);
+    };
+    container.appendChild(thumb);
+  });
+}
+
+// Controls
+S('puzzleShuffleBtn').onclick = () => { sfx.pop(1.3); initGame(puzzleCurrentIdx); };
+S('puzzleNumbersBtn').onclick = () => {
+  puzzleShowNumbers = !puzzleShowNumbers;
+  S('puzzleNumbersBtn').innerHTML = `<span>🔢</span> Numbers: ${puzzleShowNumbers ? 'ON' : 'OFF'}`;
+  sfx.pop(1.4);
+  renderViews();
+};
+S('puzzleSolveBtn').onclick = () => {
+  puzzleBoardState = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  trayPieces = [];
+  renderViews();
+  triggerWin();
+};
+
+const previewModal = S('puzzlePreviewModal');
+S('puzzlePreviewBtn').onclick = () => {
+  sfx.sparkle();
+  S('puzzlePreviewImg').src = puzzlePhotosList[puzzleCurrentIdx].src;
+  S('puzzlePreviewCap').textContent = puzzlePhotosList[puzzleCurrentIdx].caption;
+  previewModal.classList.remove('hide');
+};
+const hidePreview = () => previewModal.classList.add('hide');
+S('previewCloseBtn').onclick = hidePreview;
+S('previewBackdrop').onclick = hidePreview;
+
+// Custom Upload
+S('puzzleCustomFile').onchange = e => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    puzzlePhotosList.push({
+      src: ev.target.result,
+      caption: 'Your Custom Photo 📸',
+      label: 'Custom'
+    });
+    initGame(puzzlePhotosList.length - 1);
+    sfx.sparkle();
+  };
+  reader.readAsDataURL(file);
+};
+
+// Start
+initGame(0);
+</script>
+</body>
+</html>

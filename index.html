@@ -292,7 +292,7 @@
     <div class="inner wide">
       <div class="stage-tag">STAGE 7 · PHOTO PUZZLE</div>
       <h2 class="t-head">Piece Our Memory Together 🧩</h2>
-      <p class="sub2">Tap any two pieces to swap them until our photo is complete!</p>
+      <p class="sub2">Drag & drop pieces from the tray onto the matching board slots!</p>
 
       <!-- Puzzle Stats Bar -->
       <div class="puzzle-stats-bar">
@@ -305,7 +305,7 @@
           <b class="pstat-val" id="puzzleTimer">00:00</b>
         </div>
         <div class="pstat-item">
-          <span class="pstat-label">MATCHED</span>
+          <span class="pstat-label">PLACED</span>
           <b class="pstat-val" id="puzzleMatched">0/9</b>
         </div>
       </div>
@@ -320,9 +320,9 @@
         </label>
       </div>
 
-      <!-- Puzzle Board Wrapper -->
+      <!-- Target Drop Board (3x3 grid) -->
       <div class="puzzle-board-wrap">
-        <div class="puzzle-board" id="puzzleBoard"></div>
+        <div class="drop-board" id="dropBoard"></div>
         
         <!-- Solved Celebration Overlay -->
         <div class="puzzle-solved-card hide" id="puzzleSolvedCard">
@@ -334,20 +334,32 @@
         </div>
       </div>
 
+      <!-- Pieces Tray (Unplaced draggable pieces) -->
+      <div class="puzzle-tray-container">
+        <div class="puzzle-tray-header">
+          <span>🧩 Puzzle Pieces (Drag to board or tap to place)</span>
+          <span class="tray-counter" id="trayCounter">9 left</span>
+        </div>
+        <div class="pieces-tray" id="piecesTray"></div>
+      </div>
+
       <!-- Puzzle Control Toolbar -->
       <div class="puzzle-tools-row">
-        <button class="ptool-btn" id="puzzleShuffleBtn" title="Scramble puzzle pieces">
-          <span>🔀</span> Reshuffle
+        <button class="ptool-btn" id="puzzleShuffleBtn" title="Reset and scramble pieces">
+          <span>🔀</span> Scramble
         </button>
         <button class="ptool-btn" id="puzzlePreviewBtn" title="Click to view completed photo">
           <span>👁️</span> Preview
         </button>
-        <button class="ptool-btn" id="puzzleNumbersBtn" title="Toggle number guide on tiles">
+        <button class="ptool-btn" id="puzzleNumbersBtn" title="Toggle number guides">
           <span>🔢</span> Numbers: ON
         </button>
         <button class="ptool-btn" id="puzzleSolveBtn" title="Auto-solve puzzle">
           <span>🪄</span> Auto-Solve
         </button>
+        <a href="puzzle.html" target="_blank" class="ptool-btn" title="Open in dedicated separate screen">
+          <span>⛶</span> Full Screen
+        </a>
       </div>
 
       <!-- Reference Photo Modal -->

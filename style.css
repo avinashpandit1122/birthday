@@ -1732,12 +1732,12 @@ body[data-theme="night"] .stage-tag {
   transform: scale(1.05);
 }
 
-/* Puzzle Board & Tiles */
+/* Drag and Drop Puzzle Board & Tray */
 .puzzle-board-wrap {
   position: relative;
   width: min(88vw, 340px);
   aspect-ratio: 1;
-  margin: 0 auto 12px;
+  margin: 0 auto 10px;
   border-radius: 18px;
   padding: 8px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
@@ -1748,11 +1748,11 @@ body[data-theme="night"] .stage-tag {
   justify-content: center;
 }
 
-.puzzle-board {
+.drop-board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 4px;
+  gap: 5px;
   width: 100%;
   height: 100%;
   border-radius: 12px;
@@ -1760,52 +1760,143 @@ body[data-theme="night"] .stage-tag {
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.puzzle-board.puzzle-solved-glow {
+.drop-board.puzzle-solved-glow {
   gap: 0px;
   box-shadow: 0 0 28px rgba(255, 210, 122, 0.8), 0 0 45px rgba(255, 61, 127, 0.5);
   border: 2px solid #ffd166;
   border-radius: 12px;
 }
 
-.ptile {
+.drop-slot {
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 8px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1.5px dashed rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   overflow: hidden;
-  cursor: pointer;
+}
+
+.drop-slot.drag-over {
+  border-color: #ff3d7f;
+  background: rgba(255, 61, 127, 0.28);
+  box-shadow: 0 0 16px #ff3d7f inset, 0 0 12px #ff3d7f;
+  transform: scale(1.04);
+}
+
+.slot-ghost-num {
+  font-family: var(--arcade);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Pieces Tray */
+.puzzle-tray-container {
+  width: min(92vw, 420px);
+  margin: 0 auto 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  padding: 10px 12px;
+  backdrop-filter: blur(8px);
+}
+
+.puzzle-tray-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ffd27a;
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+
+.tray-counter {
+  background: rgba(255, 61, 127, 0.35);
+  color: #fff;
+  border-radius: 99px;
+  padding: 2px 8px;
+  font-size: 10.5px;
+  font-family: var(--arcade);
+}
+
+.pieces-tray {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 8px;
+  min-height: 84px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1.5px dashed rgba(255, 255, 255, 0.14);
+  transition: all 0.2s ease;
+}
+
+.pieces-tray.drag-over {
+  border-color: #ffd166;
+  background: rgba(255, 209, 102, 0.15);
+}
+
+/* Drag Piece */
+.drag-piece {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
   background-repeat: no-repeat;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25), 0 2px 6px rgba(0, 0, 0, 0.35);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
-  touch-action: manipulation;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s;
+  flex-shrink: 0;
 }
 
-.ptile:hover {
-  transform: scale(0.97);
+.drop-slot .drag-piece {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  box-shadow: none;
 }
 
-.ptile.selected {
+.drag-piece:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5), inset 0 0 0 1.5px #ffd27a;
+}
+
+.drag-piece:active, .drag-piece.is-dragging {
+  cursor: grabbing;
+  opacity: 0.4;
+}
+
+.drag-piece.selected-piece {
   outline: 3px solid #ff3d7f;
-  outline-offset: -2px;
-  transform: scale(1.04) !important;
-  z-index: 5;
-  box-shadow: 0 0 16px #ff3d7f, 0 4px 12px rgba(0, 0, 0, 0.5);
+  outline-offset: 2px;
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 16px #ff3d7f;
   animation: pulseTile 1s infinite alternate ease-in-out;
 }
 
-@keyframes pulseTile {
-  0% { transform: scale(1.03); }
-  100% { transform: scale(1.08); }
-}
-
-.ptile.matched::after {
+.drop-slot .drag-piece.is-matched::after {
   content: "✓";
   position: absolute;
   right: 4px;
   bottom: 4px;
   width: 16px;
   height: 16px;
-  background: rgba(31, 209, 193, 0.85);
+  background: rgba(31, 209, 193, 0.88);
   color: #fff;
   font-size: 10px;
   font-weight: 800;
@@ -1817,7 +1908,7 @@ body[data-theme="night"] .stage-tag {
   pointer-events: none;
 }
 
-.ptile-num {
+.piece-num {
   position: absolute;
   top: 4px;
   left: 4px;
@@ -1825,9 +1916,9 @@ body[data-theme="night"] .stage-tag {
   backdrop-filter: blur(4px);
   color: #fff;
   font-family: var(--arcade);
-  font-size: 10px;
-  width: 18px;
-  height: 18px;
+  font-size: 9px;
+  width: 17px;
+  height: 17px;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -1836,14 +1927,28 @@ body[data-theme="night"] .stage-tag {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-.puzzle-solved-glow .ptile {
+.drop-board.puzzle-solved-glow .drag-piece {
   border-radius: 0;
-  box-shadow: none;
+  cursor: default;
 }
 
-.puzzle-solved-glow .ptile-num,
-.puzzle-solved-glow .ptile::after {
+.drop-board.puzzle-solved-glow .piece-num,
+.drop-board.puzzle-solved-glow .is-matched::after {
   display: none !important;
+}
+
+/* Floating clone while dragging */
+.floating-drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  border-radius: 10px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px #ff3d7f;
+  border: 2px solid #ffd27a;
+  transform: scale(1.1) rotate(4deg);
+  opacity: 0.95;
+  transition: transform 0.05s ease;
+  will-change: left, top, transform;
 }
 
 /* Solved Card */
