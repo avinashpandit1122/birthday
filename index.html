@@ -184,48 +184,388 @@
   <!-- 4 · Cake Bakery & Candle Blow Game -->
   <section class="scene night" id="s-cake" data-tap>
     <div class="inner">
-      <div class="stage-tag">STAGE 4 · BIRTHDAY BAKERY</div>
-      <h2 class="t-head">Bake &amp; Blow the Candle 🎂</h2>
-      
-      <!-- Interactive Topping Station -->
-      <div class="topping-bar" id="toppingBar" aria-label="Cake Toppings">
-        <span class="topping-title">Add Topping:</span>
-        <button class="top-btn" data-topping="🍓" title="Add Strawberry">🍓 Strawberry</button>
-        <button class="top-btn" data-topping="🍒" title="Add Cherry">🍒 Cherry</button>
-        <button class="top-btn" data-topping="✨" title="Add Magic Sprinkles">✨ Sprinkles</button>
-        <button class="top-btn" data-topping="🍫" title="Add Chocolate">🍫 Heart</button>
+      <div class="stage-tag">STAGE 4 · BIRTHDAY CELEBRATION &amp; GIFT</div>
+      <h2 class="t-head">Make a Wish &amp;<br>Unwrap Your Gift ✨</h2>
+      <p class="sub2">Decorate your celebration cake, blow out the candles, and unwrap a special birthday surprise!</p>
+
+      <!-- Celebration Mode Switcher -->
+      <div class="celebration-switcher" id="celebrationSwitcher" role="tablist">
+        <button class="c-switch-btn active" id="tabCakeBtn" type="button" role="tab" aria-selected="true">
+          <span class="btn-emoji">🎂</span> Celebration Cake
+        </button>
+        <button class="c-switch-btn" id="tabGiftBtn" type="button" role="tab" aria-selected="false">
+          <span class="btn-emoji">🎁</span> Birthday Gift <span class="c-glow-badge">FOR YOU</span>
+        </button>
       </div>
 
-      <!-- Interactive SVG Cake -->
-      <div class="cake-wrapper" id="cakeWrapper">
-        <svg class="cake" id="cake" viewBox="0 0 260 210" aria-hidden="true">
-          <line class="plate" x1="20" y1="186" x2="240" y2="186" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-          <g class="cl" style="--d:.7s"><rect x="40" y="160" width="180" height="26" rx="9" fill="#f2638f"/></g>
-          <g class="cl" style="--d:1.2s"><rect x="40" y="134" width="180" height="26" rx="9" fill="#ff7fa8"/></g>
-          <g class="cl" style="--d:1.7s"><rect x="40" y="108" width="180" height="26" rx="9" fill="#ff9dbd"/></g>
-          <g class="frost" style="--d:2.3s">
-            <path d="M36 112c0-12 10-18 22-18h144c12 0 22 6 22 18 0 7-6 10-11 10-6 0-8 4-8 9 0 8-9 8-10 0 0-5-3-8-8-8s-8 3-8 8c0 9-10 9-11 0-1-5-3-8-8-8-6 0-9 3-9 9 0 9-10 9-11 0 0-6-4-9-9-9-6 0-9 4-9 9 0 8-10 8-10 0 0-5-2-9-8-9s-9 3-9 9c0 8-10 8-10 0 0-6-3-9-8-9-6 0-9 3-9 9 0 7-9 7-10 0 0-7-3-9-10-9-5 0-8-2-8-8z" fill="#fff"/>
-          </g>
-          <g class="candle" id="cakeCandle" style="--d:2.9s">
-            <rect x="125" y="56" width="10" height="40" rx="3" fill="#ffe0ea"/>
-            <path d="M125 66l10-5M125 78l10-5M125 90l10-5" stroke="#ff7fa8" stroke-width="2.4"/>
-            <g id="candleFlame" class="candle-flame">
-              <path class="flame" d="M130 30c7 9 8 16 0 22-8-6-7-13 0-22z" fill="#ffb02e"/>
-              <path class="flame in" d="M130 38c3 5 4 8 0 11-4-3-3-6 0-11z" fill="#fff3a8"/>
+      <!-- VIEW 1: Luxury Artisanal Birthday Cake -->
+      <div class="celebration-panel" id="cakePanel">
+        <!-- Interactive Topping Station -->
+        <div class="topping-bar" id="toppingBar" aria-label="Cake Toppings">
+          <span class="topping-title">Toppings:</span>
+          <button class="top-btn" data-topping="🍓" title="Fresh Glazed Strawberry">🍓 Strawberry</button>
+          <button class="top-btn" data-topping="🍒" title="Ruby Cherry">🍒 Cherry</button>
+          <button class="top-btn" data-topping="✨" title="24K Gold Dust">✨ Gold Dust</button>
+          <button class="top-btn" data-topping="🍫" title="Belgian Chocolate">🍫 Choco</button>
+          <button class="top-btn" data-topping="🌹" title="Romantic Rose Petal">🌹 Rose</button>
+        </div>
+
+        <!-- Interactive Artisanal 3D Cake -->
+        <div class="cake-wrapper" id="cakeWrapper">
+          <div class="cake-ambient-glow" aria-hidden="true"></div>
+          <svg class="cake" id="cake" viewBox="0 0 320 270" aria-label="Artisanal Birthday Cake">
+            <defs>
+              <!-- Ambient Drop Shadow -->
+              <filter id="cakeDropShadow" x="-20%" y="-20%" width="140%" height="150%">
+                <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#000000" flood-opacity="0.45"/>
+              </filter>
+              <!-- Warm Flame Halo -->
+              <filter id="flameGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+              <!-- Pedestal Gradients -->
+              <radialGradient id="plateTopGrad" cx="50%" cy="40%" r="50%">
+                <stop offset="0%" stop-color="#fffbfc"/>
+                <stop offset="75%" stop-color="#f5e1ea"/>
+                <stop offset="100%" stop-color="#e2bfcf"/>
+              </radialGradient>
+              <linearGradient id="goldRimGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#d4af37"/>
+                <stop offset="25%" stop-color="#fff2a8"/>
+                <stop offset="50%" stop-color="#d4af37"/>
+                <stop offset="75%" stop-color="#ffe885"/>
+                <stop offset="100%" stop-color="#aa820a"/>
+              </linearGradient>
+              <linearGradient id="pedestalStandGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ecd2de"/>
+                <stop offset="50%" stop-color="#fdf5f8"/>
+                <stop offset="100%" stop-color="#c99bb3"/>
+              </linearGradient>
+              <!-- Cake Tier Gradients -->
+              <linearGradient id="tierBaseGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ff7399"/>
+                <stop offset="40%" stop-color="#e91e63"/>
+                <stop offset="100%" stop-color="#9c0d3c"/>
+              </linearGradient>
+              <linearGradient id="tierMidGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffa3be"/>
+                <stop offset="50%" stop-color="#ff5c8a"/>
+                <stop offset="100%" stop-color="#c41c52"/>
+              </linearGradient>
+              <linearGradient id="tierTopGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffe8f0"/>
+                <stop offset="60%" stop-color="#ff85a8"/>
+                <stop offset="100%" stop-color="#d6255d"/>
+              </linearGradient>
+              <linearGradient id="whiteGanacheDrip" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="70%" stop-color="#fff2f6"/>
+                <stop offset="100%" stop-color="#ffd5e3"/>
+              </linearGradient>
+              <linearGradient id="candleSpiral" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#ffe6a8"/>
+                <stop offset="50%" stop-color="#ffb834"/>
+                <stop offset="100%" stop-color="#d48806"/>
+              </linearGradient>
+              <radialGradient id="flameCoreGrad" cx="50%" cy="60%" r="50%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="35%" stop-color="#fff8b8"/>
+                <stop offset="70%" stop-color="#ffa217"/>
+                <stop offset="100%" stop-color="#ff4514"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Ground Ambient Shadow -->
+            <ellipse cx="160" cy="248" rx="130" ry="16" fill="rgba(10,3,18,0.5)" filter="url(#cakeDropShadow)"/>
+
+            <!-- Pedestal Stand & Porcelain Plate -->
+            <g class="pedestal-group">
+              <!-- Stem Base -->
+              <path d="M125 240 Q160 236 195 240 L190 252 Q160 256 130 252 Z" fill="url(#pedestalStandGrad)"/>
+              <ellipse cx="160" cy="252" rx="34" ry="5" fill="#a4728d"/>
+              <!-- Stand Stem -->
+              <path d="M142 215 L146 242 Q160 245 174 242 L178 215 Z" fill="url(#pedestalStandGrad)"/>
+              <!-- Scalloped Plate Underside -->
+              <ellipse cx="160" cy="216" rx="132" ry="17" fill="#b988a2"/>
+              <!-- Golden Rim Base -->
+              <ellipse cx="160" cy="214" rx="134" ry="17" fill="url(#goldRimGrad)"/>
+              <!-- Plate Surface -->
+              <ellipse cx="160" cy="212" rx="128" ry="15" fill="url(#plateTopGrad)"/>
+              <ellipse cx="160" cy="212" rx="120" ry="13" fill="none" stroke="url(#goldRimGrad)" stroke-width="1.2" opacity="0.8"/>
             </g>
-          </g>
-          <!-- Dynamic Topping Container -->
-          <g id="cakeToppingsGroup"></g>
-        </svg>
+
+            <!-- TIER 1: Base Tier (Velvet Berry) -->
+            <g class="cake-tier tier-1" style="--d:.1s">
+              <!-- Shadow under Tier 1 -->
+              <ellipse cx="160" cy="208" rx="108" ry="13" fill="rgba(30,5,15,0.4)"/>
+              <!-- Tier 1 Body -->
+              <path d="M52 165 C52 165 52 202 52 202 C52 214 100 218 160 218 C220 218 268 214 268 202 L268 165 Z" fill="url(#tierBaseGrad)"/>
+              <!-- Tier 1 Top Surface -->
+              <ellipse cx="160" cy="165" rx="108" ry="14" fill="#ff7da2"/>
+              <!-- Golden Filigree Trim at Base -->
+              <path d="M54 196 Q160 216 266 196" fill="none" stroke="url(#goldRimGrad)" stroke-width="2.2" opacity="0.85"/>
+              <!-- Cream Pearl Piping Beads along Rim -->
+              <g class="piped-pearls">
+                <circle cx="62" cy="199" r="3.5" fill="#fff5ea"/>
+                <circle cx="82" cy="204" r="3.5" fill="#fff5ea"/>
+                <circle cx="104" cy="208" r="3.5" fill="#fff5ea"/>
+                <circle cx="128" cy="211" r="3.5" fill="#fff5ea"/>
+                <circle cx="160" cy="212" r="3.8" fill="#fff9f0"/>
+                <circle cx="192" cy="211" r="3.5" fill="#fff5ea"/>
+                <circle cx="216" cy="208" r="3.5" fill="#fff5ea"/>
+                <circle cx="238" cy="204" r="3.5" fill="#fff5ea"/>
+                <circle cx="258" cy="199" r="3.5" fill="#fff5ea"/>
+              </g>
+            </g>
+
+            <!-- TIER 2: Middle Tier (Strawberry Chiffon) -->
+            <g class="cake-tier tier-2" style="--d:.25s">
+              <!-- Shadow under Tier 2 -->
+              <ellipse cx="160" cy="164" rx="82" ry="11" fill="rgba(40,8,20,0.3)"/>
+              <!-- Tier 2 Body -->
+              <path d="M78 122 C78 122 78 158 78 158 C78 168 114 172 160 172 C206 172 242 168 242 158 L242 122 Z" fill="url(#tierMidGrad)"/>
+              <!-- Tier 2 Top Surface -->
+              <ellipse cx="160" cy="122" rx="82" ry="12" fill="#ffadc4"/>
+              <!-- Satin Gold Ribbon Banner -->
+              <path d="M78 145 Q160 162 242 145 L242 153 Q160 170 78 153 Z" fill="url(#goldRimGrad)" opacity="0.9"/>
+              <!-- Rosette Cream Border -->
+              <g class="tier2-cream">
+                <circle cx="86" cy="155" r="3" fill="#ffffff"/>
+                <circle cx="110" cy="160" r="3" fill="#ffffff"/>
+                <circle cx="136" cy="164" r="3.2" fill="#ffffff"/>
+                <circle cx="160" cy="165" r="3.5" fill="#ffffff"/>
+                <circle cx="184" cy="164" r="3.2" fill="#ffffff"/>
+                <circle cx="210" cy="160" r="3" fill="#ffffff"/>
+                <circle cx="234" cy="155" r="3" fill="#ffffff"/>
+              </g>
+            </g>
+
+            <!-- TIER 3: Crown Tier with Ganache Drips -->
+            <g class="cake-tier tier-3" style="--d:.4s">
+              <!-- Shadow under Tier 3 -->
+              <ellipse cx="160" cy="122" rx="58" ry="8" fill="rgba(50,10,25,0.35)"/>
+              <!-- Tier 3 Body -->
+              <path d="M104 84 C104 84 104 116 104 116 C104 124 128 128 160 128 C192 128 216 124 216 116 L216 84 Z" fill="url(#tierTopGrad)"/>
+              <!-- Tier 3 Top Surface -->
+              <ellipse cx="160" cy="84" rx="56" ry="10" fill="#fff3f7"/>
+              <!-- Organic Vanilla Ganache Dripping Frosting -->
+              <path class="frost-drip" d="M102 84 C102 84 102 96 103 100 C104 106 109 106 111 98 C112 94 114 92 116 96 C118 103 120 112 124 112 C128 112 129 100 132 94 C134 90 137 92 138 98 C140 106 142 116 148 116 C153 116 155 104 157 95 C159 90 162 92 164 97 C166 106 168 118 174 118 C179 118 181 106 183 96 C185 91 188 93 190 99 C192 108 195 114 199 114 C203 114 205 102 207 96 C209 90 213 90 215 95 C217 99 218 84 218 84 C218 78 190 75 160 75 C130 75 102 78 102 84 Z" fill="url(#whiteGanacheDrip)" filter="url(#cakeDropShadow)"/>
+              <!-- Top Cream Swirls & Berries -->
+              <g class="top-dollops">
+                <circle cx="120" cy="82" r="5" fill="#ffffff" filter="url(#cakeDropShadow)"/>
+                <circle cx="138" cy="79" r="5.5" fill="#ffffff" filter="url(#cakeDropShadow)"/>
+                <circle cx="160" cy="78" r="6" fill="#ffffff" filter="url(#cakeDropShadow)"/>
+                <circle cx="182" cy="79" r="5.5" fill="#ffffff" filter="url(#cakeDropShadow)"/>
+                <circle cx="200" cy="82" r="5" fill="#ffffff" filter="url(#cakeDropShadow)"/>
+                <!-- Garnished Mini Ruby Berries -->
+                <circle cx="120" cy="80" r="2.8" fill="#e91e63"/>
+                <circle cx="160" cy="76" r="3.2" fill="#e91e63"/>
+                <circle cx="200" cy="80" r="2.8" fill="#e91e63"/>
+              </g>
+            </g>
+
+            <!-- TRIO OF CELEBRATION CANDLES -->
+            <!-- Left Candle (Tilted) -->
+            <g class="candle left-candle" id="cakeCandleLeft" style="--d:.55s">
+              <rect x="131" y="44" width="7" height="34" rx="2" fill="url(#candleSpiral)" transform="rotate(-6 134 60)"/>
+              <path d="M130 52 L137 49 M131 60 L138 57 M132 68 L139 65" stroke="#ff3d7f" stroke-width="1.8" transform="rotate(-6 134 60)"/>
+              <line x1="134" y1="44" x2="134" y2="39" stroke="#4a1525" stroke-width="1.5" transform="rotate(-6 134 60)"/>
+              <!-- Left Flame -->
+              <g class="candle-flame flame-side" id="flameLeft">
+                <circle cx="132" cy="30" r="14" fill="#ffa217" opacity="0.35" filter="url(#flameGlow)"/>
+                <path class="flame" d="M132 18 C138 25 139 31 132 36 C125 31 126 25 132 18 Z" fill="url(#flameCoreGrad)"/>
+                <path class="flame in" d="M132 25 C135 29 135 32 132 34 C129 32 129 29 132 25 Z" fill="#ffffff"/>
+              </g>
+            </g>
+
+            <!-- Center Grand Candle -->
+            <g class="candle center-candle" id="cakeCandle" style="--d:.6s">
+              <rect x="156" y="32" width="8" height="46" rx="2.5" fill="url(#candleSpiral)"/>
+              <path d="M156 42 L164 38 M156 52 L164 48 M156 62 L164 58 M156 72 L164 68" stroke="#ff3d7f" stroke-width="2"/>
+              <line x1="160" y1="32" x2="160" y2="26" stroke="#4a1525" stroke-width="1.6"/>
+              <!-- Center Flame (Main Flame Target) -->
+              <g class="candle-flame" id="candleFlame">
+                <circle cx="160" cy="16" r="18" fill="#ffa217" opacity="0.45" filter="url(#flameGlow)"/>
+                <path class="flame" d="M160 2 C168 11 169 19 160 26 C151 19 152 11 160 2 Z" fill="url(#flameCoreGrad)"/>
+                <path class="flame in" d="M160 11 C164 16 164 21 160 24 C156 21 156 16 160 11 Z" fill="#ffffff"/>
+              </g>
+            </g>
+
+            <!-- Right Candle (Tilted) -->
+            <g class="candle right-candle" id="cakeCandleRight" style="--d:.55s">
+              <rect x="182" y="44" width="7" height="34" rx="2" fill="url(#candleSpiral)" transform="rotate(6 186 60)"/>
+              <path d="M182 52 L189 49 M183 60 L190 57 M184 68 L191 65" stroke="#ff3d7f" stroke-width="1.8" transform="rotate(6 186 60)"/>
+              <line x1="186" y1="44" x2="186" y2="39" stroke="#4a1525" stroke-width="1.5" transform="rotate(6 186 60)"/>
+              <!-- Right Flame -->
+              <g class="candle-flame flame-side" id="flameRight">
+                <circle cx="188" cy="30" r="14" fill="#ffa217" opacity="0.35" filter="url(#flameGlow)"/>
+                <path class="flame" d="M188 18 C194 25 195 31 188 36 C181 31 182 25 188 18 Z" fill="url(#flameCoreGrad)"/>
+                <path class="flame in" d="M188 25 C191 29 191 32 188 34 C185 32 185 29 188 25 Z" fill="#ffffff"/>
+              </g>
+            </g>
+
+            <!-- Post-Blow Smoke Wisps -->
+            <g class="smoke-group hide" id="candleSmoke">
+              <path class="smoke-wisp w1" d="M160 26 Q156 14 162 4 T158 -10" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round"/>
+              <path class="smoke-wisp w2" d="M134 38 Q128 26 136 16 T130 2" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round"/>
+              <path class="smoke-wisp w3" d="M186 38 Q192 26 184 16 T190 2" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round"/>
+            </g>
+
+            <!-- Dynamic Topping Container -->
+            <g id="cakeToppingsGroup"></g>
+          </svg>
+        </div>
+
+        <p class="greet" id="greet"></p>
+        <p class="status" id="cakeStatus">Baking something sweet…</p>
+
+        <!-- Cake Stage Controls -->
+        <div class="cake-controls">
+          <button class="game-action-btn blow-btn pulse-glow" id="blowBtn" type="button">💨 Make a Wish &amp; Blow Out Candles!</button>
+          <button class="game-action-btn open-gift-prompt hide" id="openGiftPromptBtn" type="button">
+            <span>🎁</span> Open Your Birthday Gift Box ➔
+          </button>
+          <button class="cta hide" id="cakeNextBtn" data-go="balloons" type="button">Proceed to Balloon Carnival 🎈</button>
+        </div>
       </div>
 
-      <p class="greet" id="greet"></p>
-      <p class="status" id="cakeStatus">Baking something sweet…</p>
+      <!-- VIEW 2: Luxury 3D Birthday Gift Box & Keepsake Reveal -->
+      <div class="celebration-panel hide" id="giftPanel">
+        <!-- Interactive 3D Gift Box Stage -->
+        <div class="gift-box-showcase" id="giftBoxShowcase">
+          <div class="gift-halo-glow" aria-hidden="true"></div>
+          
+          <!-- 3D Layered Gift Box -->
+          <div class="gift-box-3d" id="giftBox3d" title="Click to unwrap your birthday gift!">
+            <!-- Floating Sparkle Particles around box -->
+            <div class="gift-sparkles" aria-hidden="true">
+              <span class="g-sparkle s1">✨</span>
+              <span class="g-sparkle s2">💖</span>
+              <span class="g-sparkle s3">⭐</span>
+              <span class="g-sparkle s4">✨</span>
+            </div>
 
-      <!-- Candle Control Action -->
-      <div class="cake-controls">
-        <button class="game-action-btn blow-btn" id="blowBtn">💨 Blow Out Candle!</button>
-        <button class="cta hide" id="cakeNextBtn" data-go="balloons">Play Balloon Carnival 🎈</button>
+            <!-- Box Lid with Gold Trim -->
+            <div class="box-lid" id="boxLid">
+              <div class="lid-rim"></div>
+              <!-- Metallic Gold Cross Ribbon on Lid -->
+              <div class="ribbon-cross-h"></div>
+              <div class="ribbon-cross-v"></div>
+              <!-- Plush Satin Bow on Top -->
+              <div class="box-bow" id="boxBow">
+                <div class="bow-loop left"></div>
+                <div class="bow-loop right"></div>
+                <div class="bow-center"></div>
+                <div class="bow-tail left"></div>
+                <div class="bow-tail right"></div>
+              </div>
+            </div>
+
+            <!-- Box Base Body -->
+            <div class="box-base" id="boxBase">
+              <div class="box-face front">
+                <div class="ribbon-vertical"></div>
+                <div class="ribbon-horizontal"></div>
+                <!-- Personalized Gift Tag -->
+                <div class="gift-tag-badge">
+                  <span class="tag-pin">📌</span>
+                  <div class="tag-row"><small>FOR:</small> <b>{you} 💖</b></div>
+                  <div class="tag-row"><small>FROM:</small> <b>{me} ✨</b></div>
+                  <div class="tag-sub">"A gift straight from the heart"</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Light Explosion Burst when opened -->
+            <div class="box-light-burst" id="boxLightBurst" aria-hidden="true"></div>
+          </div>
+
+          <!-- Unwrap CTA Action Button -->
+          <div class="gift-actions" id="giftActions">
+            <button class="game-action-btn unwrap-btn pulse-glow" id="unwrapGiftBtn" type="button">
+              <span>🎁</span> Untie Ribbon &amp; Unwrap Gift 🎀
+            </button>
+          </div>
+        </div>
+
+        <!-- REVEALED: The VIP Birthday Gift Certificate & Keepsake -->
+        <article class="birthday-gift-card hide" id="birthdayGiftCard" aria-label="Birthday Gift Certificate">
+          <div class="gift-card-shine" aria-hidden="true"></div>
+          <div class="gift-card-header">
+            <div class="gift-vip-badge">👑 OFFICIAL BIRTHDAY VIP PASS 👑</div>
+            <h3 class="gift-card-title">Aditi's Special Birthday Gift 💖</h3>
+            <p class="gift-card-subtitle">Valid Forever · Non-Transferable · Wrapped with Love</p>
+          </div>
+
+          <div class="gift-dedication">
+            <p class="dedication-text">
+              "Happy {age}th Birthday, {you}! You bring so much sweetness, warmth, and laughter into my world. 
+              Here is your official birthday voucher, redeemable anytime you wish…"
+            </p>
+          </div>
+
+          <!-- 4 Curated VIP Perks -->
+          <div class="gift-perks-grid">
+            <div class="perk-card">
+              <span class="perk-badge-icon">🍽️</span>
+              <div class="perk-content">
+                <b class="perk-title">The Royal Birthday Feast</b>
+                <p class="perk-desc">Any restaurant, cuisine, or late-night craving of your choice — fully on me, zero excuses.</p>
+              </div>
+            </div>
+
+            <div class="perk-card">
+              <span class="perk-badge-icon">🌟</span>
+              <div class="perk-content">
+                <b class="perk-title">The Golden Wish Ticket</b>
+                <p class="perk-desc">Redeemable for one spontaneous adventure, surprise outing, or special wish together.</p>
+              </div>
+            </div>
+
+            <div class="perk-card">
+              <span class="perk-badge-icon">🎬</span>
+              <div class="perk-content">
+                <b class="perk-title">Midnight Drive &amp; Ice Cream</b>
+                <p class="perk-desc">Your favourite playlist, extra scoops of dessert, and peaceful stargazing conversations.</p>
+              </div>
+            </div>
+
+            <div class="perk-card">
+              <span class="perk-badge-icon">🫂</span>
+              <div class="perk-content">
+                <b class="perk-title">Lifetime Love &amp; Comfort</b>
+                <p class="perk-desc">Unlimited supply of warm hugs, attentive listening, and standing by your side always.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="gift-card-footer">
+            <div class="gift-card-seal">
+              <span class="seal-icon">🎂</span>
+              <span class="seal-text">{age} YEARS OF MAGIC</span>
+            </div>
+            <button class="gift-claim-btn" id="claimGiftBtn" type="button">
+              <span>💖</span> Claim My Birthday Gift!
+            </button>
+          </div>
+
+          <div class="claimed-banner hide" id="claimedBanner">
+            <span class="claimed-check">🎉</span>
+            <div class="claimed-text">
+              <b>GIFT OFFICIALLY CLAIMED BY {you}! 💖</b>
+              <small>I can't wait to celebrate every moment with you.</small>
+            </div>
+          </div>
+
+          <div class="gift-post-actions">
+            <button class="game-pill-btn" id="rewrapGiftBtn" type="button">↺ Re-wrap Box</button>
+            <button class="cta mini-cta" data-go="balloons" type="button">Proceed to Balloon Carnival 🎈 ➔</button>
+          </div>
+        </article>
       </div>
     </div>
   </section>

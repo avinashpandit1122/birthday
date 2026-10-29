@@ -761,14 +761,44 @@ if (waterBtn) {
    STAGE 4 · CAKE BAKERY & CANDLE BLOW GAME
    ========================================================= */
 let candleBlown = false;
+let giftUnwrapped = false;
+
+function switchCelebrationTab(tab) {
+  const tabCakeBtn = S('tabCakeBtn');
+  const tabGiftBtn = S('tabGiftBtn');
+  const cakePanel = S('cakePanel');
+  const giftPanel = S('giftPanel');
+
+  if (tab === 'gift') {
+    if (tabGiftBtn) tabGiftBtn.classList.add('active');
+    if (tabCakeBtn) tabCakeBtn.classList.remove('active');
+    if (cakePanel) cakePanel.classList.add('hide');
+    if (giftPanel) giftPanel.classList.remove('hide');
+  } else {
+    if (tabCakeBtn) tabCakeBtn.classList.add('active');
+    if (tabGiftBtn) tabGiftBtn.classList.remove('active');
+    if (cakePanel) cakePanel.classList.remove('hide');
+    if (giftPanel) giftPanel.classList.add('hide');
+  }
+}
 
 function blowOutCandle() {
   if (candleBlown || curId !== 'cake') return;
   candleBlown = true;
   sfx.blow();
   
-  const flame = S('candleFlame');
-  if (flame) flame.classList.add('out');
+  // Extinguish all three candle flames
+  ['candleFlame', 'flameLeft', 'flameRight'].forEach(id => {
+    const el = S(id);
+    if (el) el.classList.add('out');
+  });
+
+  // Activate post-blow smoke wisps
+  const smoke = S('candleSmoke');
+  if (smoke) {
+    smoke.classList.remove('hide');
+    smoke.classList.add('active');
+  }
   
   const cake = S('cake');
   const r = cake ? cake.getBoundingClientRect() : { left: innerWidth / 2 - 50, width: 100, top: 200, height: 100 };
@@ -787,15 +817,51 @@ function blowOutCandle() {
       if (status) status.classList.add('hide');
       const nextBtn = S('cakeNextBtn');
       if (nextBtn) nextBtn.classList.remove('hide');
+      const openGiftPrompt = S('openGiftPromptBtn');
+      if (openGiftPrompt) openGiftPrompt.classList.remove('hide');
       rain(60);
     });
   }, 350);
 }
 
+function unwrapBirthdayGift() {
+  if (giftUnwrapped) return;
+  giftUnwrapped = true;
+  sfx.pop(1.1);
+  later(() => sfx.sparkle(), 180);
+  later(() => sfx.fanfare(), 450);
+
+  const giftBox3d = S('giftBox3d');
+  if (giftBox3d) giftBox3d.classList.add('unwrapped');
+
+  const giftActions = S('giftActions');
+  if (giftActions) giftActions.classList.add('hide');
+
+  const rect = giftBox3d ? giftBox3d.getBoundingClientRect() : { left: innerWidth / 2, width: 0, top: innerHeight / 2, height: 0 };
+  burst(80, rect.left + rect.width / 2, rect.top + rect.height * 0.4, ['#ff4f93', '#ffd166', '#ffffff', '#e91e63', '#a78bfa']);
+  rain(45);
+  addScore(500, rect.left + rect.width / 2, rect.top + rect.height * 0.3, 'GIFT UNWRAPPED! 🎁💖');
+
+  later(() => {
+    const card = S('birthdayGiftCard');
+    if (card) {
+      card.classList.remove('hide');
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, 500);
+}
+
 hooks.cake = () => {
   candleBlown = false;
-  const flame = S('candleFlame');
-  if (flame) flame.classList.remove('out');
+  ['candleFlame', 'flameLeft', 'flameRight'].forEach(id => {
+    const el = S(id);
+    if (el) el.classList.remove('out');
+  });
+  const smoke = S('candleSmoke');
+  if (smoke) {
+    smoke.classList.add('hide');
+    smoke.classList.remove('active');
+  }
   const greet = S('greet');
   if (greet) greet.textContent = '';
   const status = S('cakeStatus');
@@ -805,10 +871,15 @@ hooks.cake = () => {
   }
   const nextBtn = S('cakeNextBtn');
   if (nextBtn) nextBtn.classList.add('hide');
+  const openGiftPrompt = S('openGiftPromptBtn');
+  if (openGiftPrompt) openGiftPrompt.classList.add('hide');
   const blowBtn = S('blowBtn');
   if (blowBtn) blowBtn.classList.remove('hide');
   const toppingsGroup = S('cakeToppingsGroup');
   if (toppingsGroup) toppingsGroup.innerHTML = '';
+
+  // Default to cake view initially
+  switchCelebrationTab('cake');
 
   later(() => {
     if (candleBlown) return;
@@ -820,7 +891,7 @@ hooks.cake = () => {
   }, 2000);
 };
 
-// Candle Controls & Topping Buttons
+// Celebration Controls: Cake & Gift Box
 (function bindCakeControls() {
   const blowBtn = S('blowBtn');
   if (blowBtn) blowBtn.addEventListener('click', e => {
@@ -833,6 +904,63 @@ hooks.cake = () => {
     if (curId === 'cake' && !candleBlown) blowOutCandle();
   });
 
+  // Switcher Tab Buttons
+  const tabCakeBtn = S('tabCakeBtn');
+  if (tabCakeBtn) tabCakeBtn.addEventListener('click', () => {
+    sfx.click();
+    switchCelebrationTab('cake');
+  });
+
+  const tabGiftBtn = S('tabGiftBtn');
+  if (tabGiftBtn) tabGiftBtn.addEventListener('click', () => {
+    sfx.click();
+    switchCelebrationTab('gift');
+  });
+
+  const openGiftPromptBtn = S('openGiftPromptBtn');
+  if (openGiftPromptBtn) openGiftPromptBtn.addEventListener('click', () => {
+    sfx.sparkle();
+    switchCelebrationTab('gift');
+  });
+
+  // Gift Box Unwrap
+  const unwrapGiftBtn = S('unwrapGiftBtn');
+  if (unwrapGiftBtn) unwrapGiftBtn.addEventListener('click', unwrapBirthdayGift);
+
+  const giftBox3d = S('giftBox3d');
+  if (giftBox3d) giftBox3d.addEventListener('click', () => {
+    if (!giftUnwrapped) unwrapBirthdayGift();
+  });
+
+  // Claim Gift Voucher
+  const claimGiftBtn = S('claimGiftBtn');
+  if (claimGiftBtn) claimGiftBtn.addEventListener('click', () => {
+    sfx.fanfare();
+    const rect = claimGiftBtn.getBoundingClientRect();
+    burst(60, rect.left + rect.width / 2, rect.top + rect.height / 2, ['#ff2d75', '#ff9ec0', '#ffd166', '#ffffff']);
+    addScore(300, rect.left + rect.width / 2, rect.top, 'GIFT CLAIMED! 👑');
+    claimGiftBtn.classList.add('hide');
+    const banner = S('claimedBanner');
+    if (banner) banner.classList.remove('hide');
+  });
+
+  // Re-wrap Gift Box
+  const rewrapGiftBtn = S('rewrapGiftBtn');
+  if (rewrapGiftBtn) rewrapGiftBtn.addEventListener('click', () => {
+    giftUnwrapped = false;
+    sfx.click();
+    const giftBox3d = S('giftBox3d');
+    if (giftBox3d) giftBox3d.classList.remove('unwrapped');
+    const giftActions = S('giftActions');
+    if (giftActions) giftActions.classList.remove('hide');
+    const card = S('birthdayGiftCard');
+    if (card) card.classList.add('hide');
+    const banner = S('claimedBanner');
+    if (banner) banner.classList.add('hide');
+    const claimGiftBtn = S('claimGiftBtn');
+    if (claimGiftBtn) claimGiftBtn.classList.remove('hide');
+  });
+
   // Interactive cake topping buttons
   $$('.top-btn').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -843,8 +971,8 @@ hooks.cake = () => {
       if (toppingsGroup) {
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.textContent = topping;
-        text.setAttribute('x', `${rand(45, 205)}`);
-        text.setAttribute('y', `${rand(115, 175)}`);
+        text.setAttribute('x', `${rand(80, 240)}`);
+        text.setAttribute('y', `${rand(125, 205)}`);
         text.setAttribute('font-size', '18');
         text.setAttribute('text-anchor', 'middle');
         toppingsGroup.appendChild(text);
@@ -1546,10 +1674,31 @@ function openLetter() {
 
 /* ---------- start game ---------- */
 window.go = go;
+window.switchCelebrationTab = switchCelebrationTab;
+window.unwrapBirthdayGift = unwrapBirthdayGift;
+
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash.replace('#', '');
-  if (ORDER.includes(hash)) go(hash);
+  if (hash === 'cake-gift' || hash === 'gift') {
+    go('cake');
+    switchCelebrationTab('gift');
+  } else if (hash === 'cake-gift-unwrapped') {
+    go('cake');
+    switchCelebrationTab('gift');
+    unwrapBirthdayGift();
+  } else if (ORDER.includes(hash)) {
+    go(hash);
+  }
 });
 
 const initHash = window.location.hash.replace('#', '');
-go(ORDER.includes(initHash) ? initHash : 'bow');
+if (initHash === 'cake-gift' || initHash === 'gift') {
+  go('cake');
+  switchCelebrationTab('gift');
+} else if (initHash === 'cake-gift-unwrapped') {
+  go('cake');
+  switchCelebrationTab('gift');
+  unwrapBirthdayGift();
+} else {
+  go(ORDER.includes(initHash) ? initHash : 'bow');
+}

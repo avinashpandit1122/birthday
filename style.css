@@ -1050,122 +1050,258 @@ body[data-theme="night"] .stage-tag {
 }
 
 /* =========================================================
-   STAGE 4 · CAKE BAKERY & CANDLE BLOW GAME
+   STAGE 4 · BIRTHDAY CELEBRATION & GIFT EXPERIENCE
+   High-end Luxury UI Design
    ========================================================= */
+
+/* Segmented Celebration Switcher */
+.celebration-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 2px auto 14px;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 210, 122, 0.25);
+  border-radius: 99px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  max-width: 360px;
+  width: 100%;
+}
+
+.c-switch-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 99px;
+  font-family: var(--fun);
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  white-space: nowrap;
+}
+
+.c-switch-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.c-switch-btn.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(255, 61, 127, 0.88), rgba(255, 122, 166, 0.88));
+  box-shadow: 0 4px 16px rgba(255, 61, 127, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transform: scale(1.02);
+}
+
+.c-glow-badge {
+  font-family: var(--arcade);
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 99px;
+  color: #1b0b2e;
+  background: #ffd27a;
+  box-shadow: 0 0 10px rgba(255, 210, 122, 0.8);
+  animation: pulseGlow 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes pulseGlow {
+  from { transform: scale(0.95); opacity: 0.9; }
+  to { transform: scale(1.08); opacity: 1; box-shadow: 0 0 14px #ffd27a; }
+}
+
+/* Celebration Panels */
+.celebration-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Interactive Topping Station */
 .topping-bar {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.35);
+  margin-bottom: 6px;
+  max-width: 440px;
+  width: 100%;
 }
 
 .topping-title {
-  font-size: 12px;
-  color: #ff9ec0;
-  font-weight: 600;
+  font-family: var(--fun);
+  font-size: 12.5px;
+  color: #ffd27a;
+  font-weight: 700;
+  letter-spacing: 0.3px;
 }
 
 .top-btn {
-  padding: 5px 12px;
+  padding: 6px 13px;
   border-radius: 99px;
   font-size: 12px;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #fff;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .top-btn:hover {
-  background: rgba(255, 61, 127, 0.4);
-  transform: scale(1.08);
+  background: rgba(255, 61, 127, 0.45);
+  border-color: #ff3d7f;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 6px 14px rgba(255, 61, 127, 0.4);
 }
 
 .top-btn:active {
-  transform: scale(0.92);
+  transform: scale(0.94);
 }
 
+/* Cake Stage Presentation Wrapper */
 .cake-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  padding: 4px 10px 10px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.cake-ambient-glow {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 200px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(255, 180, 50, 0.25) 0%, rgba(255, 61, 127, 0.12) 45%, transparent 72%);
+  border-radius: 50%;
+  filter: blur(20px);
+  pointer-events: none;
+  animation: ambientPulse 3s infinite alternate ease-in-out;
+  z-index: 0;
+}
+
+@keyframes ambientPulse {
+  0% { transform: translateX(-50%) scale(0.95); opacity: 0.8; }
+  100% { transform: translateX(-50%) scale(1.1); opacity: 1; }
 }
 
 .cake {
-  width: min(74vw, 300px);
+  position: relative;
+  z-index: 1;
+  width: min(86vw, 330px);
   height: auto;
   overflow: visible;
-  margin-top: 10px;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.5));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.cake .plate {
-  stroke-dasharray: 240;
-  stroke-dashoffset: 240;
+.cake:hover {
+  transform: translateY(-3px) scale(1.02);
 }
 
-.scene.live .cake .plate {
-  animation: draw240 0.6s 0.2s ease forwards;
-}
-
-@keyframes draw240 {
-  to { stroke-dashoffset: 0; }
-}
-
-.cake .cl, .cake .candle {
-  transform: translateY(-320px);
+/* Tier Entrance Animations */
+.cake-tier {
+  transform: translateY(-300px);
   opacity: 0;
 }
 
-.scene.live .cake .cl, .scene.live .cake .candle {
-  animation: drop 0.6s var(--d) cubic-bezier(0.4, 1.3, 0.5, 1) forwards;
+.scene.live .cake-tier {
+  animation: tierDrop 0.65s var(--d) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes drop {
-  0% { transform: translateY(-320px); opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
+@keyframes tierDrop {
+  0% { transform: translateY(-300px) scale(0.85); opacity: 0; }
+  75% { transform: translateY(8px) scale(1.03); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-.cake .frost {
-  transform-origin: 50% 100%;
+.frost-drip {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
   transform: scaleY(0);
   opacity: 0;
 }
 
-.scene.live .cake .frost {
-  animation: frost 0.6s var(--d) ease forwards;
+.scene.live .frost-drip {
+  animation: dripReveal 0.4s 0.45s ease forwards;
 }
 
-@keyframes frost {
+@keyframes dripReveal {
+  from { transform: scaleY(0); opacity: 0; }
   to { transform: scaleY(1); opacity: 1; }
+}
+
+/* Candles & Dynamic Flames */
+.candle {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  opacity: 0;
+}
+
+.scene.live .candle {
+  animation: candleDrop 0.5s var(--d) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes candleDrop {
+  0% { transform: translateY(-70px) scale(0.9); opacity: 0; }
+  75% { transform: translateY(4px) scale(1.03); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 .flame {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: flick 0.5s ease-in-out infinite alternate;
+  animation: realisticFlicker 0.4s ease-in-out infinite alternate;
 }
 
-@keyframes flick {
-  from { transform: scale(1, 1) rotate(-3deg); }
-  to { transform: scale(0.9, 1.12) rotate(3deg); }
+@keyframes realisticFlicker {
+  0% { transform: scale(1, 1) rotate(-3deg); }
+  50% { transform: scale(0.94, 1.14) rotate(2deg); }
+  100% { transform: scale(1.06, 0.96) rotate(-1deg); }
 }
 
 .candle-flame {
-  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  transform-origin: 130px 42px;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .candle-flame.out {
   opacity: 0 !important;
-  transform: scale(0) translateY(-20px) !important;
+  transform: scale(0.1) translateY(-24px) !important;
   pointer-events: none;
 }
 
@@ -1173,18 +1309,46 @@ body[data-theme="night"] .stage-tag {
   animation: none !important;
 }
 
+/* Smoke Wisps Post-Blow */
+.smoke-group {
+  pointer-events: none;
+}
+
+.smoke-wisp {
+  opacity: 0;
+}
+
+.smoke-group.active .smoke-wisp.w1 {
+  animation: smokeWispRise 1.8s ease-out forwards;
+}
+.smoke-group.active .smoke-wisp.w2 {
+  animation: smokeWispRise 1.6s 0.15s ease-out forwards;
+}
+.smoke-group.active .smoke-wisp.w3 {
+  animation: smokeWispRise 1.7s 0.25s ease-out forwards;
+}
+
+@keyframes smokeWispRise {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  25% { opacity: 0.85; }
+  100% { opacity: 0; transform: translateY(-45px) translateX(14px) scale(1.6); }
+}
+
+/* Greeting Text & Status */
 .greet {
   font-family: var(--hand);
-  font-size: clamp(26px, 8.2vw, 36px);
-  color: #ffa51f;
+  font-size: clamp(26px, 7.5vw, 36px);
+  color: #ffd27a;
   min-height: 1.3em;
   line-height: 1.2;
-  text-shadow: 0 2px 14px rgba(255, 165, 31, 0.35);
+  text-shadow: 0 2px 16px rgba(255, 210, 122, 0.5), 0 0 25px rgba(255, 61, 127, 0.4);
+  margin-top: 2px;
 }
 
 .status {
   font-size: 14px;
-  color: #e6cdea;
+  color: #f3d7ea;
+  margin-bottom: 8px;
 }
 
 .cake-controls {
@@ -1192,11 +1356,574 @@ body[data-theme="night"] .stage-tag {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  width: 100%;
 }
 
 .blow-btn {
-  background: linear-gradient(135deg, #1fd1c1, #00b4d8);
-  box-shadow: 0 10px 24px -6px rgba(0, 180, 216, 0.6);
+  background: linear-gradient(135deg, #ff3d7f, #ff85a2);
+  box-shadow: 0 10px 28px -6px rgba(255, 61, 127, 0.65), 0 0 16px rgba(255, 61, 127, 0.4);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.open-gift-prompt {
+  background: linear-gradient(135deg, #ffb02e, #ff6b35);
+  box-shadow: 0 10px 28px -6px rgba(255, 176, 46, 0.7), 0 0 18px rgba(255, 176, 46, 0.5);
+  color: #1b0b2e;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  animation: giftPromptPulse 1.4s infinite alternate ease-in-out;
+}
+
+@keyframes giftPromptPulse {
+  from { transform: scale(1); box-shadow: 0 10px 28px -6px rgba(255, 176, 46, 0.7); }
+  to { transform: scale(1.04); box-shadow: 0 14px 34px -4px rgba(255, 176, 46, 0.9), 0 0 24px #ffd27a; }
+}
+
+/* =========================================================
+   STAGE 4 (VIEW 2) · LUXURY BIRTHDAY GIFT BOX
+   ========================================================= */
+.gift-box-showcase {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 10px 16px;
+}
+
+.gift-halo-glow {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(255, 61, 127, 0.25) 0%, rgba(255, 210, 122, 0.2) 40%, transparent 72%);
+  border-radius: 50%;
+  filter: blur(24px);
+  pointer-events: none;
+}
+
+/* 3D Layered Gift Box */
+.gift-box-3d {
+  position: relative;
+  width: 220px;
+  height: 200px;
+  margin: 20px auto 24px;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  perspective: 800px;
+}
+
+.gift-box-3d:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+/* Floating Sparkle Particles around box */
+.gift-sparkles {
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+}
+
+.g-sparkle {
+  position: absolute;
+  font-size: 16px;
+  animation: floatSparkle 2.6s infinite alternate ease-in-out;
+}
+.g-sparkle.s1 { top: 0; left: 10%; animation-delay: 0s; }
+.g-sparkle.s2 { top: 20%; right: 5%; animation-delay: 0.6s; font-size: 18px; }
+.g-sparkle.s3 { bottom: 10%; left: 0%; animation-delay: 1.2s; font-size: 14px; }
+.g-sparkle.s4 { bottom: 25%; right: 10%; animation-delay: 1.8s; font-size: 20px; }
+
+@keyframes floatSparkle {
+  0% { transform: translateY(0) scale(0.85); opacity: 0.6; }
+  100% { transform: translateY(-12px) scale(1.2); opacity: 1; }
+}
+
+/* Box Lid */
+.box-lid {
+  position: absolute;
+  top: 36px;
+  left: -8px;
+  width: 236px;
+  height: 48px;
+  background: linear-gradient(135deg, #ba164f 0%, #e91e63 50%, #940a3b 100%);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), inset 0 2px 0 rgba(255, 255, 255, 0.35);
+  border: 1.5px solid rgba(255, 210, 122, 0.4);
+  z-index: 5;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center bottom;
+}
+
+.lid-rim {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #aa820a, #ffd27a 50%, #aa820a);
+  border-radius: 0 0 10px 10px;
+}
+
+/* Ribbons on Lid */
+.box-lid .ribbon-cross-h {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 24px;
+  transform: translateY(-50%);
+  background: linear-gradient(180deg, #ffd27a 0%, #f3ba3a 50%, #c48c10 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.box-lid .ribbon-cross-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 24px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #ffd27a 0%, #ffe6a0 50%, #d89b14 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Plush 3D Satin Bow */
+.box-bow {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 44px;
+  z-index: 10;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bow-loop {
+  position: absolute;
+  top: 0;
+  width: 44px;
+  height: 32px;
+  background: radial-gradient(circle at 50% 30%, #fff0b3, #f5bc36 60%, #b8810b 100%);
+  border-radius: 50% 50% 20% 50%;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 240, 180, 0.6);
+}
+
+.bow-loop.left {
+  left: 6px;
+  transform: rotate(-24deg);
+}
+
+.bow-loop.right {
+  right: 6px;
+  transform: rotate(24deg) scaleX(-1);
+}
+
+.bow-center {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(circle, #fff3c4, #f5be38 60%, #9e6d05);
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.bow-tail {
+  position: absolute;
+  top: 26px;
+  width: 14px;
+  height: 38px;
+  background: linear-gradient(180deg, #f5be38, #b8810b);
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bow-tail.left {
+  left: 24px;
+  transform: rotate(18deg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+}
+
+.bow-tail.right {
+  right: 24px;
+  transform: rotate(-18deg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+}
+
+/* Box Base Body */
+.box-base {
+  position: absolute;
+  top: 76px;
+  left: 0;
+  width: 220px;
+  height: 130px;
+  background: linear-gradient(180deg, #a81244 0%, #70062a 60%, #4a031a 100%);
+  border-radius: 8px 8px 16px 16px;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1.5px solid rgba(255, 210, 122, 0.3);
+  overflow: hidden;
+}
+
+.box-base .ribbon-vertical {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 24px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #d89b14 0%, #ffe6a0 50%, #d89b14 100%);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.box-base .ribbon-horizontal {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 24px;
+  transform: translateY(-50%);
+  background: linear-gradient(180deg, #d89b14 0%, #ffe6a0 50%, #d89b14 100%);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Hanging Personalized Gift Tag */
+.gift-tag-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: #fff8ee;
+  color: #3b1420;
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+  transform: rotate(-7deg);
+  border: 1px solid #e0c8b0;
+  font-family: var(--ui);
+  text-align: left;
+  z-index: 3;
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+
+.gift-tag-badge .tag-pin {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+}
+
+.gift-tag-badge .tag-row {
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.gift-tag-badge .tag-row small {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #ff3d7f;
+}
+
+.gift-tag-badge .tag-row b {
+  color: #1b0b2e;
+}
+
+.gift-tag-badge .tag-sub {
+  font-family: var(--hand);
+  font-size: 11.5px;
+  color: #8c425c;
+  margin-top: 2px;
+}
+
+/* Unwrapping Triggered States */
+.gift-box-3d.unwrapped .box-bow {
+  transform: translateX(-50%) translateY(-90px) scale(0) rotate(45deg);
+  opacity: 0;
+}
+
+.gift-box-3d.unwrapped .box-lid {
+  transform: translateY(-110px) rotate(-18deg) scale(0.9);
+  opacity: 0;
+}
+
+.gift-box-3d.unwrapped .gift-tag-badge {
+  transform: rotate(20deg) translateY(40px);
+  opacity: 0;
+}
+
+/* Light Explosion inside box */
+.box-light-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255, 230, 160, 0.9) 0%, rgba(255, 61, 127, 0.6) 45%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 6;
+}
+
+.gift-box-3d.unwrapped .box-light-burst {
+  animation: burstRays 1.2s ease-out forwards;
+}
+
+@keyframes burstRays {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  60% { transform: translate(-50%, -50%) scale(1.6); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+}
+
+.unwrap-btn {
+  background: linear-gradient(135deg, #ffd27a 0%, #ff85a2 100%);
+  color: #1b0b2e;
+  font-weight: 800;
+  box-shadow: 0 10px 28px -4px rgba(255, 210, 122, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* =========================================================
+   THE VIP BIRTHDAY GIFT CERTIFICATE / PASS
+   ========================================================= */
+.birthday-gift-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: linear-gradient(145deg, rgba(32, 10, 48, 0.96) 0%, rgba(22, 5, 34, 0.98) 100%);
+  border: 2px solid #ffd27a;
+  border-radius: 20px;
+  padding: 24px 20px;
+  box-shadow: 0 20px 50px -8px rgba(0, 0, 0, 0.8), 0 0 35px rgba(255, 210, 122, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: giftCardReveal 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  overflow: hidden;
+  margin-top: 6px;
+  text-align: center;
+}
+
+@keyframes giftCardReveal {
+  from { opacity: 0; transform: translateY(40px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.gift-card-shine {
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent 40%, rgba(255, 255, 255, 0.12) 50%, transparent 60%);
+  pointer-events: none;
+  animation: shineSweep 4s infinite linear;
+}
+
+@keyframes shineSweep {
+  0% { transform: translateX(-40%); }
+  100% { transform: translateX(40%); }
+}
+
+.gift-vip-badge {
+  display: inline-block;
+  font-family: var(--arcade);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #1b0b2e;
+  background: linear-gradient(90deg, #ffd27a, #ffe599, #ffd27a);
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-weight: 800;
+  box-shadow: 0 0 12px rgba(255, 210, 122, 0.6);
+  margin-bottom: 8px;
+}
+
+.gift-card-title {
+  font-family: var(--fun);
+  font-size: clamp(20px, 5.5vw, 26px);
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(255, 61, 127, 0.4);
+  margin-bottom: 2px;
+}
+
+.gift-card-subtitle {
+  font-size: 11.5px;
+  color: #ffd27a;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.gift-dedication {
+  background: rgba(255, 255, 255, 0.06);
+  border-left: 3px solid #ff3d7f;
+  padding: 8px 12px;
+  border-radius: 0 10px 10px 0;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.dedication-text {
+  font-family: var(--hand);
+  font-size: 15px;
+  line-height: 1.4;
+  color: #ffdeeb;
+}
+
+/* 4 Perks Grid */
+.gift-perks-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+@media (min-width: 480px) {
+  .gift-perks-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.perk-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 10px;
+  transition: all 0.22s ease;
+}
+
+.perk-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 210, 122, 0.4);
+  transform: translateY(-2px);
+}
+
+.perk-badge-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  background: rgba(255, 61, 127, 0.2);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 61, 127, 0.35);
+}
+
+.perk-content {
+  flex: 1;
+}
+
+.perk-title {
+  display: block;
+  font-size: 12.5px;
+  color: #ffd27a;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.perk-desc {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.35;
+}
+
+.gift-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255, 210, 122, 0.3);
+  flex-wrap: wrap;
+}
+
+.gift-card-seal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--arcade);
+  font-size: 9px;
+  color: #ffd27a;
+}
+
+.gift-claim-btn {
+  background: linear-gradient(135deg, #ff3d7f, #e91e63);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 8px 18px;
+  border-radius: 99px;
+  font-family: var(--fun);
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 61, 127, 0.5);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gift-claim-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 61, 127, 0.7);
+}
+
+/* Claimed State Banner */
+.claimed-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(31, 209, 193, 0.25), rgba(0, 180, 216, 0.25));
+  border: 1.5px solid #1fd1c1;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-top: 14px;
+  text-align: left;
+  animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.claimed-check {
+  font-size: 26px;
+}
+
+.claimed-text b {
+  display: block;
+  font-size: 13px;
+  color: #1fd1c1;
+}
+
+.claimed-text small {
+  font-size: 11px;
+  color: #fff;
+  opacity: 0.85;
+}
+
+.gift-post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
 }
 
 /* =========================================================
@@ -2452,11 +3179,13 @@ body[data-theme="night"] .stage-tag {
   }
 
   .t-head {
-    font-size: clamp(19px, 5.6vw, 25px);
-    word-break: break-word;
+    font-size: clamp(18px, 5.2vw, 24px);
+    word-break: normal;
     overflow-wrap: break-word;
-    line-height: 1.2;
-    max-width: 100%;
+    line-height: 1.25;
+    max-width: 96%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .sub2 {
@@ -2553,27 +3282,91 @@ body[data-theme="night"] .stage-tag {
     gap: 6px;
   }
 
-  /* Stage 4: Bakery */
+  /* Stage 4: Celebration Cake & Birthday Gift */
+  .celebration-switcher {
+    max-width: min(94vw, 340px);
+  }
+
+  .c-switch-btn {
+    padding: 7px 10px;
+    font-size: 11.5px;
+  }
+
   .topping-bar {
-    gap: 5px;
-    padding: 6px 8px;
-    width: min(96vw, 380px);
+    gap: 6px;
+    padding: 6px 10px;
+    width: min(96vw, 360px);
     max-width: 100%;
     flex-wrap: wrap;
     justify-content: center;
   }
 
   .top-btn {
-    padding: 3px 8px;
-    font-size: 10.5px;
+    padding: 4px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+    line-height: 1.2;
   }
 
   .cake {
-    width: min(72vw, 220px);
+    width: min(76vw, 240px);
   }
 
   .greet {
-    font-size: clamp(20px, 6.5vw, 26px);
+    font-size: clamp(18px, 5.5vw, 24px);
+  }
+
+  .gift-box-3d {
+    width: 180px;
+    height: 170px;
+    margin: 14px auto 18px;
+  }
+
+  .box-lid {
+    width: 196px;
+    left: -8px;
+    height: 42px;
+  }
+
+  .box-base {
+    width: 180px;
+    height: 110px;
+    top: 68px;
+  }
+
+  .birthday-gift-card {
+    padding: 18px 14px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .gift-card-title {
+    font-size: clamp(18px, 5vw, 22px);
+  }
+
+  .gift-perks-grid {
+    gap: 8px;
+  }
+
+  .perk-card {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .perk-badge-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 17px;
+  }
+
+  .perk-title {
+    font-size: 12.5px;
+  }
+
+  .perk-desc {
+    font-size: 11px;
+    line-height: 1.35;
   }
 
   /* Stage 5: Balloon Carnival */
@@ -2771,6 +3564,30 @@ body[data-theme="night"] .stage-tag {
   }
   .pstat-item {
     font-size: 8px;
+  }
+  .c-switch-btn {
+    padding: 5px 8px;
+    font-size: 10.5px;
+  }
+  .c-glow-badge {
+    display: none;
+  }
+  .gift-box-3d {
+    width: 150px;
+    height: 140px;
+  }
+  .box-lid {
+    width: 164px;
+    height: 36px;
+    left: -7px;
+  }
+  .box-base {
+    width: 150px;
+    height: 94px;
+    top: 56px;
+  }
+  .birthday-gift-card {
+    padding: 14px 10px;
   }
 }
 
