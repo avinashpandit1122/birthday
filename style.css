@@ -3595,6 +3595,7 @@ body[data-theme="night"] .stage-tag {
 #s-letter {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  z-index: 80;
 }
 
 #s-letter .inner {
@@ -3605,6 +3606,7 @@ body[data-theme="night"] .stage-tag {
 /* Master Romantic Stationery Sheet */
 .romantic-letter-folio {
   position: relative;
+  z-index: 85;
   width: min(94vw, 560px);
   text-align: left;
   padding: 30px 32px 36px;
@@ -3692,6 +3694,8 @@ body[data-theme="night"] .stage-tag {
 
 /* Royal Quest Victory Arch above letter */
 .royal-quest-banner {
+  position: relative;
+  z-index: 85;
   display: flex;
   align-items: center;
   justify-content: center;

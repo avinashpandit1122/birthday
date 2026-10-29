@@ -420,7 +420,10 @@ function rain(n) {
 }
 function cfTick() {
   if (!cx) return;
-  cx.clearRect(0, 0, innerWidth, innerHeight);
+  cx.save();
+  cx.setTransform(1, 0, 0, 1, 0, 0);
+  cx.clearRect(0, 0, cf.width, cf.height);
+  cx.restore();
   parts = parts.filter(p => p.y < innerHeight + 30);
   parts.forEach(p => {
     p.x += p.vx; p.y += p.vy; p.vy += p.g; p.vx *= .995; p.r += p.vr;
@@ -430,7 +433,12 @@ function cfTick() {
     cx.restore();
   });
   cfRaf = parts.length ? requestAnimationFrame(cfTick) : 0;
-  if (!cfRaf) cx.clearRect(0, 0, innerWidth, innerHeight);
+  if (!cfRaf) {
+    cx.save();
+    cx.setTransform(1, 0, 0, 1, 0, 0);
+    cx.clearRect(0, 0, cf.width, cf.height);
+    cx.restore();
+  }
 }
 
 /* ---------- typewriter ---------- */
@@ -2061,7 +2069,9 @@ function openLetter() {
     if (notePhase) notePhase.classList.remove('hide');
     if (letterScene) letterScene.scrollTop = 0;
 
-    startAmbientGlitterShower();
+    // Keep letter reading area 100% clean, pristine and unobstructed
+    stopAmbientGlitterShower();
+    document.querySelectorAll('.glitter-particle, .glitter-star, .ambient-glitter').forEach(el => el.remove());
 
     const finalScoreVal = S('finalScoreVal');
     if (finalScoreVal) finalScoreVal.textContent = score.toLocaleString();
@@ -2075,7 +2085,10 @@ function openLetter() {
       if (noteSign) noteSign.classList.remove('hide');
       if (replayBtn) replayBtn.classList.remove('hide');
       if (letterActions) letterActions.classList.remove('hide');
-      rain(65);
+      // Celebratory bursts framing the letter from the sides, keeping letter text clean & readable
+      burst(28, 30, Math.min(window.innerHeight * 0.35, 240));
+      burst(28, window.innerWidth - 30, Math.min(window.innerHeight * 0.35, 240));
+      burst(36, window.innerWidth / 2, 60);
     });
 
     const note = S('note');
