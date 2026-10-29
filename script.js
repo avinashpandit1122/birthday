@@ -2037,6 +2037,13 @@ function openLetter() {
   const originX = targetRect ? (targetRect.left + targetRect.width / 2) : (window.innerWidth / 2);
   const originY = targetRect ? (targetRect.top + targetRect.height / 2) : (window.innerHeight / 2);
 
+  const openBtn = S('openLetterBtn');
+  if (openBtn) {
+    openBtn.style.opacity = '0.7';
+    openBtn.style.pointerEvents = 'none';
+    openBtn.innerHTML = '<span>✨</span> Opening Secret Letter... 💌';
+  }
+
   // Trigger grand sparkling glitter fountain & score popup
   spawnSparklingGlitter(originX, originY);
   addScore(1000, originX, originY - 40, 'SECRET LETTER UNSEALED! 💌');
@@ -2091,6 +2098,12 @@ function resealLetter() {
   if (noteSign) noteSign.classList.add('hide');
   if (noteTapHint) noteTapHint.classList.remove('hide');
   if (letterActions) letterActions.classList.add('hide');
+  const openBtn = S('openLetterBtn');
+  if (openBtn) {
+    openBtn.style.opacity = '1';
+    openBtn.style.pointerEvents = 'auto';
+    openBtn.innerHTML = '<span>✨</span> Tap Wax Seal to Open Letter 💌';
+  }
 }
 
 (function bindLetter() {

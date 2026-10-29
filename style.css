@@ -662,6 +662,12 @@ body[data-theme="night"] .stage-tag {
   z-index: 5;
 }
 
+#s-bow {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .bow-controls {
   position: absolute;
   bottom: calc(var(--safe-b) + 3%);
@@ -673,6 +679,9 @@ body[data-theme="night"] .stage-tag {
   gap: 8px;
   padding: 0 16px;
   z-index: 10;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .eyebrow-b {
@@ -799,7 +808,7 @@ body[data-theme="night"] .stage-tag {
 }
 
 .scene.live .mini {
-  animation: fadeUp 0.8s 0.2s ease forwards;
+  animation: fadeUp 0.6s 0.1s ease forwards;
 }
 
 .hb {
@@ -813,7 +822,7 @@ body[data-theme="night"] .stage-tag {
 }
 
 .scene.live .hb {
-  animation: fadeUp 0.9s 1.4s cubic-bezier(0.3, 1.4, 0.5, 1) forwards;
+  animation: fadeUp 0.8s 0.35s cubic-bezier(0.3, 1.4, 0.5, 1) forwards;
 }
 
 .squig {
@@ -832,7 +841,7 @@ body[data-theme="night"] .stage-tag {
 }
 
 .scene.live .squig path {
-  animation: draw 1s 2s ease forwards;
+  animation: draw 0.7s 0.65s ease forwards;
 }
 
 .to {
@@ -843,12 +852,12 @@ body[data-theme="night"] .stage-tag {
 }
 
 .scene.live .to {
-  animation: fadeUp 0.8s 2.4s ease forwards;
+  animation: fadeUp 0.6s 0.85s ease forwards;
 }
 
 .scene.live .band-in button {
   opacity: 0;
-  animation: fadeUp 0.8s 2.8s ease forwards;
+  animation: fadeUp 0.6s 1.05s ease forwards;
 }
 
 @keyframes fadeUp {
@@ -4486,6 +4495,21 @@ body[data-theme="night"] .stage-tag {
     max-width: 100%;
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .puzzle-board-wrap {
+    width: min(84vw, 280px);
+    margin: 0 auto 6px;
+  }
+
+  .puzzle-stats-bar {
+    margin-bottom: 4px;
+    padding: 3px 10px;
+    gap: 8px;
+  }
+
+  .puzzle-picker-container {
+    margin-bottom: 6px;
   }
 
   .puzzle-thumb-list {
