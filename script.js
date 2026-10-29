@@ -1909,43 +1909,148 @@ hooks.puzzle = () => {
    STAGE 8 · THE SECRET LETTER & FINAL CELEBRATION
    ========================================================= */
 let opening = false;
+let ambientGlitterTimer = null;
+
+function stopAmbientGlitterShower() {
+  if (ambientGlitterTimer) {
+    clearInterval(ambientGlitterTimer);
+    ambientGlitterTimer = null;
+  }
+  document.querySelectorAll('.ambient-glitter').forEach(el => el.remove());
+}
+
+function startAmbientGlitterShower() {
+  stopAmbientGlitterShower();
+  const palette = ['#ffd700', '#fff4b8', '#ff7eb3', '#ffffff', '#ffe082', '#ff80ab', '#a7f3d0'];
+  ambientGlitterTimer = setInterval(() => {
+    if (curId !== 'letter') {
+      stopAmbientGlitterShower();
+      return;
+    }
+    const g = document.createElement('div');
+    g.className = 'ambient-glitter';
+    const sz = rand(3, 8);
+    const isDiamond = Math.random() > 0.5;
+    g.style.left = `${rand(5, 95)}vw`;
+    g.style.top = `${rand(5, 45)}vh`;
+    g.style.width = `${sz}px`;
+    g.style.height = `${sz}px`;
+    g.style.background = pick(palette);
+    g.style.boxShadow = `0 0 ${sz * 2}px ${pick(palette)}`;
+    g.style.borderRadius = isDiamond ? '2px' : '50%';
+    g.style.setProperty('--dur', `${rand(2.2, 4)}s`);
+    document.body.appendChild(g);
+    setTimeout(() => g.remove(), 4000);
+  }, 140);
+}
+
+function spawnSparklingGlitter(x, y) {
+  const palette = ['#ffd700', '#fff4b8', '#ff7eb3', '#ffffff', '#ffb6c1', '#f6c90e', '#ffe082', '#ff80ab', '#a7f3d0'];
+  const starIcons = ['✨', '⭐', '🌟', '💎', '💖', '👑', '🎉', '🎀', '💫'];
+
+  // 1. Burst of 75 multi-colored diamond / circle glitter particles
+  for (let i = 0; i < 75; i++) {
+    const p = document.createElement('div');
+    p.className = 'glitter-particle';
+    const color = pick(palette);
+    const sz = rand(4, 10);
+    const angle = rand(0, Math.PI * 2);
+    const dist = rand(70, 320);
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist - rand(40, 160); // bias upward
+    const rot = rand(-360, 360);
+    const dur = rand(1.1, 1.8);
+    const isDiamond = Math.random() > 0.4;
+
+    p.style.left = `${x}px`;
+    p.style.top = `${y}px`;
+    p.style.width = `${sz}px`;
+    p.style.height = `${sz}px`;
+    p.style.background = color;
+    p.style.borderRadius = isDiamond ? '2px' : '50%';
+    p.style.boxShadow = `0 0 ${rand(6, 14)}px ${color}, 0 0 4px #ffffff`;
+    p.style.setProperty('--dx', `${dx}px`);
+    p.style.setProperty('--dy', `${dy}px`);
+    p.style.setProperty('--rot', `${rot}deg`);
+    p.style.setProperty('--dur', `${dur}s`);
+    p.style.setProperty('--s', `${rand(1.2, 2.2)}`);
+
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), dur * 1000 + 200);
+  }
+
+  // 2. Burst of 36 golden & sparkling star emojis
+  for (let i = 0; i < 36; i++) {
+    const s = document.createElement('span');
+    s.className = 'glitter-star';
+    s.textContent = pick(starIcons);
+    const angle = rand(-Math.PI * 0.9, -Math.PI * 0.1); // upward fan
+    const dist = rand(90, 280);
+    const dx = Math.cos(angle) * dist + rand(-40, 40);
+    const dy = Math.sin(angle) * dist - rand(20, 80);
+    const rot = rand(-240, 240);
+    const dur = rand(1.3, 2.2);
+
+    s.style.left = `${x}px`;
+    s.style.top = `${y}px`;
+    s.style.setProperty('--sz', `${rand(16, 32)}px`);
+    s.style.setProperty('--dx', `${dx}px`);
+    s.style.setProperty('--dy', `${dy}px`);
+    s.style.setProperty('--rot', `${rot}deg`);
+    s.style.setProperty('--dur', `${dur}s`);
+
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), dur * 1000 + 200);
+  }
+}
 
 hooks.letter = () => {
   opening = false;
+  stopAmbientGlitterShower();
   const envPhase = S('envPhase'), notePhase = S('notePhase'), env2 = S('env2');
-  const noteText = S('noteText'), noteSign = S('noteSign'), replayBtn = S('replayBtn');
+  const noteText = S('noteText'), noteSign = S('noteSign'), replayBtn = S('replayBtn'), letterActions = S('letterActions');
+  const noteTapHint = S('noteTapHint');
   if (envPhase) envPhase.classList.remove('hide');
   if (notePhase) notePhase.classList.add('hide');
   if (env2) env2.classList.remove('open');
   if (noteText) noteText.textContent = '';
   if (noteSign) noteSign.classList.add('hide');
+  if (noteTapHint) noteTapHint.classList.remove('hide');
   if (replayBtn) replayBtn.classList.add('hide');
+  if (letterActions) letterActions.classList.add('hide');
 };
 
 function openLetter() {
   if (opening || curId !== 'letter') return;
   opening = true;
-  sfx.sparkle();
   
+  // Audio chime & wax seal snap
+  sfx.pop(1.4);
+  later(() => sfx.sparkle(), 120);
+  later(() => sfx.sparkle(), 380);
+
   const env = S('env2');
   if (env) env.classList.add('open');
-  
-  const r = env ? env.getBoundingClientRect() : { left: innerWidth / 2 - 50, width: 100, top: 300, height: 100 };
-  for (let i = 0; i < 24; i++) {
-    const s = document.createElement('span');
-    s.className = 'spark'; s.textContent = pick(['✨', '🎈', '🎂', '💖', '👑', '🎉', '⭐']);
-    s.style.cssText = `left:${r.left + r.width / 2}px;top:${r.top + r.height * .35}px;font-size:${rand(14, 26)}px;--dx:${rand(-140, 140)}px;--dy:${rand(-200, -40)}px;--rot:${rand(-90, 90)}deg`;
-    document.body.appendChild(s); setTimeout(() => s.remove(), 1500);
-  }
 
-  addScore(1000, r.left + r.width / 2, r.top + r.height * .35, 'LETTER UNLOCKED! 💌');
+  const waxSeal = S('waxSeal');
+  const targetRect = waxSeal ? waxSeal.getBoundingClientRect() : (env ? env.getBoundingClientRect() : null);
+  const originX = targetRect ? (targetRect.left + targetRect.width / 2) : (window.innerWidth / 2);
+  const originY = targetRect ? (targetRect.top + targetRect.height / 2) : (window.innerHeight / 2);
+
+  // Trigger grand sparkling glitter fountain & score popup
+  spawnSparklingGlitter(originX, originY);
+  addScore(1000, originX, originY - 40, 'SECRET LETTER UNSEALED! 💌');
 
   later(() => {
     const envPhase = S('envPhase'), notePhase = S('notePhase'), noteText = S('noteText');
-    const noteSign = S('noteSign'), replayBtn = S('replayBtn'), letterScene = $('#s-letter');
+    const noteSign = S('noteSign'), letterActions = S('letterActions'), replayBtn = S('replayBtn');
+    const letterScene = $('#s-letter');
+
     if (envPhase) envPhase.classList.add('hide');
     if (notePhase) notePhase.classList.remove('hide');
     if (letterScene) letterScene.scrollTop = 0;
+
+    startAmbientGlitterShower();
 
     const finalScoreVal = S('finalScoreVal');
     if (finalScoreVal) finalScoreVal.textContent = score.toLocaleString();
@@ -1954,24 +2059,49 @@ function openLetter() {
       sfx.fanfare();
       const note = S('note');
       if (note) note.onclick = null;
+      const noteTapHint = S('noteTapHint');
+      if (noteTapHint) noteTapHint.classList.add('hide');
       if (noteSign) noteSign.classList.remove('hide');
       if (replayBtn) replayBtn.classList.remove('hide');
-      rain(55);
+      if (letterActions) letterActions.classList.remove('hide');
+      rain(65);
     });
 
     const note = S('note');
     if (note) note.onclick = () => {
       sfx.sparkle();
       skip(); // Instant finish on tap
+      const noteTapHint = S('noteTapHint');
+      if (noteTapHint) noteTapHint.classList.add('hide');
     };
-  }, 1400);
+  }, 1300);
+}
+
+function resealLetter() {
+  opening = false;
+  stopAmbientGlitterShower();
+  sfx.pop(1.1);
+  const envPhase = S('envPhase'), notePhase = S('notePhase'), env2 = S('env2');
+  const noteText = S('noteText'), noteSign = S('noteSign'), letterActions = S('letterActions');
+  const noteTapHint = S('noteTapHint');
+  if (notePhase) notePhase.classList.add('hide');
+  if (envPhase) envPhase.classList.remove('hide');
+  if (env2) env2.classList.remove('open');
+  if (noteText) noteText.textContent = '';
+  if (noteSign) noteSign.classList.add('hide');
+  if (noteTapHint) noteTapHint.classList.remove('hide');
+  if (letterActions) letterActions.classList.add('hide');
 }
 
 (function bindLetter() {
   const env2 = S('env2');
   if (env2) env2.addEventListener('click', openLetter);
-  const envHint = S('envHint');
-  if (envHint) envHint.addEventListener('click', openLetter);
+  const waxSeal = S('waxSeal');
+  if (waxSeal) waxSeal.addEventListener('click', (e) => { e.stopPropagation(); openLetter(); });
+  const openLetterBtn = S('openLetterBtn');
+  if (openLetterBtn) openLetterBtn.addEventListener('click', openLetter);
+  const resealBtn = S('resealBtn');
+  if (resealBtn) resealBtn.addEventListener('click', resealLetter);
 })();
 
 /* ---------- start game ---------- */
@@ -1979,6 +2109,8 @@ window.go = go;
 window.switchCelebrationTab = switchCelebrationTab;
 window.unwrapBirthdayGift = unwrapBirthdayGift;
 window.switchMemoryTab = switchMemoryTab;
+window.openLetter = openLetter;
+window.resealLetter = resealLetter;
 
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash.replace('#', '');
@@ -1995,6 +2127,9 @@ window.addEventListener('hashchange', () => {
   } else if (hash === 'memory') {
     go('memory');
     switchMemoryTab('photos');
+  } else if (hash === 'letter-open') {
+    go('letter');
+    later(() => openLetter(), 300);
   } else if (ORDER.includes(hash)) {
     go(hash);
   }
@@ -2014,6 +2149,9 @@ if (initHash === 'cake-gift' || initHash === 'gift') {
 } else if (initHash === 'memory') {
   go('memory');
   switchMemoryTab('photos');
+} else if (initHash === 'letter-open') {
+  go('letter');
+  later(() => openLetter(), 400);
 } else {
   go(ORDER.includes(initHash) ? initHash : 'bow');
 }

@@ -773,37 +773,117 @@
     <div class="inner" id="envPhase">
       <div class="stage-tag">FINAL QUEST · THE SECRET LETTER</div>
       <h2 class="t-head">One last thing, {you}…</h2>
-      <p class="sub2">{me} wrote a sealed letter just for you.</p>
+      <p class="sub2">{me} handcrafted a sealed love letter just for your birthday.</p>
       
+      <!-- Luxury 3D Envelope Showcase -->
       <div class="envelope-showcase">
-        <button class="env2" id="env2" aria-label="Open your sealed letter">
-          <div class="e-back"></div>
-          <div class="e-paper"><span>🎂</span><i></i><i></i></div>
-          <div class="e-front"></div>
-          <div class="e-flap"></div>
-          <div class="e-seal" title="Break the wax seal"></div>
+        <div class="envelope-ambient-glow" aria-hidden="true"></div>
+
+        <!-- Ambient Floating Sparkle Dust -->
+        <div class="env-floating-sparkles" aria-hidden="true">
+          <span class="env-sp s1">✨</span>
+          <span class="env-sp s2">💖</span>
+          <span class="env-sp s3">⭐</span>
+          <span class="env-sp s4">✨</span>
+          <span class="env-sp s5">🌟</span>
+        </div>
+
+        <button class="env2" id="env2" aria-label="Open your sealed birthday letter" title="Click to break the wax seal and unwrap letter">
+          <!-- Back Interior with Gold Silk Stars Lining -->
+          <div class="e-back">
+            <div class="e-silk-lining"></div>
+          </div>
+
+          <!-- Folded Parchment Letter Inside -->
+          <div class="e-paper">
+            <div class="paper-ribbon"></div>
+            <div class="paper-crest">💌</div>
+            <div class="paper-lines">
+              <i></i><i></i><i></i>
+            </div>
+            <div class="paper-peek-tag">FOR {you} 💖</div>
+          </div>
+
+          <!-- Bottom & Side Flaps with Gold Trim -->
+          <div class="e-sides"></div>
+          <div class="e-front">
+            <div class="e-front-shadow"></div>
+          </div>
+
+          <!-- Top Foldable Flap with 3D Shadow -->
+          <div class="e-flap">
+            <div class="e-flap-piping"></div>
+          </div>
+
+          <!-- Sculpted 3D Crimson & Gold Wax Seal with Ribbon Tails -->
+          <div class="e-seal" id="waxSeal" title="Break the wax seal">
+            <div class="seal-ribbon-tails">
+              <span class="ribbon-tail left"></span>
+              <span class="ribbon-tail right"></span>
+            </div>
+            <div class="seal-wax-ring">
+              <div class="seal-wax-core">
+                <span class="seal-monogram">💖</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Light Burst Effect on Open -->
+          <div class="env-light-explosion" id="envLightExplosion" aria-hidden="true"></div>
         </button>
       </div>
 
-      <p class="hint pulse" id="envHint">👆 Tap the golden wax seal to open</p>
+      <!-- Action Prompt -->
+      <div class="env-prompt-wrap">
+        <button class="game-action-btn open-letter-cta pulse-glow" id="openLetterBtn" type="button">
+          <span>✨</span> Tap Wax Seal to Open Letter 💌
+        </button>
+        <p class="hint" id="envHint">A secret message wrapped with love and glitter sparkles ✨</p>
+      </div>
     </div>
 
+    <!-- Letter Reading & Victory Celebration Phase -->
     <div class="inner hide" id="notePhase">
       <div class="quest-clear-banner" id="questClearBanner">
-        <span class="quest-stars">⭐⭐⭐⭐⭐</span>
-        <h3>BIRTHDAY QUEST COMPLETE! 🏆</h3>
-        <p class="final-score-text">FINAL SCORE: <b id="finalScoreVal">10,000</b> LOVE XP</p>
+        <span class="quest-trophy-icon">🏆</span>
+        <div class="quest-stars">✨ ⭐ 🌟 💖 🌟 ⭐ ✨</div>
+        <h3 class="quest-title">BIRTHDAY QUEST COMPLETE!</h3>
+        <p class="final-score-text">FINAL SCORE: <b id="finalScoreVal">10,000</b> LOVE XP UNLOCKED</p>
+        <div class="quest-badge-pill">👑 QUEEN OF MY HEART 👑</div>
       </div>
 
-      <article class="note" id="note" title="Tap letter to fast-forward">
-        <h3>Dear {you},</h3>
-        <p id="noteText"></p>
-        <p class="sign hide" id="noteSign">With all my love,<br>— {me}</p>
-        <span class="note-seal" aria-hidden="true">🎂</span>
+      <!-- Luxury Deckled Parchment Love Letter -->
+      <article class="note" id="note" title="Tap anywhere to finish reading instantly">
+        <div class="note-paper-texture" aria-hidden="true"></div>
+        <div class="note-golden-border" aria-hidden="true"></div>
+
+        <div class="note-header">
+          <span class="note-date-badge">OCTOBER 29 · HER SPECIAL DAY</span>
+          <h3 class="note-greeting">My Dearest {you}, 💖</h3>
+        </div>
+
+        <p id="noteText" class="note-body-text"></p>
+
+        <div class="sign-block hide" id="noteSign">
+          <p class="sign-closing">With all my love, forever &amp; always,</p>
+          <p class="sign-name">— {me} ✨</p>
+          <div class="note-wax-stamp">
+            <span class="stamp-heart">💌</span>
+            <small>SEALED WITH LOVE</small>
+          </div>
+        </div>
+
+        <div class="note-tap-hint" id="noteTapHint">👆 Tap letter to fast-forward</div>
       </article>
 
-      <div class="letter-actions">
-        <button class="cta hide" id="replayBtn" data-go="bow">Play Again ↺ (Replay Arcade)</button>
+      <!-- Post-Letter Actions -->
+      <div class="letter-actions hide" id="letterActions">
+        <button class="cta cta-glow" id="replayBtn" data-go="bow">
+          <span>↺</span> Play Again (Replay Arcade Journey)
+        </button>
+        <button class="game-pill-btn" id="resealBtn" type="button">
+          <span>✉️</span> Re-seal &amp; Read Again
+        </button>
       </div>
     </div>
   </section>
