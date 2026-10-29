@@ -3,6 +3,9 @@
    Customizable via CONFIG. Everything else runs automatically!
    ========================================================= */
 const CONFIG = {
+  // Password protection for surprise website (change anytime here)
+  password: '5nov',
+
   you: 'Soniya',
   me: 'Avinash',
   age: 21,
@@ -50,6 +53,135 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
   while (w.nextNode()) nodes.push(w.currentNode);
   nodes.forEach(n => { if (/\{(me|you|age)\}/.test(n.nodeValue)) n.nodeValue = tpl(n.nodeValue); });
   document.title = `A little something, for ${CONFIG.you} ✨`;
+})();
+
+/* =========================================================
+   PASSWORD PROTECTION GATE ENGINE
+   ========================================================= */
+(function initPasswordGate() {
+  const gate = S('passwordGate');
+  const form = S('passwordForm');
+  const input = S('secretPasswordInput');
+  const toggleBtn = S('pwdToggleVisibility');
+  const errorBanner = S('pwdErrorBanner');
+  const unlockBtn = S('unlockSurpriseBtn');
+  const card = S('passwordCard');
+
+  const isUnlocked = () => {
+    try {
+      return localStorage.getItem('surprise_unlocked') === 'true';
+    } catch(e) {
+      return false;
+    }
+  };
+
+  const markUnlocked = () => {
+    try {
+      localStorage.setItem('surprise_unlocked', 'true');
+    } catch(e) {}
+    document.documentElement.classList.remove('is-locked');
+    document.documentElement.classList.add('is-unlocked');
+  };
+
+  // If already unlocked on this device, immediately remove gate
+  if (isUnlocked()) {
+    markUnlocked();
+    if (gate) gate.remove();
+    return;
+  }
+
+  // Toggle password visibility (eye icon)
+  if (toggleBtn && input) {
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = input.getAttribute('type') === 'password';
+      input.setAttribute('type', isPassword ? 'text' : 'password');
+      toggleBtn.textContent = isPassword ? '🙈' : '👁️';
+    });
+  }
+
+  // Validate entered password
+  const validate = () => {
+    if (!input) return;
+    const val = input.value.trim().toLowerCase();
+    const target = String(CONFIG.password || '5nov').trim().toLowerCase();
+
+    // Check match (accepts exact match or normalized variants if default 5nov)
+    const isCorrect = (val === target) ||
+      (val === target.replace(/\s+/g, '')) ||
+      (target === '5nov' && (val === '5 nov' || val === '05 nov' || val === '05nov' || val === '5th nov' || val === 'soniya' || val === '5november' || val === '5 november'));
+
+    if (isCorrect) {
+      // 1. Success audio chime
+      try {
+        if (typeof sfx !== 'undefined') {
+          sfx.pop(1.2);
+          setTimeout(() => sfx.sparkle(), 140);
+          setTimeout(() => sfx.fanfare(), 360);
+        }
+      } catch(e) {}
+
+      if (errorBanner) errorBanner.classList.add('hide');
+      if (unlockBtn) {
+        unlockBtn.classList.add('unlocking');
+        unlockBtn.innerHTML = '<span>✨ Unlocking Surprise... 💖</span>';
+        unlockBtn.disabled = true;
+      }
+
+      // Burst celebratory confetti
+      if (typeof burst === 'function') {
+        const rect = unlockBtn ? unlockBtn.getBoundingClientRect() : { left: innerWidth / 2, width: 0, top: innerHeight / 2, height: 0 };
+        burst(60, rect.left + rect.width / 2, rect.top + rect.height / 2, ['#ff4081', '#ff80ab', '#ffd27a', '#ffffff', '#e91e63']);
+      }
+
+      // 2. Remember this device in localStorage
+      markUnlocked();
+
+      // 3. Smooth romantic gate exit animation
+      if (gate) {
+        gate.classList.add('unlocked-exit');
+        setTimeout(() => {
+          gate.remove();
+        }, 650);
+      }
+    } else {
+      // Wrong password feedback
+      try {
+        if (typeof sfx !== 'undefined') sfx.tone(220, 'sawtooth', 0.15, 0.08);
+      } catch(e) {}
+
+      if (errorBanner) {
+        errorBanner.classList.remove('hide');
+      }
+
+      if (card) {
+        card.classList.remove('shake');
+        void card.offsetWidth; // Force reflow
+        card.classList.add('shake');
+        setTimeout(() => card.classList.remove('shake'), 600);
+      }
+
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+    }
+  };
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      validate();
+    });
+  }
+
+  // Clear error message on typing
+  if (input) {
+    input.addEventListener('input', () => {
+      if (errorBanner && !errorBanner.classList.contains('hide')) {
+        errorBanner.classList.add('hide');
+      }
+    });
+  }
 })();
 
 /* =========================================================

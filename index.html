@@ -9,8 +9,75 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Dancing+Script:wght@600;700&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script>
+  (function() {
+    try {
+      if (localStorage.getItem('surprise_unlocked') === 'true') {
+        document.documentElement.classList.add('is-unlocked');
+      } else {
+        document.documentElement.classList.add('is-locked');
+      }
+    } catch(e) {
+      document.documentElement.classList.add('is-locked');
+    }
+  })();
+</script>
 </head>
 <body data-theme="day">
+
+<!-- Romantic Password Protection Gate -->
+<div id="passwordGate" class="password-gate-screen" role="dialog" aria-modal="true" aria-label="Unlock Special Birthday Surprise">
+  <!-- Romantic Ambient Hearts Backdrop -->
+  <div class="pwd-hearts-bg" aria-hidden="true">
+    <span class="pwd-float-heart h1">💖</span>
+    <span class="pwd-float-heart h2">💕</span>
+    <span class="pwd-float-heart h3">🌸</span>
+    <span class="pwd-float-heart h4">✨</span>
+    <span class="pwd-float-heart h5">💗</span>
+    <span class="pwd-float-heart h6">💝</span>
+    <span class="pwd-float-heart h7">⭐</span>
+    <span class="pwd-float-heart h8">🌷</span>
+  </div>
+
+  <div class="password-card" id="passwordCard">
+    <div class="pwd-card-crown">👑</div>
+    <div class="pwd-ribbon-badge">A PRIVATE BIRTHDAY SURPRISE</div>
+
+    <h1 class="pwd-main-title">A Special Surprise Is Waiting For You 💝</h1>
+    <p class="pwd-sub-message">Enter the secret passcode to unlock your birthday world ✨</p>
+
+    <form class="pwd-form" id="passwordForm" onsubmit="return false;" autocomplete="off">
+      <div class="pwd-input-wrap" id="pwdInputWrap">
+        <span class="pwd-input-icon">🔐</span>
+        <input 
+          type="password" 
+          id="secretPasswordInput" 
+          class="pwd-input" 
+          placeholder="Enter secret passcode…" 
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Secret Passcode"
+        >
+        <button type="button" class="pwd-toggle-visibility" id="pwdToggleVisibility" title="Show/Hide Passcode" aria-label="Toggle password visibility">
+          👁️
+        </button>
+      </div>
+
+      <!-- Error feedback message banner -->
+      <div class="pwd-error-banner hide" id="pwdErrorBanner" role="alert">
+        <span>Oops! Wrong password, try again 🥺❤️</span>
+      </div>
+
+      <button type="submit" class="pwd-unlock-btn pulse-glow" id="unlockSurpriseBtn">
+        <span>Unlock Surprise 🎁</span>
+      </button>
+
+      <p class="pwd-hint-text">💡 Hint: Her special date or passcode (e.g. <b>5nov</b>) 🌸</p>
+    </form>
+  </div>
+</div>
 
 <!-- Background atmospheric layers -->
 <div id="nightBg" aria-hidden="true"><div id="stars"></div></div>
