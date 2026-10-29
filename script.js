@@ -1063,102 +1063,404 @@ hooks.balloons = () => {
 };
 
 /* =========================================================
-   STAGE 6 · MEMORY VAULT & STICKER STUDIO
+   STAGE 6 · LUXURY PHOTO ALBUM & MEMORY PUZZLE
    ========================================================= */
 let activeStamp = '💖';
-const PH = ['#ffb4c6', '#ffd29e', '#e8a0bf', '#ffe08a', '#f4a6a0'];
+let currentMemoryIdx = 0;
+
+const MEMORY_STORIES = [
+  {
+    title: "Under The Starlight ✨",
+    story: "Under a sky full of stars, you've always shone the brightest.",
+    date: "Chapter 01 · Celestial Magic",
+    likes: 38
+  },
+  {
+    title: "Cozy Café & Sweet Talks ☕",
+    story: "Hours always felt like minutes whenever we shared our worlds.",
+    date: "Chapter 02 · Warm Moments",
+    likes: 42
+  },
+  {
+    title: "The Birthday Girl 👑",
+    story: "Celebrating another wonderful year of pure magic with you.",
+    date: "Chapter 03 · Celebration",
+    likes: 56
+  },
+  {
+    title: "Sunset & Golden Horizons 🌅",
+    story: "Every journey and sunset is a hundred times sweeter by your side.",
+    date: "Chapter 04 · Endless Horizons",
+    likes: 31
+  },
+  {
+    title: "Forever My Person 💖",
+    story: "My favourite place in the entire world is right next to you.",
+    date: "Chapter 05 · Heart to Heart",
+    likes: 64
+  }
+];
+
 function placeholder(i) {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${PH[i % 5]}'/><stop offset='1' stop-color='#fff4e0'/></linearGradient></defs><rect width='400' height='500' fill='url(#g)'/><circle cx='200' cy='190' r='62' fill='#e0316d' opacity='.75'/><path d='M80 420c0-80 55-120 120-120s120 40 120 120z' fill='#e0316d' opacity='.75'/><text x='200' y='470' font-family='sans-serif' font-size='24' text-anchor='middle' fill='#7a2a45'>Your photo ${i + 1}</text></svg>`;
-  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+  if (i === 0) {
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'>
+      <defs>
+        <linearGradient id='bg0' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='0%' stop-color='#0f031e'/>
+          <stop offset='45%' stop-color='#2b0a3d'/>
+          <stop offset='85%' stop-color='#5e174b'/>
+          <stop offset='100%' stop-color='#1b0424'/>
+        </linearGradient>
+        <radialGradient id='moonGlow' cx='50%' cy='50%' r='50%'>
+          <stop offset='0%' stop-color='#fff5cc' stop-opacity='0.9'/>
+          <stop offset='60%' stop-color='#ffd27a' stop-opacity='0.3'/>
+          <stop offset='100%' stop-color='#ffd27a' stop-opacity='0'/>
+        </radialGradient>
+      </defs>
+      <rect width='500' height='500' fill='url(#bg0)'/>
+      <circle cx='380' cy='120' r='60' fill='url(#moonGlow)'/>
+      <path d='M395 85 A35 35 0 1 0 420 145 A45 45 0 1 1 395 85 Z' fill='#fff5d0'/>
+      <circle cx='80' cy='70' r='3' fill='#fff' opacity='0.9'/>
+      <circle cx='140' cy='110' r='2' fill='#ffd27a' opacity='0.8'/>
+      <circle cx='220' cy='60' r='3.5' fill='#fff' opacity='0.95'/>
+      <circle cx='290' cy='130' r='2' fill='#ff9ec0' opacity='0.75'/>
+      <circle cx='60' cy='190' r='2.5' fill='#fff' opacity='0.85'/>
+      <circle cx='180' cy='220' r='2' fill='#ffd27a' opacity='0.8'/>
+      <circle cx='440' cy='240' r='2.5' fill='#fff' opacity='0.7'/>
+      <line x1='120' y1='40' x2='50' y2='90' stroke='url(#moonGlow)' stroke-width='2' stroke-linecap='round'/>
+      <g transform='translate(150, 150) scale(0.9)'>
+        <ellipse cx='20' cy='30' rx='14' ry='18' fill='#ffb02e' opacity='0.85'/>
+        <path d='M15 25 C15 20 25 20 25 27 C25 32 20 35 20 35 C20 35 15 32 15 27 Z' fill='#fff'/>
+      </g>
+      <g transform='translate(270, 180) scale(0.7)'>
+        <ellipse cx='20' cy='30' rx='14' ry='18' fill='#ff4f93' opacity='0.85'/>
+        <path d='M15 25 C15 20 25 20 25 27 C25 32 20 35 20 35 C20 35 15 32 15 27 Z' fill='#fff'/>
+      </g>
+      <path d='M-20 420 Q160 360 320 400 T520 410 L520 520 L-20 520 Z' fill='#170522'/>
+      <path d='M-20 440 Q180 390 380 430 T520 430 L520 520 L-20 520 Z' fill='#0e0216'/>
+      <ellipse cx='220' cy='370' rx='10' ry='12' fill='#ffd27a' opacity='0.9'/>
+      <path d='M210 382 C210 382 200 420 215 425 C230 425 230 382 230 382 Z' fill='#ffd27a' opacity='0.9'/>
+      <ellipse cx='242' cy='374' rx='9' ry='11' fill='#ff85a2' opacity='0.9'/>
+      <path d='M233 385 C233 385 225 422 240 425 C255 425 252 385 252 385 Z' fill='#ff85a2' opacity='0.9'/>
+      <text x='250' y='475' font-family='sans-serif' font-weight='700' font-size='18' fill='#ffd27a' text-anchor='middle' letter-spacing='2'>UNDER THE STARLIGHT ✨</text>
+    </svg>`);
+  }
+  if (i === 1) {
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'>
+      <defs>
+        <linearGradient id='bg1' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='0%' stop-color='#260c1c'/>
+          <stop offset='50%' stop-color='#5c1d35'/>
+          <stop offset='100%' stop-color='#a6443c'/>
+        </linearGradient>
+      </defs>
+      <rect width='500' height='500' fill='url(#bg1)'/>
+      <path d='M0 80 Q125 120 250 85 T500 90' fill='none' stroke='rgba(255,210,122,0.4)' stroke-width='2'/>
+      <circle cx='80' cy='105' r='8' fill='#ffd27a' filter='drop-shadow(0 0 6px #ffd27a)'/>
+      <circle cx='180' cy='105' r='8' fill='#ff85a2' filter='drop-shadow(0 0 6px #ff85a2)'/>
+      <circle cx='310' cy='95' r='8' fill='#ffd27a' filter='drop-shadow(0 0 6px #ffd27a)'/>
+      <circle cx='420' cy='90' r='8' fill='#7ff3e6' filter='drop-shadow(0 0 6px #7ff3e6)'/>
+      <ellipse cx='250' cy='390' rx='210' ry='70' fill='#421b18'/>
+      <ellipse cx='250' cy='380' rx='205' ry='65' fill='#5c2a24'/>
+      <ellipse cx='250' cy='370' rx='195' ry='60' fill='#7a3b32'/>
+      <g transform='translate(160, 290)'>
+        <rect x='0' y='10' width='60' height='55' rx='10' fill='#fff5ea'/>
+        <path d='M60 22 C72 22 72 45 60 45' stroke='#fff5ea' stroke-width='6' fill='none'/>
+        <ellipse cx='30' cy='10' rx='30' ry='12' fill='#d9c0a3'/>
+        <ellipse cx='30' cy='10' rx='26' ry='9' fill='#6e3725'/>
+        <path d='M30 6 C25 2 20 6 23 11 C25 14 30 16 30 16 C30 16 35 14 37 11 C40 6 35 2 30 6 Z' fill='#fff5ea'/>
+        <path d='M25 -5 Q20 -15 28 -25' stroke='rgba(255,255,255,0.6)' stroke-width='2' fill='none' stroke-linecap='round'/>
+      </g>
+      <g transform='translate(270, 290)'>
+        <rect x='0' y='10' width='60' height='55' rx='10' fill='#ffb8d0'/>
+        <path d='M-1 22 C-13 22 -13 45 -1 45' stroke='#ffb8d0' stroke-width='6' fill='none'/>
+        <ellipse cx='30' cy='10' rx='30' ry='12' fill='#d9c0a3'/>
+        <ellipse cx='30' cy='10' rx='26' ry='9' fill='#6e3725'/>
+        <path d='M30 6 C25 2 20 6 23 11 C25 14 30 16 30 16 C30 16 35 14 37 11 C40 6 35 2 30 6 Z' fill='#fff5ea'/>
+        <path d='M35 -5 Q40 -15 32 -25' stroke='rgba(255,255,255,0.6)' stroke-width='2' fill='none' stroke-linecap='round'/>
+      </g>
+      <text x='250' y='465' font-family='sans-serif' font-weight='700' font-size='18' fill='#ffd27a' text-anchor='middle' letter-spacing='2'>SWEET CAFÉ &amp; SMILES ☕</text>
+    </svg>`);
+  }
+  if (i === 2) {
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'>
+      <defs>
+        <linearGradient id='bg2' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='0%' stop-color='#250938'/>
+          <stop offset='55%' stop-color='#691b54'/>
+          <stop offset='100%' stop-color='#e62e6e'/>
+        </linearGradient>
+      </defs>
+      <rect width='500' height='500' fill='url(#bg2)'/>
+      <ellipse cx='120' cy='140' rx='36' ry='44' fill='#ff4f93'/>
+      <path d='M120 184 L117 190 L123 190 Z' fill='#ff4f93'/>
+      <path d='M120 190 Q110 240 140 290' stroke='#ffc2d8' stroke-width='1.5' fill='none'/>
+      <ellipse cx='380' cy='130' rx='36' ry='44' fill='#ffd27a'/>
+      <path d='M380 174 L377 180 L383 180 Z' fill='#ffd27a'/>
+      <path d='M380 180 Q390 230 360 290' stroke='#ffe8a3' stroke-width='1.5' fill='none'/>
+      <ellipse cx='250' cy='90' rx='40' ry='50' fill='#7ff3e6'/>
+      <path d='M250 140 L246 146 L254 146 Z' fill='#7ff3e6'/>
+      <path d='M250 146 Q245 210 255 260' stroke='#b8f8f0' stroke-width='1.5' fill='none'/>
+      <g transform='translate(200, 270)'>
+        <path d='M0 45 L20 10 L50 35 L80 10 L100 45 Z' fill='#ffd27a' stroke='#f3ba3a' stroke-width='2'/>
+        <circle cx='20' cy='10' r='4' fill='#ff3d7f'/>
+        <circle cx='50' cy='35' r='4' fill='#ff3d7f'/>
+        <circle cx='80' cy='10' r='4' fill='#ff3d7f'/>
+        <rect x='0' y='45' width='100' height='12' rx='3' fill='#f3ba3a'/>
+      </g>
+      <text x='250' y='465' font-family='sans-serif' font-weight='700' font-size='18' fill='#ffd27a' text-anchor='middle' letter-spacing='2'>BIRTHDAY CELEBRATION 🎂</text>
+    </svg>`);
+  }
+  if (i === 3) {
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'>
+      <defs>
+        <linearGradient id='bg3' x1='0' y1='0' x2='0' y2='1'>
+          <stop offset='0%' stop-color='#29082f'/>
+          <stop offset='40%' stop-color='#781c4e'/>
+          <stop offset='70%' stop-color='#d94c34'/>
+          <stop offset='100%' stop-color='#ffb03a'/>
+        </linearGradient>
+      </defs>
+      <rect width='500' height='500' fill='url(#bg3)'/>
+      <circle cx='250' cy='280' r='55' fill='#fff2b8' opacity='0.9'/>
+      <rect x='0' y='280' width='500' height='220' fill='#421236'/>
+      <path d='M0 310 Q125 305 250 310 T500 310' stroke='#ff9457' stroke-width='3' fill='none'/>
+      <path d='M0 340 Q150 335 300 340 T500 340' stroke='#ffb873' stroke-width='2.5' fill='none'/>
+      <path d='M0 410 Q200 390 500 420 L500 500 L0 500 Z' fill='#8c3a2f'/>
+      <text x='250' y='480' font-family='sans-serif' font-weight='700' font-size='18' fill='#ffd27a' text-anchor='middle' letter-spacing='2'>GOLDEN SUNSETS 🌅</text>
+    </svg>`);
+  }
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'>
+    <defs>
+      <linearGradient id='bg4' x1='0' y1='0' x2='0' y2='1'>
+        <stop offset='0%' stop-color='#1b062b'/>
+        <stop offset='50%' stop-color='#5a1548'/>
+        <stop offset='100%' stop-color='#a6266a'/>
+      </linearGradient>
+    </defs>
+    <rect width='500' height='500' fill='url(#bg4)'/>
+    <path d='M-10 80 Q140 100 240 50 T460 30' stroke='#38141e' stroke-width='10' fill='none' stroke-linecap='round'/>
+    <circle cx='120' cy='90' r='16' fill='#ff9ec0'/>
+    <circle cx='180' cy='130' r='18' fill='#ff85a8'/>
+    <circle cx='260' cy='55' r='18' fill='#ff85a8'/>
+    <g transform='translate(210, 240)'>
+      <circle cx='40' cy='40' r='50' fill='rgba(255,210,122,0.15)' stroke='#ffd27a' stroke-width='2'/>
+      <path d='M40 25 C30 12 14 20 20 35 C25 45 40 55 40 55 C40 55 55 45 60 35 C66 20 50 12 40 25 Z' fill='#ff3d7f'/>
+    </g>
+    <text x='250' y='465' font-family='sans-serif' font-weight='700' font-size='18' fill='#ffd27a' text-anchor='middle' letter-spacing='2'>FOREVER &amp; ALWAYS 💖</text>
+  </svg>`);
 }
-const CAPS = ['wow', 'good', 'love', 'smile', 'us'];
+
+const CAPS = [
+  'Under The Starlight ✨',
+  'Cozy Café & Sweet Talks ☕',
+  'The Birthday Girl 👑',
+  'Sunset & Golden Horizons 🌅',
+  'Forever My Person 💖'
+];
+
 const photos = Array.from({ length: 5 }, (_, i) => {
   let p = CONFIG.photos[i]; if (typeof p === 'string') p = { src: p }; p = p || {};
   return { src: p.src || placeholder(i), caption: p.caption || CAPS[i] };
 });
 
-hooks.memory = () => {
-  const rail = S('rail'), dots = S('pdots');
-  if (!rail || !dots) return;
-  rail.innerHTML = ''; dots.innerHTML = '';
-  
-  photos.forEach((p, i) => {
-    const it = document.createElement('div');
-    it.className = 'pitem' + (i === 0 ? ' on' : '');
-    it.innerHTML = `<div class="pol" style="--r:${rand(-3, 3).toFixed(1)}deg"><span class="pin"></span><img alt="" src="${p.src}" draggable="false"><span class="cap">${esc(p.caption)}</span></div>`;
-    
-    // Interactive sticker stamping onto polaroid
-    const pol = it.querySelector('.pol');
-    it.addEventListener('click', e => {
-      sfx.stamp();
-      const rect = pol.getBoundingClientRect();
-      const stamp = document.createElement('span');
-      stamp.className = 'stamped-badge';
-      stamp.textContent = activeStamp;
-      stamp.style.left = `${Math.max(10, Math.min(rect.width - 40, e.clientX - rect.left - 15))}px`;
-      stamp.style.top = `${Math.max(10, Math.min(rect.height - 40, e.clientY - rect.top - 15))}px`;
-      stamp.style.setProperty('--rot', `${rand(-25, 25)}deg`);
-      pol.appendChild(stamp);
+function renderActiveMemory() {
+  const p = photos[currentMemoryIdx];
+  const meta = MEMORY_STORIES[currentMemoryIdx] || {
+    title: p.caption || `Memory #${currentMemoryIdx + 1}`,
+    story: "A cherished memory straight from the heart.",
+    date: `Chapter 0${currentMemoryIdx + 1}`,
+    likes: 24
+  };
 
-      addScore(50, e.clientX, e.clientY, `${activeStamp} STAMP!`);
-      it.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    });
+  const img = S('activePhotoImg');
+  if (img) img.src = p.src;
 
-    rail.appendChild(it);
+  const idxBadge = S('memoryIndexBadge');
+  if (idxBadge) idxBadge.textContent = `MEMORY ${currentMemoryIdx + 1} OF ${photos.length}`;
 
-    const dot = document.createElement('i');
-    dot.className = i === 0 ? 'on' : '';
-    dot.setAttribute('aria-label', `Go to photo ${i + 1}`);
-    dot.addEventListener('click', e => {
-      e.stopPropagation();
-      sfx.pop(1.4);
-      it.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    });
-    dots.appendChild(dot);
+  const dateBadge = S('memoryDateBadge');
+  if (dateBadge) dateBadge.textContent = meta.date;
+
+  const titleEl = S('memoryTitle');
+  if (titleEl) titleEl.textContent = meta.title;
+
+  const storyEl = S('memoryStory');
+  if (storyEl) storyEl.textContent = meta.story;
+
+  const likeCountEl = S('photoLikeCount');
+  if (likeCountEl) likeCountEl.textContent = meta.likes;
+
+  const stampedLayer = S('stampedLayer');
+  if (stampedLayer) stampedLayer.innerHTML = '';
+
+  $$('.filmstrip-thumb').forEach((thumb, i) => {
+    thumb.classList.toggle('active', i === currentMemoryIdx);
   });
+}
 
-  rail.scrollLeft = 0;
-  let raf = 0;
-  rail.onscroll = () => {
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => {
-      const items = $$('.pitem', rail), mid = rail.scrollLeft + rail.clientWidth / 2;
-      let best = 0, bd = 1e9;
-      items.forEach((it, i) => {
-        const d = Math.abs(it.offsetLeft + it.offsetWidth / 2 - mid);
-        if (d < bd) { bd = d; best = i; }
-      });
-      items.forEach((it, i) => it.classList.toggle('on', i === best));
-      $$('#pdots i').forEach((d, i) => d.classList.toggle('on', i === best));
-    });
-  };
+function renderFilmstrip() {
+  const container = S('photoFilmstrip');
+  if (!container) return;
+  container.innerHTML = '';
+  photos.forEach((p, i) => {
+    const thumb = document.createElement('button');
+    thumb.type = 'button';
+    thumb.className = 'filmstrip-thumb' + (i === currentMemoryIdx ? ' active' : '');
+    thumb.title = `View Memory #${i + 1}`;
+    thumb.innerHTML = `<img src="${p.src}" alt="Memory ${i + 1}"><span class="thumb-num">${i + 1}</span>`;
+    thumb.onclick = () => {
+      sfx.pop(1.3);
+      currentMemoryIdx = i;
+      renderActiveMemory();
+    };
+    container.appendChild(thumb);
+  });
+}
 
-  // Desktop mouse drag scrolling
-  let isDown = false, startX = 0, scrollLeft = 0;
-  rail.onmousedown = e => {
-    isDown = true;
-    startX = e.pageX - rail.offsetLeft;
-    scrollLeft = rail.scrollLeft;
-  };
-  window.addEventListener('mouseup', () => { isDown = false; });
-  rail.onmousemove = e => {
-    if (!isDown) return;
-    const x = e.pageX - rail.offsetLeft;
-    const walk = (x - startX) * 1.4;
-    rail.scrollLeft = scrollLeft - walk;
-  };
+function switchMemoryTab(tab) {
+  const tabPhotosBtn = S('tabPhotosBtn');
+  const tabPuzzleBtn = S('tabPuzzleBtn');
+  const photosPanel = S('memoryPhotosPanel');
+  const puzzlePanel = S('memoryPuzzlePanel');
+
+  if (tab === 'puzzle') {
+    if (tabPuzzleBtn) tabPuzzleBtn.classList.add('active');
+    if (tabPhotosBtn) tabPhotosBtn.classList.remove('active');
+    if (photosPanel) photosPanel.classList.add('hide');
+    if (puzzlePanel) puzzlePanel.classList.remove('hide');
+    buildPuzzlePhotoList();
+    renderPuzzleThumbnails();
+    initPuzzle(currentMemoryIdx + 1);
+  } else {
+    if (tabPhotosBtn) tabPhotosBtn.classList.add('active');
+    if (tabPuzzleBtn) tabPuzzleBtn.classList.remove('active');
+    if (photosPanel) photosPanel.classList.remove('hide');
+    if (puzzlePanel) puzzlePanel.classList.add('hide');
+    renderActiveMemory();
+  }
+}
+
+function stampActivePhoto(e) {
+  sfx.stamp();
+  const layer = S('stampedLayer');
+  if (!layer) return;
+  const rect = layer.getBoundingClientRect();
+  const stamp = document.createElement('span');
+  stamp.className = 'stamped-badge';
+  stamp.textContent = activeStamp;
+  const x = e ? (e.clientX - rect.left - 15) : rand(30, rect.width - 60);
+  const y = e ? (e.clientY - rect.top - 15) : rand(30, rect.height - 60);
+  stamp.style.left = `${Math.max(10, Math.min(rect.width - 45, x))}px`;
+  stamp.style.top = `${Math.max(10, Math.min(rect.height - 45, y))}px`;
+  stamp.style.setProperty('--rot', `${rand(-25, 25)}deg`);
+  layer.appendChild(stamp);
+  addScore(50, e ? e.clientX : rect.left + rect.width / 2, e ? e.clientY : rect.top + rect.height / 2, `${activeStamp} STAMP!`);
+}
+
+hooks.memory = () => {
+  switchMemoryTab('photos');
+  renderFilmstrip();
+  renderActiveMemory();
 };
 
-// Sticker Station chips
-$$('.stamp-chip').forEach(chip => {
-  chip.addEventListener('click', e => {
-    e.stopPropagation();
-    sfx.pop(1.5);
-    $$('.stamp-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeStamp = chip.dataset.stamp || '💖';
+hooks.puzzle = () => {
+  go('memory');
+  switchMemoryTab('puzzle');
+};
+
+(function bindMemoryEvents() {
+  const tabPhotosBtn = S('tabPhotosBtn');
+  if (tabPhotosBtn) tabPhotosBtn.addEventListener('click', () => {
+    sfx.click();
+    switchMemoryTab('photos');
   });
-});
+
+  const tabPuzzleBtn = S('tabPuzzleBtn');
+  if (tabPuzzleBtn) tabPuzzleBtn.addEventListener('click', () => {
+    sfx.click();
+    switchMemoryTab('puzzle');
+  });
+
+  const polPrevBtn = S('polPrevBtn');
+  if (polPrevBtn) polPrevBtn.addEventListener('click', () => {
+    sfx.pop(1.2);
+    currentMemoryIdx = (currentMemoryIdx - 1 + photos.length) % photos.length;
+    renderActiveMemory();
+  });
+
+  const polNextBtn = S('polNextBtn');
+  if (polNextBtn) polNextBtn.addEventListener('click', () => {
+    sfx.pop(1.2);
+    currentMemoryIdx = (currentMemoryIdx + 1) % photos.length;
+    renderActiveMemory();
+  });
+
+  const playWithThisPhotoBtn = S('playWithThisPhotoBtn');
+  if (playWithThisPhotoBtn) playWithThisPhotoBtn.addEventListener('click', () => {
+    sfx.sparkle();
+    switchMemoryTab('puzzle');
+  });
+
+  const backToAlbumBtn = S('backToAlbumBtn');
+  if (backToAlbumBtn) backToAlbumBtn.addEventListener('click', () => {
+    sfx.click();
+    switchMemoryTab('photos');
+  });
+
+  const photoFrame = S('polaroidPhotoFrame');
+  if (photoFrame) {
+    photoFrame.addEventListener('click', e => {
+      if (e.target.closest('#photoLikeBtn')) return;
+      stampActivePhoto(e);
+    });
+  }
+
+  const photoLikeBtn = S('photoLikeBtn');
+  if (photoLikeBtn) {
+    photoLikeBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      sfx.sparkle();
+      const meta = MEMORY_STORIES[currentMemoryIdx];
+      if (meta) meta.likes++;
+      const countEl = S('photoLikeCount');
+      if (countEl) countEl.textContent = meta ? meta.likes : '99';
+      burst(25, e.clientX, e.clientY, ['#ff3d7f', '#ff9ec0', '#ffd166', '#ffffff']);
+      addScore(25, e.clientX, e.clientY, '💖 LOVED!');
+    });
+  }
+
+  const photoInput = S('photoFileInput');
+  if (photoInput) {
+    photoInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        photos[currentMemoryIdx].src = ev.target.result;
+        sfx.fanfare();
+        burst(40, innerWidth / 2, innerHeight / 2);
+        renderActiveMemory();
+        renderFilmstrip();
+        buildPuzzlePhotoList();
+        renderPuzzleThumbnails();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Stamp chips selection
+  $$('.stamp-chip').forEach(chip => {
+    chip.addEventListener('click', e => {
+      e.stopPropagation();
+      sfx.pop(1.5);
+      $$('.stamp-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeStamp = chip.dataset.stamp || '💖';
+      stampActivePhoto();
+    });
+  });
+})();
 
 /* =========================================================
    STAGE 7 · PHOTO PUZZLE QUEST ENGINE
@@ -1676,6 +1978,7 @@ function openLetter() {
 window.go = go;
 window.switchCelebrationTab = switchCelebrationTab;
 window.unwrapBirthdayGift = unwrapBirthdayGift;
+window.switchMemoryTab = switchMemoryTab;
 
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash.replace('#', '');
@@ -1686,6 +1989,12 @@ window.addEventListener('hashchange', () => {
     go('cake');
     switchCelebrationTab('gift');
     unwrapBirthdayGift();
+  } else if (hash === 'memory-puzzle' || hash === 'puzzle') {
+    go('memory');
+    switchMemoryTab('puzzle');
+  } else if (hash === 'memory') {
+    go('memory');
+    switchMemoryTab('photos');
   } else if (ORDER.includes(hash)) {
     go(hash);
   }
@@ -1699,6 +2008,12 @@ if (initHash === 'cake-gift' || initHash === 'gift') {
   go('cake');
   switchCelebrationTab('gift');
   unwrapBirthdayGift();
+} else if (initHash === 'memory-puzzle' || initHash === 'puzzle') {
+  go('memory');
+  switchMemoryTab('puzzle');
+} else if (initHash === 'memory') {
+  go('memory');
+  switchMemoryTab('photos');
 } else {
   go(ORDER.includes(initHash) ? initHash : 'bow');
 }

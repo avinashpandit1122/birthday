@@ -589,128 +589,184 @@
     </div>
   </section>
 
-  <!-- 6 · Memory Vault & Polaroid Sticker Studio -->
+  <!-- 6 · Memory Vault: Photo Showcase & Memory Puzzle -->
   <section class="scene night" id="s-memory">
     <div class="inner wide">
-      <div class="stage-tag">STAGE 6 · MEMORY VAULT</div>
-      <h2 class="t-head">A Walk Down Memory Lane 📸</h2>
-      <p class="sub2">Drag or swipe through memories. Tap stickers to stamp photos!</p>
+      <div class="stage-tag">STAGE 6 · MEMORY VAULT &amp; PHOTO PUZZLE</div>
+      <h2 class="t-head">A Walk Down<br>Memory Lane 📸</h2>
+      <p class="sub2">Relive our sweetest memories &amp; piece the memory puzzle together!</p>
       
-      <!-- Interactive Sticker Palette -->
-      <div class="sticker-palette" id="stickerPalette" aria-label="Photo Stickers">
-        <span class="palette-label">Pick Stamp:</span>
-        <button class="stamp-chip active" data-stamp="💖" title="Love Stamp">💖</button>
-        <button class="stamp-chip" data-stamp="✨" title="Magic Stamp">✨</button>
-        <button class="stamp-chip" data-stamp="👑" title="Crown Stamp">👑</button>
-        <button class="stamp-chip" data-stamp="🍰" title="Cake Stamp">🍰</button>
-        <button class="stamp-chip" data-stamp="🔥" title="Fire Stamp">🔥</button>
+      <!-- Segmented Experience Switcher -->
+      <div class="celebration-switcher memory-switcher" id="memorySwitcher" role="tablist">
+        <button class="c-switch-btn active" id="tabPhotosBtn" type="button" role="tab" aria-selected="true">
+          <span class="btn-emoji">📸</span> Photo Album <span class="c-count-badge">5 Photos</span>
+        </button>
+        <button class="c-switch-btn" id="tabPuzzleBtn" type="button" role="tab" aria-selected="false">
+          <span class="btn-emoji">🧩</span> Play Puzzle <span class="c-glow-badge">PLAY</span>
+        </button>
       </div>
 
-      <div class="lights" aria-hidden="true"></div>
-      <div class="rail" id="rail" title="Drag to browse photos"></div>
-      <div class="pdots" id="pdots"></div>
-
-      <!-- Photo Puzzle Challenge Card next to gallery -->
-      <div class="gallery-puzzle-callout">
-        <div class="g-callout-icon">🧩</div>
-        <div class="g-callout-info">
-          <span class="g-callout-title">Photo Puzzle Challenge</span>
-          <span class="g-callout-desc">Can you piece our favourite memories back together?</span>
+      <!-- VIEW 1: Luxury Photo Album & Keepsake -->
+      <div class="celebration-panel" id="memoryPhotosPanel">
+        <!-- Fairy String Lights -->
+        <div class="fairy-lights-string" aria-hidden="true">
+          <span class="f-bulb b1"></span>
+          <span class="f-bulb b2"></span>
+          <span class="f-bulb b3"></span>
+          <span class="f-bulb b4"></span>
+          <span class="f-bulb b5"></span>
+          <span class="f-bulb b6"></span>
+          <span class="f-bulb b7"></span>
         </div>
-        <button class="g-callout-btn" data-go="puzzle">Play Puzzle ➔</button>
+
+        <!-- Centerpiece Polaroid Showcase with Prev / Next -->
+        <div class="polaroid-showcase-wrap">
+          <button class="pol-nav-btn prev-btn" id="polPrevBtn" type="button" title="Previous photo" aria-label="Previous photo">‹</button>
+
+          <div class="hero-polaroid-card" id="heroPolaroid">
+            <!-- Wooden Clothespin -->
+            <div class="wooden-pin" aria-hidden="true"></div>
+            
+            <!-- Photo Display Area -->
+            <div class="polaroid-photo-frame" id="polaroidPhotoFrame">
+              <img id="activePhotoImg" src="" alt="Memory Photo" draggable="false">
+              <!-- Floating Interactive Heart Reaction -->
+              <button class="photo-like-pill" id="photoLikeBtn" type="button" title="Tap to love this memory">
+                <span class="like-heart">💖</span>
+                <span class="like-count" id="photoLikeCount">24</span>
+              </button>
+              <!-- Stamped Stickers Layer -->
+              <div class="stamped-stickers-layer" id="stampedLayer"></div>
+            </div>
+
+            <!-- Polaroid Bottom Caption & Metadata -->
+            <div class="polaroid-meta">
+              <div class="memory-badge-row">
+                <span class="memory-index-badge" id="memoryIndexBadge">MEMORY 1 OF 5</span>
+                <span class="memory-date-badge" id="memoryDateBadge">Special Moment</span>
+              </div>
+              <h3 class="memory-title" id="memoryTitle">Under The Starlight ✨</h3>
+              <p class="memory-story" id="memoryStory">Under a sky full of stars, you've always shone the brightest.</p>
+            </div>
+          </div>
+
+          <button class="pol-nav-btn next-btn" id="polNextBtn" type="button" title="Next photo" aria-label="Next photo">›</button>
+        </div>
+
+        <!-- Interactive Filmstrip Thumbnails -->
+        <div class="photo-filmstrip-container">
+          <span class="filmstrip-label">Select Memory:</span>
+          <div class="photo-filmstrip" id="photoFilmstrip"></div>
+        </div>
+
+        <!-- Interactive Sticker Palette -->
+        <div class="sticker-palette" id="stickerPalette" aria-label="Photo Stickers">
+          <span class="palette-label">Tap Sticker to Stamp:</span>
+          <div class="stamps-row">
+            <button class="stamp-chip active" data-stamp="💖" title="Love Stamp">💖</button>
+            <button class="stamp-chip" data-stamp="✨" title="Magic Stamp">✨</button>
+            <button class="stamp-chip" data-stamp="👑" title="Queen Stamp">👑</button>
+            <button class="stamp-chip" data-stamp="🍰" title="Sweet Stamp">🍰</button>
+            <button class="stamp-chip" data-stamp="🔥" title="Forever Stamp">🔥</button>
+          </div>
+        </div>
+
+        <!-- Primary Action Bar -->
+        <div class="memory-action-bar">
+          <button class="game-action-btn play-puzzle-cta pulse-glow" id="playWithThisPhotoBtn" type="button">
+            <span>🧩</span> Play Puzzle with this Photo ➔
+          </button>
+          
+          <label class="game-pill-btn upload-pill-btn" for="photoFileInput" title="Upload your own real photo">
+            <span>📷</span> Upload Your Photo
+            <input type="file" id="photoFileInput" accept="image/*" style="display:none">
+          </label>
+        </div>
+
+        <div class="scene-nav-actions" style="margin-top: 12px;">
+          <button class="ghost-skip-btn" data-go="letter">Skip to Secret Letter 💌 ➔</button>
+        </div>
       </div>
-      
-      <div class="scene-nav-actions">
-        <button class="cta" data-go="puzzle">Play Photo Puzzle 🧩</button>
-        <button class="ghost-skip-btn" data-go="letter">Skip to Letter 💌</button>
+
+      <!-- VIEW 2: The Interactive Drag & Drop Memory Puzzle -->
+      <div class="celebration-panel hide" id="memoryPuzzlePanel">
+        <!-- Puzzle Stats Bar -->
+        <div class="puzzle-stats-bar">
+          <div class="pstat-item">
+            <span class="pstat-label">MOVES</span>
+            <b class="pstat-val" id="puzzleMoves">0</b>
+          </div>
+          <div class="pstat-item">
+            <span class="pstat-label">TIME</span>
+            <b class="pstat-val" id="puzzleTimer">00:00</b>
+          </div>
+          <div class="pstat-item">
+            <span class="pstat-label">MATCHED</span>
+            <b class="pstat-val" id="puzzleMatched">0/9</b>
+          </div>
+        </div>
+
+        <!-- Gallery Photo Selector -->
+        <div class="puzzle-picker-container">
+          <span class="picker-label">Choose Photo to Piece Together:</span>
+          <div class="puzzle-thumb-list" id="puzzlePhotoList"></div>
+        </div>
+
+        <!-- Target Drop Board (3x3 grid) -->
+        <div class="puzzle-board-wrap">
+          <div class="drop-board" id="dropBoard"></div>
+          
+          <!-- Solved Celebration Overlay -->
+          <div class="puzzle-solved-card hide" id="puzzleSolvedCard">
+            <div class="solved-stars">✨ 🌟 💖 🌟 ✨</div>
+            <h3 class="solved-heading">PUZZLE COMPLETED! 🏆</h3>
+            <p class="solved-msg">You pieced together our sweetest memory!</p>
+            <div class="solved-xp">+500 LOVE XP UNLOCKED ⭐</div>
+            <button class="cta" data-go="letter">Open The Secret Letter 💌</button>
+          </div>
+        </div>
+
+        <!-- Puzzle Control Toolbar -->
+        <div class="puzzle-tools-row">
+          <button class="ptool-btn" id="puzzleShuffleBtn" title="Reshuffle photo pieces">
+            <span>🔀</span> Reshuffle
+          </button>
+          <button class="ptool-btn" id="puzzlePreviewBtn" title="Click to view full photo">
+            <span>👁️</span> Preview
+          </button>
+          <button class="ptool-btn" id="puzzleNumbersBtn" title="Toggle number guides">
+            <span>🔢</span> Numbers: ON
+          </button>
+          <button class="ptool-btn" id="puzzleSolveBtn" title="Auto-solve puzzle">
+            <span>🪄</span> Solve
+          </button>
+          <a href="puzzle.html" target="_blank" class="ptool-btn" title="Open in dedicated separate screen">
+            <span>⛶</span> Full Screen
+          </a>
+        </div>
+
+        <div class="scene-nav-actions" style="margin-top: 14px;">
+          <button class="game-pill-btn" id="backToAlbumBtn" type="button">‹ Back to Photo Album 📸</button>
+          <button class="cta mini-cta" data-go="letter" type="button">Continue to Secret Letter 💌 ➔</button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 7 · Memory Photo Puzzle Quest -->
-  <section class="scene night" id="s-puzzle">
-    <div class="inner wide">
-      <div class="stage-tag">STAGE 7 · PHOTO PUZZLE</div>
-      <h2 class="t-head">Piece Our Memory Together 🧩</h2>
-      <p class="sub2">Drag and drop photo pieces to move them into the correct spots!</p>
-
-      <!-- Puzzle Stats Bar -->
-      <div class="puzzle-stats-bar">
-        <div class="pstat-item">
-          <span class="pstat-label">MOVES</span>
-          <b class="pstat-val" id="puzzleMoves">0</b>
-        </div>
-        <div class="pstat-item">
-          <span class="pstat-label">TIME</span>
-          <b class="pstat-val" id="puzzleTimer">00:00</b>
-        </div>
-        <div class="pstat-item">
-          <span class="pstat-label">MATCHED</span>
-          <b class="pstat-val" id="puzzleMatched">0/9</b>
-        </div>
+  <!-- Reference Photo Modal -->
+  <div class="puzzle-preview-modal hide" id="puzzlePreviewModal">
+    <div class="preview-backdrop" id="previewBackdrop"></div>
+    <div class="preview-dialog">
+      <div class="preview-header">
+        <h4>Complete Photo Preview 📸</h4>
+        <button class="preview-close" id="previewCloseBtn">✕</button>
       </div>
-
-      <!-- Gallery Photo Selector -->
-      <div class="puzzle-picker-container">
-        <span class="picker-label">Select Memory:</span>
-        <div class="puzzle-thumb-list" id="puzzlePhotoList"></div>
+      <div class="preview-img-container">
+        <img id="puzzlePreviewImg" alt="Complete Memory">
       </div>
-
-      <!-- Target Drop Board (3x3 grid) -->
-      <div class="puzzle-board-wrap">
-        <div class="drop-board" id="dropBoard"></div>
-        
-        <!-- Solved Celebration Overlay -->
-        <div class="puzzle-solved-card hide" id="puzzleSolvedCard">
-          <div class="solved-stars">✨ 🌟 💖 🌟 ✨</div>
-          <h3 class="solved-heading">PUZZLE COMPLETED! 🏆</h3>
-          <p class="solved-msg">You pieced together our sweetest memory!</p>
-          <div class="solved-xp">+500 LOVE XP UNLOCKED ⭐</div>
-          <button class="cta" data-go="letter">Open The Secret Letter 💌</button>
-        </div>
-      </div>
-
-      <!-- Puzzle Control Toolbar -->
-      <div class="puzzle-tools-row">
-        <button class="ptool-btn" id="puzzleShuffleBtn" title="Reshuffle photo pieces">
-          <span>🔀</span> Reshuffle
-        </button>
-        <button class="ptool-btn" id="puzzlePreviewBtn" title="Click to view full photo">
-          <span>👁️</span> Preview Photo
-        </button>
-        <button class="ptool-btn" id="puzzleNumbersBtn" title="Toggle number guides">
-          <span>🔢</span> Numbers: ON
-        </button>
-        <button class="ptool-btn" id="puzzleSolveBtn" title="Auto-solve puzzle">
-          <span>🪄</span> Auto-Solve
-        </button>
-        <a href="puzzle.html" target="_blank" class="ptool-btn" title="Open in dedicated separate screen">
-          <span>⛶</span> Full Screen
-        </a>
-      </div>
-
-      <!-- Reference Photo Modal -->
-      <div class="puzzle-preview-modal hide" id="puzzlePreviewModal">
-        <div class="preview-backdrop" id="previewBackdrop"></div>
-        <div class="preview-dialog">
-          <div class="preview-header">
-            <h4>Complete Photo Preview 📸</h4>
-            <button class="preview-close" id="previewCloseBtn">✕</button>
-          </div>
-          <div class="preview-img-container">
-            <img id="puzzlePreviewImg" alt="Complete Memory">
-          </div>
-          <p class="preview-caption" id="puzzlePreviewCap">Our happy memory</p>
-        </div>
-      </div>
-
-      <!-- Navigation Footer -->
-      <div class="puzzle-footer-nav">
-        <button class="cta hide" id="puzzleNextBtn" data-go="letter">Continue to Secret Letter 💌</button>
-        <button class="ghost-back-btn" data-go="memory">← Back to Memory Vault 📸</button>
-      </div>
+      <p class="preview-caption" id="puzzlePreviewCap">Our happy memory</p>
     </div>
-  </section>
+  </div>
 
   <!-- 7 · The Secret Quest Letter & Victory Celebration -->
   <section class="scene night" id="s-letter">
