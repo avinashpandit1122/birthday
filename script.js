@@ -1507,6 +1507,14 @@ function renderActiveMemory() {
   $$('.filmstrip-thumb').forEach((thumb, i) => {
     thumb.classList.toggle('active', i === currentMemoryIdx);
   });
+
+  // Hanging card dynamic impulse animation
+  const card = S('heroPolaroid');
+  if (card) {
+    card.classList.remove('hanging-swing-impulse');
+    void card.offsetWidth;
+    card.classList.add('hanging-swing-impulse');
+  }
 }
 
 function renderFilmstrip() {
@@ -1670,6 +1678,54 @@ hooks.puzzle = () => {
       stampActivePhoto();
     });
   });
+
+  // Interactive hanging card physics (sway impulse settling & mobile swipe)
+  const heroPolaroid = S('heroPolaroid');
+  if (heroPolaroid) {
+    heroPolaroid.addEventListener('animationend', (e) => {
+      if (e.animationName === 'photoHangSettle') {
+        heroPolaroid.classList.remove('hanging-swing-impulse');
+      }
+    });
+
+    let touchStartX = 0, touchStartY = 0, touchActive = false;
+    heroPolaroid.addEventListener('touchstart', (e) => {
+      if (e.target.closest('#photoLikeBtn') || e.target.closest('.stamped-sticker')) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchActive = true;
+    }, { passive: true });
+
+    heroPolaroid.addEventListener('touchmove', (e) => {
+      if (!touchActive) return;
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 8) {
+        const tilt = Math.max(-10, Math.min(10, dx * 0.1));
+        heroPolaroid.style.transform = `rotate(${tilt}deg)`;
+      }
+    }, { passive: true });
+
+    heroPolaroid.addEventListener('touchend', (e) => {
+      if (!touchActive) return;
+      touchActive = false;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      heroPolaroid.style.transform = '';
+      if (dx < -40) {
+        sfx.pop(1.2);
+        currentMemoryIdx = (currentMemoryIdx + 1) % photos.length;
+        renderActiveMemory();
+      } else if (dx > 40) {
+        sfx.pop(1.2);
+        currentMemoryIdx = (currentMemoryIdx - 1 + photos.length) % photos.length;
+        renderActiveMemory();
+      } else {
+        heroPolaroid.classList.remove('hanging-swing-impulse');
+        void heroPolaroid.offsetWidth;
+        heroPolaroid.classList.add('hanging-swing-impulse');
+      }
+    }, { passive: true });
+  }
 })();
 
 /* =========================================================
