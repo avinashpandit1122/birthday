@@ -31,9 +31,9 @@ const CONFIG = {
   ],
 
   letter:
-    'I keep thinking about how incredibly lucky I got with you. You have seen me at my worst and stayed anyway, ' +
-    'and I do not say thank you nearly enough for that. This year, I hope life gives you as much magic and warmth ' +
-    'as you bring to everyone around you. Happy Birthday, my favourite person…'
+    'Happy Birthday, My Special One! 🎂❤️\n\n' +
+    'Tum meri life ka sabse pyaara surprise ho. 🥹💕 Dua hai ki tumhari har khwahish poori ho, ' +
+    'tumhe duniya ki saari khushiyan milein, aur tumhari pyaari si muskurahat ki ek wajah main bhi banu. 🫣💗✨'
 };
 
 /* ---------- helpers ---------- */
@@ -443,6 +443,7 @@ function cfTick() {
 
 /* ---------- typewriter ---------- */
 function typeInto(el, text, speed, onDone, fresh = true) {
+  const chars = Array.from(text);
   let i = 0, done = false;
   const finish = () => {
     if (done) return;
@@ -454,9 +455,9 @@ function typeInto(el, text, speed, onDone, fresh = true) {
   const id = loop(() => {
     i++;
     const k = fresh ? 4 : 0;
-    el.innerHTML = esc(text.slice(0, Math.max(0, i - k))) + (fresh && i > 0 ? `<span class="fresh">${esc(text.slice(Math.max(0, i - k), i))}</span>` : '');
+    el.innerHTML = esc(chars.slice(0, Math.max(0, i - k)).join('')) + (fresh && i > 0 ? `<span class="fresh">${esc(chars.slice(Math.max(0, i - k), i).join(''))}</span>` : '');
     if (i % 3 === 0) sfx.tone(800 + (i % 5) * 40, 'sine', 0.04, 0.03);
-    if (i >= text.length) finish();
+    if (i >= chars.length) finish();
   }, speed);
   return finish;
 }
