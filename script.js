@@ -56,6 +56,41 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
 })();
 
 /* =========================================================
+   WEB CACHE & ASSET STORAGE SYNC (Saves HTML, CSS, JS on Web)
+   ========================================================= */
+(function initWebPersistence() {
+  if (typeof window === 'undefined') return;
+
+  // 1. Save build & bundle timestamp metadata into localStorage
+  try {
+    const buildInfo = {
+      app: 'Birthday Surprise Arcade',
+      version: '1.2.0',
+      savedAt: new Date().toISOString(),
+      assets: ['index.html', 'style.css', 'script.js', 'manifest.json']
+    };
+    localStorage.setItem('birthday_app_cached', JSON.stringify(buildInfo));
+  } catch (e) {}
+
+  // 2. Explicit CacheStorage warm-up for instant web load
+  if ('caches' in window && (location.protocol === 'http:' || location.protocol === 'https:')) {
+    caches.open('birthday-surprise-cache-v3').then(cache => {
+      cache.addAll([
+        './index.html',
+        './style.css',
+        './script.js',
+        './manifest.json',
+        './photos/photo1.jpg',
+        './photos/photo2.jpg',
+        './photos/photo3.jpg',
+        './photos/photo4.jpg',
+        './photos/photo5.jpg'
+      ]).catch(() => {});
+    }).catch(() => {});
+  }
+})();
+
+/* =========================================================
    PASSWORD PROTECTION GATE ENGINE
    ========================================================= */
 (function initPasswordGate() {
@@ -111,15 +146,6 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
       (target === '5nov' && (val === '5 nov' || val === '05 nov' || val === '05nov' || val === '5th nov' || val === 'soniya' || val === '5november' || val === '5 november'));
 
     if (isCorrect) {
-      // 1. Success audio chime
-      try {
-        if (typeof sfx !== 'undefined') {
-          sfx.pop(1.2);
-          setTimeout(() => sfx.sparkle(), 140);
-          setTimeout(() => sfx.fanfare(), 360);
-        }
-      } catch(e) {}
-
       if (errorBanner) errorBanner.classList.add('hide');
       if (unlockBtn) {
         unlockBtn.classList.add('unlocking');
@@ -127,27 +153,37 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
         unlockBtn.disabled = true;
       }
 
-      // Burst celebratory confetti
-      if (typeof burst === 'function') {
-        const rect = unlockBtn ? unlockBtn.getBoundingClientRect() : { left: innerWidth / 2, width: 0, top: innerHeight / 2, height: 0 };
-        burst(60, rect.left + rect.width / 2, rect.top + rect.height / 2, ['#ff4081', '#ff80ab', '#ffd27a', '#ffffff', '#e91e63']);
-      }
-
-      // 2. Remember this device in localStorage
+      // 1. Remember this device in localStorage
       markUnlocked();
 
-      // 3. Start surprise experience cleanly from Stage 1 (bow minigame)
+      // 2. Start surprise experience cleanly from Stage 1 (bow minigame) immediately
       if (typeof startSurpriseExperience === 'function') {
         startSurpriseExperience();
       }
 
-      // 4. Smooth romantic gate exit animation
+      // 3. Smooth romantic gate exit animation
       if (gate) {
         gate.classList.add('unlocked-exit');
         setTimeout(() => {
           gate.remove();
         }, 650);
       }
+
+      // 4. Non-blocking audio chime & celebratory burst (runs off critical render path)
+      setTimeout(() => {
+        try {
+          if (typeof sfx !== 'undefined') {
+            sfx.pop(1.2);
+            setTimeout(() => sfx.sparkle(), 140);
+            setTimeout(() => sfx.fanfare(), 360);
+          }
+        } catch(e) {}
+
+        if (typeof burst === 'function') {
+          const rect = unlockBtn ? unlockBtn.getBoundingClientRect() : { left: innerWidth / 2, width: 0, top: innerHeight / 2, height: 0 };
+          burst(60, rect.left + rect.width / 2, rect.top + rect.height / 2, ['#ff4081', '#ff80ab', '#ffd27a', '#ffffff', '#e91e63']);
+        }
+      }, 0);
     } else {
       // Wrong password feedback
       try {
@@ -207,18 +243,22 @@ class SoundEngine {
     this.muted = false;
   }
   init() {
-    if (!this.ctx) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtx) this.ctx = new AudioCtx();
-    }
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume().catch(() => {});
     }
   }
   play(fn) {
     if (this.muted) return;
-    this.init();
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        try { this.ctx = new AudioCtx(); } catch (e) {}
+      }
+    }
     if (!this.ctx) return;
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {});
+    }
     try { fn(this.ctx); } catch (e) {}
   }
   tone(freq, type = 'sine', duration = 0.12, gainVal = 0.15) {

@@ -350,6 +350,11 @@ body[data-theme="night"] .hud-btn {
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s 0.5s;
 }
 
+.scene:not(.on):not(.live) {
+  content-visibility: auto;
+  contain-intrinsic-size: 100vw 100vh;
+}
+
 .scene.on {
   opacity: 1;
   visibility: visible;
