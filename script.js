@@ -852,20 +852,25 @@ function unwrapBirthdayGift() {
 
   const rect = giftBox3d ? giftBox3d.getBoundingClientRect() : { left: innerWidth / 2, width: 0, top: innerHeight / 2, height: 0 };
   burst(80, rect.left + rect.width / 2, rect.top + rect.height * 0.4, ['#ff4f93', '#ffd166', '#ffffff', '#e91e63', '#a78bfa']);
-  rain(45);
-  addScore(500, rect.left + rect.width / 2, rect.top + rect.height * 0.3, 'GIFT UNWRAPPED! 🎁💖');
+  addScore(500, rect.left + rect.width / 2, rect.top + rect.height * 0.3, 'SCROLL UNROLLED! 📜💖');
 
   later(() => {
+    const showcase = S('giftBoxShowcase');
+    if (showcase) showcase.classList.add('hide');
     const card = S('birthdayGiftCard');
     if (card) {
       card.classList.remove('hide');
-      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      const cakeScene = S('s-cake');
+      if (cakeScene) {
+        cakeScene.scrollTo({ top: 110, behavior: 'smooth' });
+      }
     }
-  }, 500);
+  }, 420);
 }
 
 hooks.cake = () => {
   candleBlown = false;
+  giftUnwrapped = false;
   ['candleFlame', 'flameLeft', 'flameRight'].forEach(id => {
     const el = S(id);
     if (el) el.classList.remove('out');
@@ -890,6 +895,15 @@ hooks.cake = () => {
   if (blowBtn) blowBtn.classList.remove('hide');
   const toppingsGroup = S('cakeToppingsGroup');
   if (toppingsGroup) toppingsGroup.innerHTML = '';
+
+  const showcase = S('giftBoxShowcase');
+  if (showcase) showcase.classList.remove('hide');
+  const giftBox3d = S('giftBox3d');
+  if (giftBox3d) giftBox3d.classList.remove('unwrapped');
+  const giftActions = S('giftActions');
+  if (giftActions) giftActions.classList.remove('hide');
+  const card = S('birthdayGiftCard');
+  if (card) card.classList.add('hide');
 
   // Default to cake view initially
   switchCelebrationTab('cake');
@@ -934,6 +948,9 @@ hooks.cake = () => {
   if (openGiftPromptBtn) openGiftPromptBtn.addEventListener('click', () => {
     sfx.sparkle();
     switchCelebrationTab('gift');
+    later(() => {
+      unwrapBirthdayGift();
+    }, 280);
   });
 
   // Gift Box Unwrap
@@ -945,33 +962,26 @@ hooks.cake = () => {
     if (!giftUnwrapped) unwrapBirthdayGift();
   });
 
-  // Claim Gift Voucher
-  const claimGiftBtn = S('claimGiftBtn');
-  if (claimGiftBtn) claimGiftBtn.addEventListener('click', () => {
-    sfx.fanfare();
-    const rect = claimGiftBtn.getBoundingClientRect();
-    burst(60, rect.left + rect.width / 2, rect.top + rect.height / 2, ['#ff2d75', '#ff9ec0', '#ffd166', '#ffffff']);
-    addScore(300, rect.left + rect.width / 2, rect.top, 'GIFT CLAIMED! 👑');
-    claimGiftBtn.classList.add('hide');
-    const banner = S('claimedBanner');
-    if (banner) banner.classList.remove('hide');
-  });
-
   // Re-wrap Gift Box
   const rewrapGiftBtn = S('rewrapGiftBtn');
   if (rewrapGiftBtn) rewrapGiftBtn.addEventListener('click', () => {
     giftUnwrapped = false;
     sfx.click();
+    const showcase = S('giftBoxShowcase');
+    if (showcase) showcase.classList.remove('hide');
     const giftBox3d = S('giftBox3d');
     if (giftBox3d) giftBox3d.classList.remove('unwrapped');
     const giftActions = S('giftActions');
     if (giftActions) giftActions.classList.remove('hide');
     const card = S('birthdayGiftCard');
     if (card) card.classList.add('hide');
-    const banner = S('claimedBanner');
-    if (banner) banner.classList.add('hide');
-    const claimGiftBtn = S('claimGiftBtn');
-    if (claimGiftBtn) claimGiftBtn.classList.remove('hide');
+  });
+
+  // Back to Cake Button
+  const backToCakeBtn = S('backToCakeBtn');
+  if (backToCakeBtn) backToCakeBtn.addEventListener('click', () => {
+    sfx.click();
+    switchCelebrationTab('cake');
   });
 
   // Interactive cake topping buttons
