@@ -23,7 +23,11 @@ const CONFIG = {
 
   // Up to 5 photos: path string or { src, caption }. Placeholders used if omitted.
   photos: [
-    // { src: 'photos/1.jpg', caption: 'sweet memory' },
+    { src: 'photos/photo1.jpg', caption: 'Sweetest Kitty Smile 🐱' },
+    { src: 'photos/photo2.jpg', caption: 'Dreamy & Adorable ✨' },
+    { src: 'photos/photo3.jpg', caption: 'Warm Hugs & Pure Love 🌸' },
+    { src: 'photos/photo4.jpg', caption: 'The Birthday Princess 👑' },
+    { src: 'photos/photo5.jpg', caption: 'Forever My Person 💖' }
   ],
 
   letter:
@@ -1070,32 +1074,32 @@ let currentMemoryIdx = 0;
 
 const MEMORY_STORIES = [
   {
-    title: "Under The Starlight ✨",
-    story: "Under a sky full of stars, you've always shone the brightest.",
+    title: "Sweetest Kitty Smile 🐱",
+    story: "The cutest smile that never fails to brighten even the darkest day.",
     date: "Chapter 01 · Celestial Magic",
     likes: 38
   },
   {
-    title: "Cozy Café & Sweet Talks ☕",
-    story: "Hours always felt like minutes whenever we shared our worlds.",
+    title: "Dreamy & Adorable ✨",
+    story: "Endlessly sweet, uniquely you, and my favourite reason to smile.",
     date: "Chapter 02 · Warm Moments",
     likes: 42
   },
   {
-    title: "The Birthday Girl 👑",
-    story: "Celebrating another wonderful year of pure magic with you.",
-    date: "Chapter 03 · Celebration",
+    title: "Warm Hugs & Pure Love 🌸",
+    story: "Soft cuddles, gentle moments, and all the warmth in the universe.",
+    date: "Chapter 03 · Pure Comfort",
     likes: 56
   },
   {
-    title: "Sunset & Golden Horizons 🌅",
-    story: "Every journey and sunset is a hundred times sweeter by your side.",
-    date: "Chapter 04 · Endless Horizons",
-    likes: 31
+    title: "The Birthday Princess 👑",
+    story: "A little spark of magic and fairy dust wherever you walk.",
+    date: "Chapter 04 · Pure Magic",
+    likes: 51
   },
   {
     title: "Forever My Person 💖",
-    story: "My favourite place in the entire world is right next to you.",
+    story: "Celebrating your special day today and loving you every day after.",
     date: "Chapter 05 · Heart to Heart",
     likes: 64
   }
@@ -1252,10 +1256,10 @@ function placeholder(i) {
 }
 
 const CAPS = [
-  'Under The Starlight ✨',
-  'Cozy Café & Sweet Talks ☕',
-  'The Birthday Girl 👑',
-  'Sunset & Golden Horizons 🌅',
+  'Sweetest Kitty Smile 🐱',
+  'Dreamy & Adorable ✨',
+  'Warm Hugs & Pure Love 🌸',
+  'The Birthday Princess 👑',
   'Forever My Person 💖'
 ];
 
