@@ -3,8 +3,8 @@
    Customizable via CONFIG. Everything else runs automatically!
    ========================================================= */
 const CONFIG = {
-  you: 'Aditi',
-  me: 'Rahul',
+  you: 'Soniya',
+  me: 'Avinash',
   age: 21,
 
   // Optional background music URL, e.g. 'assets/music.mp3'
