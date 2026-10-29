@@ -705,7 +705,7 @@ hooks.tree = () => {
       const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
       const el = document.createElement('i');
       el.textContent = '♥';
-      el.style.cssText = `left:${50 + x / 17 * k * 48}%;top:${50 + (y - 2.5) / 16 * k * 46}%;font-size:${rand(16, 34)}px;color:${pick(cols)};animation-delay:${1.1 + i * .01}s;text-shadow:0 2px 4px rgba(160,20,70,.25)`;
+      el.style.cssText = `left:${50 + x / 17 * k * 48}%;top:${50 + (y - 2.5) / 16 * k * 46}%;font-size:${rand(16, 34)}px;color:${pick(cols)};animation-delay:${0.2 + i * 0.005}s;text-shadow:0 2px 4px rgba(160,20,70,.25)`;
       
       el.addEventListener('click', e => {
         e.stopPropagation();

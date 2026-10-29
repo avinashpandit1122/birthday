@@ -145,39 +145,45 @@
     <div class="rays" aria-hidden="true"></div>
     <div class="floaters" aria-hidden="true"></div>
     
-    <div class="scene-header">
-      <span class="stage-tag">STAGE 3 · BLOSSOM GARDEN</span>
-      <p class="sub2">Tap branches or floating hearts to harvest blooms 🌸</p>
-      <div class="garden-counter" id="gardenCounter">🌸 <span id="bloomCount">0</span> Blossoms Grown</div>
-    </div>
+    <div class="garden-stage-content">
+      <div class="scene-header">
+        <span class="stage-tag">STAGE 3 · BLOSSOM GARDEN</span>
+        <p class="sub2">Tap branches or floating hearts to harvest blooms 🌸</p>
+        <div class="garden-counter" id="gardenCounter">🌸 <span id="bloomCount">0</span> Blossoms Grown</div>
+      </div>
 
-    <div class="tree" id="treeContainer">
-      <svg viewBox="0 0 300 510" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-        <g fill="none" stroke="#7a3d4a" stroke-linecap="round">
-          <path pathLength="1" style="--d:.1s" stroke-width="10" d="M150 510C146 440 156 380 150 300"/>
-          <path pathLength="1" style="--d:.9s" stroke-width="6" d="M150 330C135 300 112 280 92 235"/>
-          <path pathLength="1" style="--d:.9s" stroke-width="6" d="M150 330C165 300 188 280 208 235"/>
-          <path pathLength="1" style="--d:1s" stroke-width="5" d="M150 300C148 262 150 228 150 192"/>
-          <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M92 235C80 215 74 195 62 175"/>
-          <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M92 235C104 215 108 198 114 170"/>
-          <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M208 235C220 215 226 195 238 175"/>
-          <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M208 235C196 215 192 198 186 170"/>
-          <path pathLength="1" style="--d:1.3s" stroke-width="3" d="M150 235C140 212 134 192 128 168"/>
-          <path pathLength="1" style="--d:1.3s" stroke-width="3" d="M150 235C160 212 166 192 172 168"/>
-        </g>
-      </svg>
-      <div id="canopy"></div>
-    </div>
+      <div class="tree-showcase-wrap">
+        <div class="tree" id="treeContainer">
+          <svg viewBox="0 0 300 510" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+            <g fill="none" stroke="#7a3d4a" stroke-linecap="round">
+              <path pathLength="1" style="--d:.1s" stroke-width="10" d="M150 510C146 440 156 380 150 300"/>
+              <path pathLength="1" style="--d:.9s" stroke-width="6" d="M150 330C135 300 112 280 92 235"/>
+              <path pathLength="1" style="--d:.9s" stroke-width="6" d="M150 330C165 300 188 280 208 235"/>
+              <path pathLength="1" style="--d:1s" stroke-width="5" d="M150 300C148 262 150 228 150 192"/>
+              <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M92 235C80 215 74 195 62 175"/>
+              <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M92 235C104 215 108 198 114 170"/>
+              <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M208 235C220 215 226 195 238 175"/>
+              <path pathLength="1" style="--d:1.2s" stroke-width="3" d="M208 235C196 215 192 198 186 170"/>
+              <path pathLength="1" style="--d:1.3s" stroke-width="3" d="M150 235C140 212 134 192 128 168"/>
+              <path pathLength="1" style="--d:1.3s" stroke-width="3" d="M150 235C160 212 166 192 172 168"/>
+            </g>
+          </svg>
+          <div id="canopy"></div>
+        </div>
+      </div>
 
-    <div class="bd-card">
-      <small>it's officially your day</small>
-      <b>Happy Birthday, {you}</b>
-      <span class="late">and just like that, you're turning {age} ✨</span>
-    </div>
+      <div class="garden-bottom-center">
+        <div class="bd-card">
+          <small>it's officially your day</small>
+          <b>Happy Birthday, {you} 💖</b>
+          <span class="late">and just like that, you're turning {age} ✨</span>
+        </div>
 
-    <div class="garden-actions">
-      <button class="game-pill-btn" id="waterTreeBtn">💧 Water &amp; Bloom (+50)</button>
-      <button class="cta mini-cta" data-go="cake">Visit Cake Bakery 🎂</button>
+        <div class="garden-actions">
+          <button class="game-pill-btn" id="waterTreeBtn">💧 Water &amp; Bloom (+50)</button>
+          <button class="cta mini-cta" data-go="cake">Visit Cake Bakery 🎂</button>
+        </div>
+      </div>
     </div>
   </section>
 
