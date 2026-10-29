@@ -3522,7 +3522,7 @@ body[data-theme="night"] .stage-tag {
 }
 
 /* =========================================================
-   NOTE PHASE: VICTORY BANNER & DECKLED LOVE LETTER
+   NOTE PHASE: ROMANTIC HEIRLOOM LOVE LETTER STATIONERY
    ========================================================= */
 #s-letter {
   overflow-y: auto;
@@ -3530,214 +3530,497 @@ body[data-theme="night"] .stage-tag {
 }
 
 #s-letter .inner {
-  padding-top: max(calc(var(--safe-t) + 54px), 64px);
-  padding-bottom: max(calc(var(--safe-b) + 32px), 40px);
+  padding-top: max(calc(var(--safe-t) + 48px), 56px);
+  padding-bottom: max(calc(var(--safe-b) + 36px), 44px);
 }
 
-.quest-clear-banner {
-  padding: 14px 20px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(255, 210, 122, 0.22), rgba(255, 61, 127, 0.18));
-  border: 2px solid #ffd27a;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 210, 122, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  animation: bannerEntrance 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  width: 100%;
-  max-width: 440px;
-  margin-bottom: 12px;
-}
-
-@keyframes bannerEntrance {
-  0% { transform: scale(0.85) translateY(-20px); opacity: 0; }
-  100% { transform: scale(1) translateY(0); opacity: 1; }
-}
-
-.quest-trophy-icon {
-  font-size: 32px;
-  animation: bounceTrophy 1.8s infinite ease-in-out;
-}
-
-@keyframes bounceTrophy {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px) scale(1.1); }
-}
-
-.quest-stars {
-  font-size: 15px;
-  letter-spacing: 5px;
-}
-
-.quest-title {
-  font-family: var(--arcade);
-  font-size: 14px;
-  letter-spacing: 1px;
-  color: #ffd27a;
-  margin: 0;
-  text-shadow: 0 0 12px rgba(255, 210, 122, 0.8);
-}
-
-.final-score-text {
-  font-family: var(--fun);
-  font-size: 13.5px;
-  color: #fff;
-  margin: 0;
-}
-
-.final-score-text b {
-  color: #ffd27a;
-  font-size: 16px;
-}
-
-.quest-badge-pill {
-  font-family: var(--arcade);
-  font-size: 8px;
-  letter-spacing: 0.8px;
-  padding: 3px 10px;
-  border-radius: 99px;
-  color: #1b0b2e;
-  background: #ffd27a;
-  box-shadow: 0 0 12px #ffd27a;
-  margin-top: 2px;
-}
-
-/* Luxury Deckled Parchment Love Letter */
-.note {
+/* Master Romantic Stationery Sheet */
+.romantic-letter-folio {
   position: relative;
-  width: min(92vw, 440px);
+  width: min(94vw, 560px);
   text-align: left;
-  padding: 28px 24px 34px;
-  border-radius: 20px;
-  background: linear-gradient(145deg, #fffcf5 0%, #faecd7 100%);
-  box-shadow: 0 30px 65px -12px rgba(0, 0, 0, 0.85), 0 0 40px rgba(255, 210, 122, 0.3);
-  border: 2px solid #e0c285;
-  color: #422509;
-  animation: noteFloatUp 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  padding: 30px 32px 36px;
+  border-radius: 8px;
+  background-color: #fffdfa;
+  background-image: 
+    repeating-linear-gradient(to bottom, transparent, transparent 33px, rgba(198, 156, 109, 0.16) 34px),
+    linear-gradient(175deg, #fffdf8 0%, #fbf5e8 50%, #f4ead5 100%);
+  border: 1px solid #e0caa0;
+  box-shadow: 
+    0 25px 65px -12px rgba(0, 0, 0, 0.75),
+    0 0 35px rgba(255, 210, 122, 0.22),
+    inset 0 0 60px rgba(212, 175, 120, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  color: #2b170a;
+  animation: letterSheetFloatUp 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   cursor: pointer;
-  overflow: hidden;
-  margin-bottom: 12px;
+  overflow: visible;
+  margin-bottom: 14px;
+  box-sizing: border-box;
 }
 
-@keyframes noteFloatUp {
-  0% { transform: translateY(40px) scale(0.92); opacity: 0; }
+@keyframes letterSheetFloatUp {
+  0% { transform: translateY(40px) scale(0.94); opacity: 0; }
   100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-.note-golden-border {
+/* Paper Deckled Rim & Gold Accent Frame */
+.letter-paper-base {
   position: absolute;
   inset: 6px;
-  border: 1px dashed rgba(184, 134, 11, 0.35);
-  border-radius: 14px;
+  border: 1px solid rgba(198, 156, 90, 0.35);
+  border-radius: 6px;
   pointer-events: none;
 }
 
-.note-header {
-  border-bottom: 1.5px solid rgba(184, 134, 11, 0.25);
-  padding-bottom: 8px;
+.letter-paper-base::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(198, 156, 90, 0.25);
+  border-radius: 4px;
+}
+
+/* Baroque Corner Gold Filigrees */
+.letter-gold-filigree {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+.letter-gold-filigree.tl {
+  top: 10px;
+  left: 10px;
+  border-top: 2px solid #caa358;
+  border-left: 2px solid #caa358;
+  border-top-left-radius: 4px;
+}
+
+.letter-gold-filigree.tr {
+  top: 10px;
+  right: 10px;
+  border-top: 2px solid #caa358;
+  border-right: 2px solid #caa358;
+  border-top-right-radius: 4px;
+}
+
+.letter-gold-filigree.bl {
+  bottom: 10px;
+  left: 10px;
+  border-bottom: 2px solid #caa358;
+  border-left: 2px solid #caa358;
+  border-bottom-left-radius: 4px;
+}
+
+.letter-gold-filigree.br {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 2px solid #caa358;
+  border-right: 2px solid #caa358;
+  border-bottom-right-radius: 4px;
+}
+
+/* Royal Quest Victory Arch above letter */
+.royal-quest-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 24px;
   margin-bottom: 14px;
+  border-radius: 99px;
+  background: linear-gradient(135deg, #7d0c2e 0%, #a81745 50%, #680522 100%);
+  border: 1.5px solid #ffd27a;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45), 0 0 22px rgba(255, 210, 122, 0.4);
+  color: #ffd27a;
+  text-align: center;
+  animation: bannerEntrance 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  width: auto;
+  max-width: 90vw;
 }
 
-.note-date-badge {
-  font-family: var(--arcade);
-  font-size: 7.5px;
-  letter-spacing: 0.5px;
-  color: #b87b28;
-  display: inline-block;
-  margin-bottom: 4px;
+.quest-crown-emblem {
+  font-size: 22px;
+  animation: bounceTrophy 1.8s infinite ease-in-out;
 }
 
-.note-greeting {
-  font-family: var(--hand);
-  font-weight: 700;
-  font-size: 26px;
-  color: #8c420e;
-  margin: 0;
-}
-
-.note-body-text {
-  font-family: var(--hand);
-  font-size: 20px;
-  line-height: 30px;
-  white-space: pre-wrap;
-  min-height: 90px;
-  color: #422509;
-  position: relative;
-  z-index: 1;
-}
-
-.sign-block {
-  margin-top: 22px;
-  padding-top: 16px;
-  border-top: 1.5px dashed rgba(184, 134, 11, 0.45);
-  position: relative;
+.quest-banner-text {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  animation: fadeUp 0.6s ease both;
+  gap: 2px;
 }
 
-.sign-closing {
-  font-family: var(--hand);
-  font-size: 20px;
-  font-weight: 600;
-  color: #4a2107;
-  margin: 0;
-}
-
-.sign-name {
-  font-family: var(--hand);
-  font-size: 28px;
+.quest-banner-title {
+  font-family: var(--arcade);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #ffd27a;
   font-weight: 700;
-  color: #9c1c04;
-  margin: 2px 0 0;
-  text-shadow: 0 1px 2px rgba(255, 210, 122, 0.4);
+  text-shadow: 0 0 8px rgba(255, 210, 122, 0.6);
 }
 
-.note-wax-stamp {
+.quest-banner-xp {
+  font-family: var(--arcade);
+  font-size: 8px;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.quest-banner-xp b {
+  color: #ffd27a;
+}
+
+/* Vintage Postage Stamp & Cancellation Mark */
+.letter-postmark-wrap {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  top: 18px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 2;
+  transform: rotate(3deg);
+}
+
+.vintage-stamp {
+  width: 52px;
+  height: 62px;
+  background: #fbf1e8;
+  border: 2px dashed #b8435d;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.stamp-inner {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(184, 67, 93, 0.4);
+  background: linear-gradient(135deg, #fff 0%, #fae6ec 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(212, 32, 84, 0.1);
-  border: 1.8px solid #c9184a;
-  transform: rotate(-6deg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  justify-content: center;
+  gap: 1px;
 }
 
-.stamp-heart {
-  font-size: 22px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+.stamp-art {
+  font-size: 19px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
 }
 
-.note-wax-stamp small {
+.stamp-price {
   font-family: var(--arcade);
-  font-size: 7px;
+  font-size: 6px;
+  color: #a81c3e;
   font-weight: 700;
-  color: #a00832;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.4px;
 }
-  font-size: 6.5px;
-  color: #ff3d7f;
+
+.stamp-label {
+  font-family: var(--arcade);
+  font-size: 5px;
+  color: #7a152d;
+  letter-spacing: 0.3px;
+}
+
+.stamp-cancellation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cancel-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(120, 25, 45, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-15deg);
+}
+
+.cancel-circle span {
+  font-family: var(--arcade);
+  font-size: 5.5px;
+  color: rgba(120, 25, 45, 0.7);
   letter-spacing: 0.5px;
 }
 
-.note-tap-hint {
+.cancel-circle small {
+  font-family: var(--arcade);
+  font-size: 4.5px;
+  color: rgba(120, 25, 45, 0.6);
+}
+
+.cancel-wavy-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cancel-wavy-lines i {
+  width: 24px;
+  height: 1.5px;
+  background: rgba(120, 25, 45, 0.55);
+  border-radius: 2px;
+}
+
+/* Letterhead Header */
+.letter-stationery-header {
+  margin-top: 4px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid rgba(198, 156, 109, 0.35);
+  position: relative;
+  z-index: 1;
+  max-width: calc(100% - 130px);
+}
+
+.letter-date-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.date-feather {
+  font-size: 14px;
+}
+
+.date-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 12.5px;
+  color: #8c5a2b;
+  letter-spacing: 0.5px;
+}
+
+.letter-salutation {
+  font-family: 'Dancing Script', cursive;
+  font-weight: 700;
+  font-size: 34px;
+  color: #781c34;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(120, 28, 52, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.salutation-heart {
+  font-size: 26px;
+  animation: pulseScale 2s infinite ease-in-out;
+}
+
+/* Ruled Letter Body */
+.letter-body-area {
+  position: relative;
+  z-index: 1;
+  min-height: 140px;
+}
+
+.letter-handwritten-text {
+  font-family: 'Caveat', cursive;
+  font-size: 25px;
+  line-height: 34px;
+  font-weight: 600;
+  color: #24140a;
+  white-space: pre-wrap;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+/* Closing Section */
+.letter-closing-section {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1.5px dashed rgba(198, 156, 109, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  animation: fadeUp 0.6s ease both;
+  z-index: 1;
+}
+
+.closing-words {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.closing-signoff {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  font-weight: 600;
+  color: #5c2f12;
+  margin: 0;
+}
+
+.closing-name {
+  font-family: 'Dancing Script', cursive;
+  font-size: 32px;
+  font-weight: 700;
+  color: #8e142e;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(142, 20, 46, 0.15);
+}
+
+.signature-sparkle {
+  font-size: 22px;
+}
+
+/* 3D Wax Seal Affixed to Letter Sheet */
+.letter-wax-seal-affixed {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  margin-bottom: 6px;
+  margin-right: 10px;
+}
+
+.wax-ribbon-tails {
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 28px;
+}
+
+.wax-ribbon {
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 26px;
+  background: linear-gradient(180deg, #d49a18, #aa7808);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.wax-ribbon.l {
+  left: 4px;
+  transform: rotate(16deg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+}
+
+.wax-ribbon.r {
+  right: 4px;
+  transform: rotate(-16deg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+}
+
+.wax-seal-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d42054, #82092e 70%, #4a0318);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 14px rgba(255, 61, 127, 0.35), inset 0 2px 3px rgba(255, 255, 255, 0.35);
+  border: 1.5px solid #ffd27a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-8deg);
+}
+
+.wax-seal-emboss {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
+.wax-monogram {
+  font-size: 18px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.wax-curved-text {
+  font-family: var(--arcade);
+  font-size: 5px;
+  font-weight: 700;
+  color: #ffd27a;
+  letter-spacing: 0.6px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+}
+
+/* Fast-forward Hint */
+.letter-tap-hint {
   text-align: center;
   font-family: var(--fun);
-  font-size: 11px;
-  color: #b87b28;
+  font-size: 11.5px;
+  color: #8c5a2b;
   opacity: 0.65;
-  margin-top: 14px;
-  animation: pulse 1.5s infinite;
+  margin-top: 18px;
+  animation: pulse 1.6s infinite;
+}
+
+/* Responsive Adaptations for Romantic Letter */
+@media (max-width: 600px) {
+  .royal-quest-banner {
+    padding: 6px 16px;
+    gap: 8px;
+    max-width: min(92vw, 360px);
+  }
+  .quest-crown-emblem {
+    font-size: 18px;
+  }
+  .quest-banner-title {
+    font-size: 8.5px;
+  }
+  .quest-banner-xp {
+    font-size: 7px;
+  }
+  .romantic-letter-folio {
+    width: min(94vw, 420px);
+    padding: 24px 18px 28px;
+    background-image: 
+      repeating-linear-gradient(to bottom, transparent, transparent 29px, rgba(198, 156, 109, 0.16) 30px),
+      linear-gradient(175deg, #fffdf8 0%, #fbf5e8 50%, #f4ead5 100%);
+  }
+  .letter-postmark-wrap {
+    top: 14px;
+    right: 8px;
+    transform: scale(0.68) rotate(3deg);
+    transform-origin: top right;
+  }
+  .letter-stationery-header {
+    max-width: calc(100% - 90px);
+  }
+  .letter-salutation {
+    font-size: 26px;
+  }
+  .letter-handwritten-text {
+    font-size: 20px;
+    line-height: 30px;
+  }
+  .closing-signoff {
+    font-size: 18px;
+  }
+  .closing-name {
+    font-size: 26px;
+  }
+  .letter-wax-seal-affixed {
+    width: 46px;
+    height: 46px;
+    margin-right: 10px;
+    margin-bottom: 6px;
+  }
+  .wax-monogram {
+    font-size: 15px;
+  }
+  .wax-curved-text {
+    font-size: 4px;
+  }
 }
 
 /* Post-Letter Actions */

@@ -7,7 +7,7 @@
 <title>A little something, for you</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Patrick+Hand&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Dancing+Script:wght@600;700&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="day">
@@ -844,36 +844,86 @@
 
     <!-- Letter Reading & Victory Celebration Phase -->
     <div class="inner hide" id="notePhase">
-      <div class="quest-clear-banner" id="questClearBanner">
-        <span class="quest-trophy-icon">🏆</span>
-        <div class="quest-stars">✨ ⭐ 🌟 💖 🌟 ⭐ ✨</div>
-        <h3 class="quest-title">BIRTHDAY QUEST COMPLETE!</h3>
-        <p class="final-score-text">FINAL SCORE: <b id="finalScoreVal">10,000</b> LOVE XP UNLOCKED</p>
-        <div class="quest-badge-pill">👑 QUEEN OF MY HEART 👑</div>
+      
+      <!-- Royal Quest Victory Arch -->
+      <div class="royal-quest-banner" id="questClearBanner">
+        <span class="quest-crown-emblem">👑</span>
+        <div class="quest-banner-text">
+          <span class="quest-banner-title">ROYAL BIRTHDAY QUEST COMPLETE</span>
+          <span class="quest-banner-xp">🏆 <b id="finalScoreVal">10,000</b> LOVE XP UNLOCKED · QUEEN OF MY HEART ✨</span>
+        </div>
       </div>
 
-      <!-- Luxury Deckled Parchment Love Letter -->
-      <article class="note" id="note" title="Tap anywhere to finish reading instantly">
-        <div class="note-paper-texture" aria-hidden="true"></div>
-        <div class="note-golden-border" aria-hidden="true"></div>
+      <!-- Luxury Romantic Heirloom Love Letter -->
+      <article class="romantic-letter-folio" id="note" title="Tap anywhere to reveal words instantly">
+        
+        <!-- Ivory Parchment Texture & Baroque Gold Filigree Corners -->
+        <div class="letter-paper-base" aria-hidden="true"></div>
+        <div class="letter-gold-filigree tl" aria-hidden="true"></div>
+        <div class="letter-gold-filigree tr" aria-hidden="true"></div>
+        <div class="letter-gold-filigree bl" aria-hidden="true"></div>
+        <div class="letter-gold-filigree br" aria-hidden="true"></div>
 
-        <div class="note-header">
-          <span class="note-date-badge">OCTOBER 29 · HER SPECIAL DAY</span>
-          <h3 class="note-greeting">My Dearest {you}, 💖</h3>
-        </div>
-
-        <p id="noteText" class="note-body-text"></p>
-
-        <div class="sign-block hide" id="noteSign">
-          <p class="sign-closing">With all my love, forever &amp; always,</p>
-          <p class="sign-name">— {me} ✨</p>
-          <div class="note-wax-stamp">
-            <span class="stamp-heart">💌</span>
-            <small>SEALED WITH LOVE</small>
+        <!-- Vintage Postage Stamp & Postmark -->
+        <div class="letter-postmark-wrap" aria-hidden="true">
+          <div class="vintage-stamp">
+            <div class="stamp-inner">
+              <span class="stamp-art">🌹</span>
+              <span class="stamp-price">29 OCT</span>
+              <span class="stamp-label">SPECIAL DELIVERY</span>
+            </div>
+          </div>
+          <div class="stamp-cancellation">
+            <div class="cancel-circle">
+              <span>AIR MAIL</span>
+              <small>WITH LOVE</small>
+            </div>
+            <div class="cancel-wavy-lines">
+              <i></i><i></i><i></i>
+            </div>
           </div>
         </div>
 
-        <div class="note-tap-hint" id="noteTapHint">👆 Tap letter to fast-forward</div>
+        <!-- Letterhead Header -->
+        <header class="letter-stationery-header">
+          <div class="letter-date-line">
+            <span class="date-feather">✒️</span>
+            <span class="date-text">October 29 · Her Special Day</span>
+          </div>
+          <h3 class="letter-salutation">My Dearest {you}, <span class="salutation-heart">💖</span></h3>
+        </header>
+
+        <!-- Ruled Letter Body -->
+        <div class="letter-body-area">
+          <p id="noteText" class="letter-handwritten-text"></p>
+        </div>
+
+        <!-- Signature & 3D Wax Seal Area -->
+        <footer class="letter-closing-section hide" id="noteSign">
+          <div class="closing-words">
+            <p class="closing-signoff">With all my love, forever &amp; always,</p>
+            <p class="closing-name">— {me} <span class="signature-sparkle">✨</span></p>
+          </div>
+
+          <!-- Real 3D Sculpted Red Wax Seal on Paper -->
+          <div class="letter-wax-seal-affixed" aria-hidden="true">
+            <div class="wax-ribbon-tails">
+              <span class="wax-ribbon l"></span>
+              <span class="wax-ribbon r"></span>
+            </div>
+            <div class="wax-seal-disc">
+              <div class="wax-seal-emboss">
+                <span class="wax-monogram">💌</span>
+                <span class="wax-curved-text">SEALED WITH LOVE</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+
+        <!-- Tap Fast-Forward Hint -->
+        <div class="letter-tap-hint" id="noteTapHint">
+          <span>👆</span> Tap anywhere on the letter to reveal words
+        </div>
       </article>
 
       <!-- Post-Letter Actions -->
