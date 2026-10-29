@@ -4881,7 +4881,7 @@ html.is-locked .audio-prompt-banner {
   display: none !important;
 }
 
-html.is-unlocked #passwordGate {
+html.is-unlocked #passwordGate:not(.unlocked-exit) {
   display: none !important;
 }
 

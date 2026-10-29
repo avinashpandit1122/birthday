@@ -5,8 +5,6 @@
 const CONFIG = {
   // Password protection for surprise website (change anytime here)
   password: '5nov',
-  // Starting stage when unlocking or loading without hash ('tree' = Stage 3)
-  startStage: 'tree',
 
   you: 'Soniya',
   me: 'Avinash',
@@ -138,12 +136,10 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
       // 2. Remember this device in localStorage
       markUnlocked();
 
-      // 3. Immediately start from Stage 3 (Blossom Garden)
-      try {
-        if (typeof go === 'function') {
-          go(CONFIG.startStage || 'tree');
-        }
-      } catch(e) {}
+      // 3. Start surprise experience cleanly from Stage 1 (bow minigame)
+      if (typeof startSurpriseExperience === 'function') {
+        startSurpriseExperience();
+      }
 
       // 4. Smooth romantic gate exit animation
       if (gate) {
@@ -189,6 +185,15 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
       if (errorBanner && !errorBanner.classList.contains('hide')) {
         errorBanner.classList.add('hide');
       }
+    });
+  }
+
+  // Prevent clicks or touches inside the password gate from interacting with background scenes
+  if (gate) {
+    ['click', 'pointerdown', 'pointerup', 'touchstart', 'touchend'].forEach(evt => {
+      gate.addEventListener(evt, (e) => {
+        e.stopPropagation();
+      }, { passive: true });
     });
   }
 })();
@@ -497,6 +502,7 @@ function go(id) {
 }
 
 document.addEventListener('click', e => {
+  if (document.documentElement.classList.contains('is-locked')) return;
   sfx.init();
   const b = e.target.closest('[data-go]');
   if (b && !b.disabled) {
@@ -2295,6 +2301,7 @@ window.openLetter = openLetter;
 window.resealLetter = resealLetter;
 
 window.addEventListener('hashchange', () => {
+  if (document.documentElement.classList.contains('is-locked')) return;
   const hash = window.location.hash.replace('#', '');
   if (hash === 'cake-gift' || hash === 'gift') {
     go('cake');
@@ -2317,23 +2324,30 @@ window.addEventListener('hashchange', () => {
   }
 });
 
-const initHash = window.location.hash.replace('#', '');
-if (initHash === 'cake-gift' || initHash === 'gift') {
-  go('cake');
-  switchCelebrationTab('gift');
-} else if (initHash === 'cake-gift-unwrapped') {
-  go('cake');
-  switchCelebrationTab('gift');
-  unwrapBirthdayGift();
-} else if (initHash === 'memory-puzzle' || initHash === 'puzzle') {
-  go('memory');
-  switchMemoryTab('puzzle');
-} else if (initHash === 'memory') {
-  go('memory');
-  switchMemoryTab('photos');
-} else if (initHash === 'letter-open') {
-  go('letter');
-  later(() => openLetter(), 400);
-} else {
-  go(ORDER.includes(initHash) ? initHash : (CONFIG.startStage || 'tree'));
+function startSurpriseExperience() {
+  const initHash = window.location.hash.replace('#', '');
+  if (initHash === 'cake-gift' || initHash === 'gift') {
+    go('cake');
+    switchCelebrationTab('gift');
+  } else if (initHash === 'cake-gift-unwrapped') {
+    go('cake');
+    switchCelebrationTab('gift');
+    unwrapBirthdayGift();
+  } else if (initHash === 'memory-puzzle' || initHash === 'puzzle') {
+    go('memory');
+    switchMemoryTab('puzzle');
+  } else if (initHash === 'memory') {
+    go('memory');
+    switchMemoryTab('photos');
+  } else if (initHash === 'letter-open') {
+    go('letter');
+    later(() => openLetter(), 400);
+  } else {
+    go(ORDER.includes(initHash) ? initHash : 'bow');
+  }
+}
+
+// Automatically launch surprise experience only if already unlocked on this browser/device
+if (!document.documentElement.classList.contains('is-locked')) {
+  startSurpriseExperience();
 }
