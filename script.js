@@ -5,6 +5,8 @@
 const CONFIG = {
   // Password protection for surprise website (change anytime here)
   password: '5nov',
+  // Starting stage when unlocking or loading without hash ('tree' = Stage 3)
+  startStage: 'tree',
 
   you: 'Soniya',
   me: 'Avinash',
@@ -136,7 +138,14 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
       // 2. Remember this device in localStorage
       markUnlocked();
 
-      // 3. Smooth romantic gate exit animation
+      // 3. Immediately start from Stage 3 (Blossom Garden)
+      try {
+        if (typeof go === 'function') {
+          go(CONFIG.startStage || 'tree');
+        }
+      } catch(e) {}
+
+      // 4. Smooth romantic gate exit animation
       if (gate) {
         gate.classList.add('unlocked-exit');
         setTimeout(() => {
@@ -2326,5 +2335,5 @@ if (initHash === 'cake-gift' || initHash === 'gift') {
   go('letter');
   later(() => openLetter(), 400);
 } else {
-  go(ORDER.includes(initHash) ? initHash : 'bow');
+  go(ORDER.includes(initHash) ? initHash : (CONFIG.startStage || 'tree'));
 }
