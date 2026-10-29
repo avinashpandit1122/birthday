@@ -1909,20 +1909,29 @@ body[data-theme="night"] .stage-tag {
   font-size: 18px;
 }
 
-/* The Handwritten Lines */
+/* The Handwritten Poetry Lines */
 .scroll-lines {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
   margin: 6px 0 10px;
 }
-.scroll-prose {
+.scroll-poetry {
   font-family: 'Caveat', cursive;
-  font-size: 17px;
-  line-height: 23px;
+  font-size: 18.5px;
+  line-height: 27px;
   color: #2b170a;
   margin: 0;
   font-weight: 600;
+  text-align: center;
+}
+.scroll-greeting-lead {
+  font-family: 'Caveat', cursive;
+  font-size: 23px;
+  line-height: 29px;
+  color: #5c0f27;
+  margin: 0;
+  font-weight: 700;
   text-align: center;
 }
 
